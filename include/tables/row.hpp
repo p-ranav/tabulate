@@ -17,7 +17,7 @@ public:
     return cells_;
   }
 
-  size_t size() constt {
+  size_t size() const {
     return cells_.size();
   }
 
@@ -28,6 +28,7 @@ public:
   
 private:
   std::vector<Cell> cells_;
+  Format format_;
 };
 
 }

@@ -23,7 +23,7 @@ private:
     for (auto& row : rows_) {
       if (index < row.size()) {
 	auto cell = row.get_cell(index);
-	size_t cell_width = cell.has_value() ? cell.value().get_width() : 0;
+	size_t cell_width = cell.has_value() ? cell.value().size() : 0;
 	result = std::max(result, cell_width);
       }
     }
@@ -39,6 +39,7 @@ private:
   }
   
   std::vector<Row> rows_;
+  Format format_;
 };
 
 }

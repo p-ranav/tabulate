@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <tables/format.hpp>
 
 namespace tables {
 
@@ -19,6 +20,7 @@ public:
 
 private:
   std::string data_;
+  Format format_;
 };
 
 }
