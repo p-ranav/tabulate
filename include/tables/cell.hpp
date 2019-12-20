@@ -8,23 +8,23 @@ namespace tables {
 
 class Cell {
 public:
-  explicit Cell(const std::string& data) : data(data) {}
+  explicit Cell(const std::string& data) : data_(data) {}
 
   std::string data() const {
-    return data;
+    return data_;
   }
 
   size_t size() const {
-    return data.size();
+    return data_.size();
   }
 
   Format format() const {
-    return format;
+    return format_;
   }
 
 private:
-  std::string data;
-  Format format;
+  std::string data_;
+  Format format_;
 };
 
 }

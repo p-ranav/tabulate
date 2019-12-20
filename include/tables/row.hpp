@@ -10,25 +10,25 @@ namespace tables {
 class Row {
 public:
   void add_cell(const Cell& cell) {
-    cells.push_back(cell);
+    cells_.push_back(cell);
   }
 
   std::vector<Cell> cells() const {
-    return cells;
+    return cells_;
   }
 
   size_t size() const {
-    return cells.size();
+    return cells_.size();
   }
 
   std::optional<Cell> get_cell(size_t index) {
-    if (index < cells.size())
-      return cells[index];
+    if (index < cells_.size())
+      return cells_[index];
   }
 
   size_t height() const {
     size_t result{1};
-    for (auto& cell: cells) {
+    for (auto& cell: cells_) {
       auto cell_data = cell.data();
       auto cell_width = cell.format().width;
       // If cell contents are wider than the
@@ -49,8 +49,8 @@ public:
   }
   
 private:
-  std::vector<Cell> cells;
-  Format format;
+  std::vector<Cell> cells_;
+  Format format_;
 };
 
 }
