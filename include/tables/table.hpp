@@ -16,24 +16,15 @@ public:
     rows_.push_back(row);
   }
 
-  void print() {
-    for (size_t i = 0; i < rows_.size(); ++i) {
-      rows_[i].print();
-    }
-  }
-
 private:
 
   size_t get_column_width(size_t index) {
     size_t result{0};
     for (auto& row : rows_) {
       if (index < row.size()) {
-	size_t cell_width{0};
 	auto cell = row.get_cell(index);
-	if (cell.has_value())
-	  cell_width = cell.value().get_width();
-	if (result < cell_width)
-	  result = cell_width;
+	size_t cell_width = cell.has_value() ? cell.value().get_width() : 0;
+	result = std::max(result, cell_width);
       }
     }
     return result;

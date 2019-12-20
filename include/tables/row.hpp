@@ -13,14 +13,11 @@ public:
     cells_.push_back(cell);
   }
 
-  void print() {
-    for (auto& cell : cells_) {
-      cell.print();
-      std::cout << " ";
-    }
+  std::vector<Cell> cells() const {
+    return cells_;
   }
 
-  size_t size() {
+  size_t size() constt {
     return cells_.size();
   }
 

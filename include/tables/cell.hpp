@@ -7,18 +7,18 @@ namespace tables {
 
 class Cell {
 public:
-  explicit Cell(const std::string& contents) : contents_(contents) {}
+  explicit Cell(const std::string& data) : data_(data) {}
 
-  void print() {
-    std::cout << contents_;
+  std::string data() const {
+    return data_;
   }
 
-  size_t get_width() {
-    return contents_.size();
+  size_t size() const {
+    return data_.size();
   }
-  
+
 private:
-  std::string contents_;
+  std::string data_;
 };
 
 }
