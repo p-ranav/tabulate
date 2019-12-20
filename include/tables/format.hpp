@@ -4,6 +4,9 @@
 namespace tables {
 
 struct Format {
+  size_t width{0};
+  size_t height{0};
+  
   size_t margin_left{1};
   size_t margin_top{1};
   size_t margin_right{1};

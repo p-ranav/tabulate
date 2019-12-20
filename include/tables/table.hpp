@@ -33,6 +33,8 @@ private:
   size_t get_row_height(size_t index) {
     size_t result{0};
     if (index < rows_.size()) {
+      const Row& row = rows_[index];
+      const std::vector<Cell>& cells = row.cells();
       
     }
     return result;
