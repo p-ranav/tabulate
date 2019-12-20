@@ -1,34 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <tables/cell.hpp>
+#include <tables/row.hpp>
 
 namespace tables {
-
-class Row {
-public:
-  void add_cell(const Cell& cell) {
-    cells_.push_back(cell);
-  }
-
-  void print() {
-    for (auto& cell : cells_) {
-      cell.print();
-      std::cout << " ";
-    }
-  }
-
-  size_t size() {
-    return cells_.size();
-  }
-
-  Cell get_cell(size_t index) {
-    return cells_[index];
-  }
-  
-private:
-  std::vector<Cell> cells_;
-};
 
 class Table {
 public:
@@ -53,7 +28,10 @@ private:
     size_t result{0};
     for (auto& row : rows_) {
       if (index < row.size()) {
-	auto cell_width = row.get_cell(index).get_width();
+	size_t cell_width{0};
+	auto cell = row.get_cell(index);
+	if (cell.has_value())
+	  cell_width = cell.value().get_width();
 	if (result < cell_width)
 	  result = cell_width;
       }
