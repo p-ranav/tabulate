@@ -29,14 +29,21 @@ public:
   size_t height() const {
     size_t result{1};
     for (auto& cell: cells) {
-      // Use format.width
-      // if cell text = "ABCD" and format.width = 3
+      auto cell_data = cell.data();
+      auto cell_width = cell.format().width;
+      // If cell contents are wider than the
+      // cell format.width, then the height of
+      // the row haas to be incremented to
+      // fit the cell contents
+      //
+      // e.g., if cell text = "ABCD" and format.width = 3
       // then, cell should show:
       // ABC
       // -D
       // So, the returned height = 2
-      auto cell_data = cell.data();
-      auto cell_width = cell.format().width;
+      if (cell_data.size() > cell_width) {
+	result = std::max(result, cell_data.size() % cell_width);
+      }
     }
     return result;
   }
