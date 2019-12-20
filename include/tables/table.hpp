@@ -38,6 +38,14 @@ private:
     }
     return result;
   }
+
+  size_t get_row_height(size_t index) {
+    size_t result{0};
+    if (index < rows_.size()) {
+      
+    }
+    return result;
+  }
   
   std::vector<Row> rows_;
 };
