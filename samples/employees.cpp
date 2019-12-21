@@ -13,9 +13,6 @@ int main() {
 
   // Format the header
   employees[0].format()
-    .corner(" ")
-    .border(" ")
-    .column_separator(" ")
     .color(Color::white)
     .background_color(Color::blue)
     .font_style({FontStyle::bold})

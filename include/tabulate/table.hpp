@@ -233,10 +233,26 @@ private:
       width += format.padding_left_;
       width += format.padding_right_;
 
-      if (col_index == 0)
+      if (col_index == 0) {
+	if (format.border_left_color_.has_value()) {
+	  apply_color(stream, format.border_left_color_.value());
+	}
+	if (format.border_left_background_color_.has_value()) {
+	  apply_background_color(stream, format.border_left_background_color_.value());
+	}	
         stream << format.border_left_;
-      else
+	reset_style(stream);
+      }      
+      else {
+	if (format.column_separator_color_.has_value()) {
+	  apply_color(stream, format.column_separator_color_.value());
+	}
+	if (format.column_separator_background_color_.has_value()) {
+	  apply_background_color(stream, format.column_separator_background_color_.value());
+	}	
         stream << format.column_separator_;
+	reset_style(stream);
+      }
 
       apply_element_style(stream, format);
 
@@ -247,7 +263,15 @@ private:
       }
       reset_style(stream);
     }
+
+    if (format.border_right_color_.has_value()) {
+      apply_color(stream, format.border_right_color_.value());
+    }
+    if (format.border_right_background_color_.has_value()) {
+      apply_background_color(stream, format.border_right_background_color_.value());
+    }    
     stream << format.border_right_;
+    reset_style(stream);
   }
 
   void print_content_row(std::ostream &stream, size_t row_index,
@@ -264,10 +288,26 @@ private:
 
       auto cell_content = row_contents[i];
 
-      if (i == 0)
+      if (i == 0) {
+	if (format.border_left_color_.has_value()) {
+	  apply_color(stream, format.border_left_color_.value());
+	}
+	if (format.border_left_background_color_.has_value()) {
+	  apply_background_color(stream, format.border_left_background_color_.value());
+	}	
         stream << format.border_left_;
-      else
+	reset_style(stream);
+      }
+      else {
+	if (format.column_separator_color_.has_value()) {
+	  apply_color(stream, format.column_separator_color_.value());
+	}
+	if (format.column_separator_background_color_.has_value()) {
+	  apply_background_color(stream, format.column_separator_background_color_.value());
+	}	
         stream << format.column_separator_;
+	reset_style(stream);
+      }
 
       apply_element_style(stream, format);
       for (size_t j = 0; j < format.padding_left_; ++j) {
@@ -291,7 +331,15 @@ private:
       }
       reset_style(stream);
     }
+
+    if (format.border_right_color_.has_value()) {
+      apply_color(stream, format.border_right_color_.value());
+    }
+    if (format.border_right_background_color_.has_value()) {
+      apply_background_color(stream, format.border_right_background_color_.value());
+    }     
     stream << format.border_right_;
+    reset_style(stream);
 
     if (row_index + 1 < rows_.size()) {
       stream << "\n";
@@ -361,18 +409,41 @@ private:
     width += format.padding_left_;
     width += format.padding_right_;
 
-    if (col_index == 0)
+    if (col_index == 0) {
+      if (format.corner_color_.has_value()) {
+	apply_color(stream, format.corner_color_.value());
+      }
+      if (format.corner_background_color_.has_value()) {
+	apply_background_color(stream, format.corner_background_color_.value());
+      }      
       stream << format.corner_;
+      reset_style(stream);
+    }
 
     if (format.border_top_ != "") {
       size_t i = 0;
       while (i < width) {
+	// Apply border_top format
+	if (format.border_top_color_.has_value()) {
+	  apply_color(stream, format.border_top_color_.value());
+	}
+	if (format.border_top_background_color_.has_value()) {
+	  apply_background_color(stream, format.border_top_background_color_.value());
+	}		
         stream << format.border_top_;
+	reset_style(stream);
         ++i;
       }
     }
 
+    if (format.corner_color_.has_value()) {
+      apply_color(stream, format.corner_color_.value());
+    }
+    if (format.corner_background_color_.has_value()) {
+      apply_background_color(stream, format.corner_background_color_.value());
+    }          
     stream << format.corner_;
+    reset_style(stream);
     return true;
   }
 
@@ -390,8 +461,16 @@ private:
     width += format.padding_left_;
     width += format.padding_right_;
 
-    if (col_index == 0)
+    if (col_index == 0) {
+      if (format.corner_color_.has_value()) {
+	apply_color(stream, format.corner_color_.value());
+      }
+      if (format.corner_background_color_.has_value()) {
+	apply_background_color(stream, format.corner_background_color_.value());
+      }      
       stream << format.corner_;
+      reset_style(stream);
+    }
 
     if (format.border_bottom_ != "") {
       size_t i = 0;
@@ -401,7 +480,14 @@ private:
       }
     }
 
+    if (format.corner_color_.has_value()) {
+      apply_color(stream, format.corner_color_.value());
+    }
+    if (format.corner_background_color_.has_value()) {
+      apply_background_color(stream, format.corner_background_color_.value());
+    }    
     stream << format.corner_;
+    reset_style(stream);
     return true;
   }
 

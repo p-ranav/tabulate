@@ -84,36 +84,111 @@ public:
     return *this;
   }
 
+  Format &border_color(Color value) {
+    border_left_color_ = value;
+    border_right_color_ = value;
+    border_top_color_ = value;
+    border_bottom_color_ = value;    
+    return *this;
+  }
+
+  Format &border_background_color(Color value) {
+    border_left_background_color_ = value;
+    border_right_background_color_ = value;
+    border_top_background_color_ = value;
+    border_bottom_background_color_ = value;    
+    return *this;
+  }  
+
   Format &border_left(const std::string &value) {
     border_left_ = value;
     return *this;
   }
+
+  Format &border_left_color(Color value) {
+    border_left_color_ = value;
+    return *this;
+  }
+
+  Format &border_left_background_color(Color value) {
+    border_left_background_color_ = value;
+    return *this;
+  }      
 
   Format &border_right(const std::string &value) {
     border_right_ = value;
     return *this;
   }
 
+  Format &border_right_color(Color value) {
+    border_right_color_ = value;
+    return *this;
+  }
+
+  Format &border_right_background_color(Color value) {
+    border_right_background_color_ = value;
+    return *this;
+  }        
+
   Format &border_top(const std::string &value) {
     border_top_ = value;
     return *this;
   }
 
+  Format &border_top_color(Color value) {
+    border_top_color_ = value;
+    return *this;
+  }
+
+  Format &border_top_background_color(Color value) {
+    border_top_background_color_ = value;
+    return *this;
+  }    
 
   Format &border_bottom(const std::string &value) {
     border_bottom_ = value;
     return *this;
   }
 
+  Format &border_bottom_color(Color value) {
+    border_bottom_color_ = value;
+    return *this;
+  }
+
+  Format &border_bottom_background_color(Color value) {
+    border_bottom_background_color_ = value;
+    return *this;
+  }          
+
   Format &corner(const std::string &value) {
     corner_ = value;
     return *this;
   }
 
+  Format &corner_color(Color value) {
+    corner_color_ = value;
+    return *this;
+  }
+
+  Format &corner_background_color(Color value) {
+    corner_background_color_ = value;
+    return *this;
+  }            
+
   Format &column_separator(const std::string &value) {
     column_separator_ = value;
     return *this;
   }
+
+  Format &column_separator_color(Color value) {
+    column_separator_color_ = value;
+    return *this;
+  }
+
+  Format &column_separator_background_color(Color value) {
+    column_separator_background_color_ = value;
+    return *this;
+  }  
 
   Format &font_align(FontAlign value) {
     font_align_ = value;
@@ -165,12 +240,28 @@ private:
   size_t padding_bottom_{1};
 
   std::string border_top_{"-"};
+  std::optional<Color> border_top_color_;
+  std::optional<Color> border_top_background_color_;
+  
   std::string border_bottom_{"-"};
+  std::optional<Color> border_bottom_color_;
+  std::optional<Color> border_bottom_background_color_;
+  
   std::string border_left_{"|"};
+  std::optional<Color> border_left_color_;
+  std::optional<Color> border_left_background_color_;
+  
   std::string border_right_{"|"};
+  std::optional<Color> border_right_color_;
+  std::optional<Color> border_right_background_color_;  
 
   std::string corner_{"+"};
+  std::optional<Color> corner_color_;
+  std::optional<Color> corner_background_color_;  
+  
   std::string column_separator_{"|"};
+  std::optional<Color> column_separator_color_;
+  std::optional<Color> column_separator_background_color_;    
 
   bool word_wrap_{false};
 };
