@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <string>
 #include <optional>
+#include <tables/font_style.hpp>
 
 namespace tables {
 
@@ -84,7 +85,12 @@ public:
   Format& column_separator(std::string value) {
     column_separator_ = value;
     return *this;
-  }  
+  }
+
+  Format& font_style(const std::vector<FontStyle>& style) {
+    font_style_ = style;
+    return *this;
+  }
   
 private:
   friend class Cell;
@@ -92,6 +98,8 @@ private:
   friend class Table;
   std::optional<size_t> width_{};
   std::optional<size_t> height_{};
+
+  std::vector<FontStyle> font_style_{};
   
   size_t margin_left_{1};
   size_t margin_top_{1};

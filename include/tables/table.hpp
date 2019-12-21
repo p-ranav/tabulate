@@ -3,6 +3,7 @@
 #include <string>
 #include <tables/row.hpp>
 #include <tables/termcolor.hpp>
+#include <tables/font_style.hpp>
 
 namespace tables {
 
@@ -29,6 +30,8 @@ private:
   friend std::ostream& operator<<(std::ostream &os, const Table& table);
   
   void print(std::ostream& stream = std::cout) const {
+    apply_font_style(stream);
+    
     for (size_t i = 0; i < rows_.size(); ++i) {
       auto& row = rows_[i];
       auto row_height = get_row_height(i);
@@ -54,7 +57,10 @@ private:
 	  auto size = cell_contents.size();	  
 	  if (pos < size) {
 	    auto remaining = (size - pos);
-	    sub_row_contents.push_back(cell_contents.substr(pos, std::min(remaining, column_width)));
+	    sub_row_contents.push_back
+	      (cell_contents.substr(pos,
+				    std::min(remaining,
+					     column_width)));
 	  } else {
 	    sub_row_contents.push_back("");
 	  }
@@ -75,7 +81,40 @@ private:
 	}
       }
     }
-  }  
+    reset_style(stream);
+  }
+
+  void apply_font_style(std::ostream& stream) const {
+    auto font_style = format_.font_style_;
+    for (auto& style : font_style) {
+      switch(style) {
+      case FontStyle::bold:
+	stream << termcolor::bold;
+	break;
+      case FontStyle::dark:
+	stream << termcolor::dark;
+	break;
+      case FontStyle::underline:
+	stream << termcolor::underline;
+	break;
+      case FontStyle::blink:
+	stream << termcolor::blink;
+	break;
+      case FontStyle::reverse:
+	stream << termcolor::reverse;
+	break;
+      case FontStyle::concealed:
+	stream << termcolor::concealed;
+	break;
+      default:
+	break;
+      }
+    }
+  }
+
+  void reset_style(std::ostream& stream) const {
+    stream << termcolor::reset;
+  }
 
   size_t get_column_width(size_t index) const {
     size_t result{0};
