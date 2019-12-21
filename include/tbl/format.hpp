@@ -1,10 +1,10 @@
 #include <cstddef>
 #include <optional>
 #include <string>
-#include <vector>
 #include <tbl/color.hpp>
 #include <tbl/font_align.hpp>
 #include <tbl/font_style.hpp>
+#include <vector>
 
 namespace tbl {
 

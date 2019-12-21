@@ -1,10 +1,10 @@
 #pragma once
+#include <functional>
 #include <iostream>
 #include <optional>
 #include <string>
 #include <tbl/cell.hpp>
 #include <vector>
-#include <functional>
 
 namespace tbl {
 
@@ -56,9 +56,7 @@ public:
   }
 
 private:
-
-  explicit Row(Format& table_format) :
-    table_format_(table_format) {}
+  explicit Row(Format &table_format) : table_format_(table_format) {}
 
   friend class Table;
   std::vector<Cell> cells_;

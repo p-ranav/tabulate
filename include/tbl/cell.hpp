@@ -1,10 +1,10 @@
 #pragma once
+#include <functional>
 #include <iostream>
 #include <optional>
 #include <string>
 #include <tbl/format.hpp>
 #include <vector>
-#include <functional>
 
 namespace tbl {
 
@@ -15,16 +15,14 @@ public:
   size_t size() const { return data_.size(); }
 
   Format &format() {
-    if (!format_.has_value()) { // no cell format
+    if (!format_.has_value()) {      // no cell format
       format_ = table_format_.get(); // Use parent table format
     }
     return format_.value();
   }
 
 private:
-
-  explicit Cell(Format& table_format) : 
-    table_format_(table_format) {}
+  explicit Cell(Format &table_format) : table_format_(table_format) {}
 
   friend class Row;
   friend class Table;

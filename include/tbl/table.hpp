@@ -280,14 +280,14 @@ private:
       reset_style(stream);
     }
     stream << format.border_right_;
-    
+
     if (row_index + 1 < rows_.size()) {
       stream << "\n";
     } else {
       // Last row. Print newline after last content row?
       // Yes ONLY if there's a padding bottom or border bottom
       if (format.padding_bottom_ != 0 || format.border_bottom_ != "") {
-        stream << "\n";  
+        stream << "\n";
       }
     }
   }
