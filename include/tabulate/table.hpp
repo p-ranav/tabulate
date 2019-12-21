@@ -1,11 +1,11 @@
 #include <iostream>
 #include <string>
-#include <tbl/font_style.hpp>
-#include <tbl/row.hpp>
-#include <tbl/termcolor.hpp>
+#include <tabulate/font_style.hpp>
+#include <tabulate/row.hpp>
+#include <tabulate/termcolor.hpp>
 #include <vector>
 
-namespace tbl {
+namespace tabulate {
 
 class Table {
 public:
@@ -422,4 +422,4 @@ std::ostream &operator<<(std::ostream &os, const Table &table) {
   return os;
 }
 
-} // namespace tbl
+} // namespace tabulate

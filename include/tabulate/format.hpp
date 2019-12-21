@@ -1,12 +1,12 @@
 #include <cstddef>
 #include <optional>
 #include <string>
-#include <tbl/color.hpp>
-#include <tbl/font_align.hpp>
-#include <tbl/font_style.hpp>
+#include <tabulate/color.hpp>
+#include <tabulate/font_align.hpp>
+#include <tabulate/font_style.hpp>
 #include <vector>
 
-namespace tbl {
+namespace tabulate {
 
 class Format {
 public:
@@ -174,4 +174,4 @@ private:
   bool word_wrap_{false};
 };
 
-}; // namespace tbl
+}; // namespace tabulate

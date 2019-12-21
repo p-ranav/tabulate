@@ -3,10 +3,10 @@
 #include <iostream>
 #include <optional>
 #include <string>
-#include <tbl/format.hpp>
+#include <tabulate/format.hpp>
 #include <vector>
 
-namespace tbl {
+namespace tabulate {
 
 class Cell {
 public:
@@ -31,4 +31,4 @@ private:
   std::optional<Format> format_;
 };
 
-} // namespace tbl
+} // namespace tabulate

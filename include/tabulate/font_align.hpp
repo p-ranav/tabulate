@@ -1,6 +1,6 @@
 #pragma once
 
-namespace tbl {
+namespace tabulate {
 
 enum class FontAlign { left, right, center };
 }

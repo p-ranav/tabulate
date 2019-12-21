@@ -1,5 +1,5 @@
-#include <tbl/table.hpp>
-using namespace tbl;
+#include <tabulate/table.hpp>
+using namespace tabulate;
 
 int main() {
     Table mario;

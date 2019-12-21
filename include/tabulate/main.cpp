@@ -1,6 +1,6 @@
 #include "table.hpp"
 
-using namespace tbl;
+using namespace tabulate;
 
 int main() {
   { // Default table
