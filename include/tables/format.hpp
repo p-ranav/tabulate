@@ -95,7 +95,8 @@ public:
   }
 
   Format& font_style(const std::vector<FontStyle>& style) {
-    font_style_ = style;
+    for (auto& s : style)
+      font_style_.push_back(s);
     return *this;
   }
 
