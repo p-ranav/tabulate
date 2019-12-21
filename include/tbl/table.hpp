@@ -280,7 +280,16 @@ private:
       reset_style(stream);
     }
     stream << format.border_right_;
-    std::cout << "\n";
+    
+    if (row_index + 1 < rows_.size()) {
+      stream << "\n";
+    } else {
+      // Last row. Print newline after last content row?
+      // Yes ONLY if there's a padding bottom or border bottom
+      if (format.padding_bottom_ != 0 || format.border_bottom_ != "") {
+        stream << "\n";  
+      }
+    }
   }
 
   void print_content_left_aligned(std::ostream &stream, std::string cell_content,

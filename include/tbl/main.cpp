@@ -107,7 +107,7 @@ int main() {
     table.add_row({"4", "5", "678910"});
     table[0].format().color(Color::green).font_style({FontStyle::bold});
     table[1].format().corner("+").border_top("-").font_align(FontAlign::center);
-    std::cout << table << "\n";
+    std::cout << table << "\n\n";
   }
 
   { // Format overriding
@@ -143,7 +143,6 @@ int main() {
       .color(Color::white)
       .font_style({FontStyle::dark})
       .border("")
-      .border_left(" ")
       .corner("")
       .column_separator("")
       .padding(0);
