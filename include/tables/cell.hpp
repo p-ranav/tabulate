@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <optional>
 #include <tables/format.hpp>
 
 namespace tables {
@@ -18,13 +19,10 @@ public:
     return data_.size();
   }
 
-  Format format() const {
-    return format_;
-  }
-
 private:
+  friend class Row;
   std::string data_;
-  Format format_;
+  std::optional<Format> format_;
 };
 
 }
