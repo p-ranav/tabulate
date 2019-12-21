@@ -98,6 +98,9 @@ private:
       case FontStyle::dark:
 	stream << termcolor::dark;
 	break;
+      case FontStyle::italic:
+	stream << termcolor::italic;
+	break;	
       case FontStyle::underline:
 	stream << termcolor::underline;
 	break;
@@ -110,10 +113,74 @@ private:
       case FontStyle::concealed:
 	stream << termcolor::concealed;
 	break;
+      case FontStyle::crossed:
+	stream << termcolor::crossed;
+	break;	
       default:
 	break;
       }
     }
+
+    auto color = format.color_;
+    if (color.has_value()) {
+      switch (color.value()) {
+      case Color::grey:
+	std::cout << termcolor::grey;
+	break;
+      case Color::red:
+	std::cout << termcolor::red;
+	break;
+      case Color::green:
+	std::cout << termcolor::green;
+	break;
+      case Color::yellow:
+	std::cout << termcolor::yellow;
+	break;
+      case Color::blue:
+	std::cout << termcolor::blue;
+	break;
+      case Color::magenta:
+	std::cout << termcolor::magenta;
+	break;
+      case Color::cyan:
+	std::cout << termcolor::cyan;
+	break;
+      case Color::white:
+	std::cout << termcolor::white;
+	break;
+      }
+    }
+
+    auto background_color = format.background_color_;
+    if (background_color.has_value()) {
+      switch (background_color.value()) {
+      case Color::grey:
+	std::cout << termcolor::on_grey;
+	break;
+      case Color::red:
+	std::cout << termcolor::on_red;
+	break;
+      case Color::green:
+	std::cout << termcolor::on_green;
+	break;
+      case Color::yellow:
+	std::cout << termcolor::on_yellow;
+	break;
+      case Color::blue:
+	std::cout << termcolor::on_blue;
+	break;
+      case Color::magenta:
+	std::cout << termcolor::on_magenta;
+	break;
+      case Color::cyan:
+	std::cout << termcolor::on_cyan;
+	break;
+      case Color::white:
+	std::cout << termcolor::on_white;
+	break;
+      }
+    }    
+    
   }
 
   void reset_style(std::ostream& stream) const {
@@ -160,8 +227,6 @@ private:
       width += format.padding_left_;
       width += format.padding_right_;
 
-      apply_font_style(stream, format);
-
       if (col_index == 0)
 	stream << format.border_left_;
       else
@@ -174,7 +239,6 @@ private:
       }
     }
     stream << format.border_right_;
-    reset_style(stream);
   }
 
   void print_content_row(std::ostream& stream, size_t row_index,
@@ -187,7 +251,6 @@ private:
       auto cell_format = cell.format_;
 
       format = get_format(row_format, cell_format);
-      apply_font_style(stream, format);
       
       auto cell_content = row_contents[i];
 
@@ -200,6 +263,7 @@ private:
 	stream << " ";     
       }
 
+      apply_font_style(stream, format);
       switch(format.font_align_) {
       case FontAlign::left:
 	print_content_left_aligned(stream, cell_content, column_widths[i]);
@@ -211,13 +275,13 @@ private:
 	print_content_right_aligned(stream, cell_content, column_widths[i]);
 	break;
       }
+      reset_style(stream);
       
       for (size_t j = 0; j < format.padding_right_; ++j) {
 	stream << " ";
       }
     }
     stream << format.border_right_;
-    reset_style(stream);
     std::cout << "\n";
   }
 
@@ -269,7 +333,6 @@ private:
     auto width = get_column_width(col_index);
 
     Format format = get_format(row_format, cell_format);
-    apply_font_style(stream, format);
 
     // add padding to width
     width += format.padding_left_;
@@ -285,7 +348,6 @@ private:
     }
 
     stream << format.corners_;
-    reset_style(stream);
   }
 
   void print_cell_footer(std::ostream& stream, size_t row_index, size_t col_index) const {
@@ -296,7 +358,6 @@ private:
     auto width = get_column_width(col_index);
 
     Format format = get_format(row_format, cell_format);
-    apply_font_style(stream, format);
 
     // add padding to width
     width += format.padding_left_;
@@ -312,7 +373,6 @@ private:
     }
 
     stream << format.corners_;
-    reset_style(stream);
   }
 
   Format get_format(std::optional<Format> row_format, std::optional<Format> cell_format) const {
