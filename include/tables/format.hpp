@@ -5,7 +5,7 @@
 namespace tables {
 
 struct Format {
-  std::optional<size_t> width{3};
+  std::optional<size_t> width{};
   std::optional<size_t> height{};
   
   size_t margin_left{1};
