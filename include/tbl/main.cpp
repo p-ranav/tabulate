@@ -150,62 +150,62 @@ int main() {
     // Row 0
     for (size_t i = 7; i < 20; ++i) {
       mario[0][i].format().color(Color::red);
-    }     
+    }
     // Row 1
     for (size_t i = 5; i < 26; ++i) {
       mario[1][i].format().color(Color::red);
-    }     
+    }
     // Row 2
     for (size_t i = 5; i < 13; ++i) {
       mario[2][i].format().color(Color::green).font_style({FontStyle::dark});
-    } 
+    }
     for (size_t i = 13; i < 18; ++i) {
       mario[2][i].format().color(Color::yellow);
-    }     
+    }
     for (size_t i = 18; i < 20; ++i) {
       mario[2][i].format().color(Color::green).font_style({FontStyle::dark});
-    } 
+    }
     for (size_t i = 20; i < 22; ++i) {
       mario[2][i].format().color(Color::yellow);
-    } 
+    }
     // Row 3
     for (size_t i = 3; i < 7; ++i) {
       mario[3][i].format().color(Color::green).font_style({FontStyle::dark});
-    } 
+    }
     for (size_t i = 7; i < 9; ++i) {
       mario[3][i].format().color(Color::yellow);
-    }    
+    }
     for (size_t i = 9; i < 11; ++i) {
       mario[3][i].format().color(Color::green).font_style({FontStyle::dark});
-    }  
+    }
     for (size_t i = 11; i < 18; ++i) {
       mario[3][i].format().color(Color::yellow);
-    } 
+    }
     for (size_t i = 18; i < 20; ++i) {
       mario[3][i].format().color(Color::green).font_style({FontStyle::dark});
-    } 
+    }
     for (size_t i = 20; i < 26; ++i) {
       mario[3][i].format().color(Color::yellow);
-    }  
+    }
     // Row 4
     for (size_t i = 3; i < 7; ++i) {
       mario[4][i].format().color(Color::green).font_style({FontStyle::dark});
-    } 
+    }
     for (size_t i = 7; i < 9; ++i) {
       mario[4][i].format().color(Color::yellow);
-    }    
+    }
     for (size_t i = 9; i < 13; ++i) {
       mario[4][i].format().color(Color::green).font_style({FontStyle::dark});
-    }  
+    }
     for (size_t i = 13; i < 20; ++i) {
       mario[4][i].format().color(Color::yellow);
-    }  
+    }
     for (size_t i = 20; i < 22; ++i) {
       mario[4][i].format().color(Color::green).font_style({FontStyle::dark});
-    }  
+    }
     for (size_t i = 22; i < 28; ++i) {
       mario[4][i].format().color(Color::yellow);
-    }    
+    }
     // Row 5
     for (size_t i = 3; i < 9; ++i) {
       mario[5][i].format().color(Color::green).font_style({FontStyle::dark});

@@ -10,9 +10,7 @@ namespace tbl {
 
 class Cell {
 public:
-  std::string set_text(const std::string& text) { 
-    data_ = text;
-  }
+  std::string set_text(const std::string &text) { data_ = text; }
 
   size_t size() const { return data_.size(); }
 
