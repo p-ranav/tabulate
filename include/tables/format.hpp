@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <string>
 #include <optional>
+#include <tables/color.hpp>
 #include <tables/font_style.hpp>
 #include <tables/font_align.hpp>
 
