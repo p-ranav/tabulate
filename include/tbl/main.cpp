@@ -98,8 +98,8 @@ int main() {
     std::cout << table << "\n\n";
   }
 
-  { // No border
-    std::cout << "No border:\n";
+  { // No border except row 1 top border
+    std::cout << "No border except row 1 top border:\n";
     Table table;
     table.format().column_separator(" ").corner("").border("").padding(0);
     table.add_row({"Title1", "Title2", "Title3"});
@@ -108,6 +108,32 @@ int main() {
     table[0].format().color(Color::green).font_style({FontStyle::bold});
     table[1].format().corner("+").border_top("-").font_align(FontAlign::center);
     std::cout << table << "\n";
+  }
+
+  { // Format overriding
+    std::cout << "Format overriding:\n";
+    Table table;
+    table.add_row({"Title1", "Title2", "Title3"});
+    table.add_row({"1", "2", "3"});
+    table.add_row({"4", "Cell override: 5", "6"});
+    // Table-level formatting rules
+    table.format()
+      .color(Color::white)
+      .font_style({FontStyle::bold});
+    // Special rule for first row
+    table[1].format()
+      .color(Color::yellow)
+      .font_style({FontStyle::italic});
+    table[2].format()
+      .padding(0);
+    // Special rule for last cell on first row
+    table[1][2].format()
+      .color(Color::white)
+      .background_color(Color::yellow);
+    // Special rule for second cell on second row
+    table[2][1].format()
+      .background_color(Color::red);
+    std::cout << table << std::endl;
   }
 
   return 0;
