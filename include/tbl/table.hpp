@@ -12,9 +12,9 @@ public:
   void add_row(const std::vector<std::string> &cells) {
     Row row(format_);
     for (auto &c : cells) {
-      auto cell = Cell(c);
-      cell.inherited_format_ = format_;
-      row.add_cell(cell);
+      auto cell = Cell(format_, row.format_);
+      cell.data_ = c;
+      row.add_cell(std::move(cell));
     }
     rows_.push_back(std::move(row));
   }
