@@ -13,6 +13,10 @@ public:
     cells_.push_back(cell);
   }
 
+  Cell& operator[](size_t index) {
+    return cells_[index];
+  }
+
   std::vector<Cell> cells() const {
     return cells_;
   }
@@ -30,7 +34,7 @@ public:
     size_t result{1};
     for (auto& cell: cells_) {
       auto cell_data = cell.data();
-      auto format_width = cell.format().width;
+      auto format_width = cell.format().width_;
       // If cell contents are wider than the
       // cell format.width, then the height of
       // the row haas to be incremented to

@@ -17,6 +17,14 @@ public:
     rows_.push_back(row);
   }
 
+  Row& operator[](size_t index) {
+    return rows_[index];
+  }
+
+  Format& format() {
+    return format_;
+  }
+
   void print(std::ostream& stream = std::cout) {
     for (size_t i = 0; i < rows_.size(); ++i) {
       auto& row = rows_[i];
@@ -28,7 +36,7 @@ public:
       }
       stream << "\n";
       // Padding top
-      for (size_t k = 0; k < format_.padding_top; ++k) {
+      for (size_t k = 0; k < format_.padding_top_; ++k) {
 	print_padding_row(stream, i);
 	stream << "\n";
       }
@@ -53,14 +61,14 @@ public:
       }
       
       // Padding bottom
-      for (size_t k = 0; k < format_.padding_bottom; ++k) {
+      for (size_t k = 0; k < format_.padding_bottom_; ++k) {
 	print_padding_row(stream, i);
 	stream << "\n";
       }
       // Footer row      
       if (i + 1 == rows_.size()) {
 	for (size_t j = 0; j < cells.size(); ++j) {
-	  print_cell_header(stream, i, j);
+	  print_cell_footer(stream, i, j);
 	}
       }
     }
@@ -75,8 +83,8 @@ private:
       if (index < row.size()) {
 	auto cell = row.get_cell(index);
 	size_t cell_width = cell.has_value() ? cell.value().size() : 0;
-	if (format_.width.has_value()) {
-	  result = format_.width.value();	  
+	if (format_.width_.has_value()) {
+	  result = format_.width_.value();	  
 	} else {
 	  result = std::max(result, cell_width);
 	}
@@ -100,10 +108,10 @@ private:
       auto cell = rows_[row_index].get_cell(col_index);
       
       // add padding to width
-      width += format_.padding_left;
-      width += format_.padding_right;
+      width += format_.padding_left_;
+      width += format_.padding_right_;
       
-      stream << format_.border_left;
+      stream << format_.border_left_;
       
       size_t i = 0;
       while(i < width) {
@@ -111,14 +119,14 @@ private:
 	++i;
       }
     }
-    stream << format_.border_right;
+    stream << format_.border_right_;
   }
 
   void print_content_row(std::ostream& stream, std::vector<std::string> row_contents, std::vector<size_t> column_widths) {
     for (size_t i = 0; i < row_contents.size(); ++i) {
       auto cell_content = row_contents[i];
-      stream << format_.border_left;
-      for (size_t j = 0; j < format_.padding_left; ++j) {
+      stream << format_.border_left_;
+      for (size_t j = 0; j < format_.padding_left_; ++j) {
 	stream << " ";     
       }
       stream << cell_content;
@@ -129,11 +137,11 @@ private:
 	  stream << " ";
 	}
       }
-      for (size_t j = 0; j < format_.padding_right; ++j) {
+      for (size_t j = 0; j < format_.padding_right_; ++j) {
 	stream << " ";
       }
     }
-    stream << format_.border_right;
+    stream << format_.border_right_;
     std::cout << "\n";
   }
 
@@ -149,20 +157,47 @@ private:
     // Print first row of cell
     
     // add padding to width
-    width += format_.padding_left;
-    width += format_.padding_right;
+    width += format_.padding_left_;
+    width += format_.padding_right_;
 
     if (col_index == 0)
-      stream << format_.corner_top_left;
+      stream << format_.corners_;
 
     size_t i = 0;
     while(i < width) {
-      stream << format_.border_top;
+      stream << format_.border_top_;
       ++i;
     }
 
-    stream << format_.corner_top_right;
+    stream << format_.corners_;
   }
+
+  void print_cell_footer(std::ostream& stream, size_t row_index, size_t col_index) {
+    auto width = get_column_width(col_index);
+    auto height = get_row_height(row_index);
+    auto cell = rows_[row_index].get_cell(col_index);
+    std::string cell_contents{""};
+    if (cell.has_value()) {
+      cell_contents = cell.value().data();
+    }
+
+    // Print first row of cell
+    
+    // add padding to width
+    width += format_.padding_left_;
+    width += format_.padding_right_;
+
+    if (col_index == 0)
+      stream << format_.corners_;
+
+    size_t i = 0;
+    while(i < width) {
+      stream << format_.border_bottom_;
+      ++i;
+    }
+
+    stream << format_.corners_;
+  }  
   
   std::vector<Row> rows_;
   Format format_;
