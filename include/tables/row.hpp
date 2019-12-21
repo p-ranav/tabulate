@@ -25,7 +25,7 @@ public:
     return cells_.size();
   }
 
-  std::optional<Cell> get_cell(size_t index) {
+  std::optional<Cell> get_cell(size_t index) const {
     if (index < cells_.size())
       return cells_[index];
   }

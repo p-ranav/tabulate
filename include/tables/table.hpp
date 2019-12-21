@@ -25,7 +25,10 @@ public:
     return format_;
   }
 
-  void print(std::ostream& stream = std::cout) {
+private:
+  friend std::ostream& operator<<(std::ostream &os, const Table& table);
+  
+  void print(std::ostream& stream = std::cout) const {
     for (size_t i = 0; i < rows_.size(); ++i) {
       auto& row = rows_[i];
       auto row_height = get_row_height(i);
@@ -72,12 +75,9 @@ public:
 	}
       }
     }
-    stream << "\n";
-  }
+  }  
 
-private:
-
-  size_t get_column_width(size_t index) {
+  size_t get_column_width(size_t index) const {
     size_t result{0};
     for (auto& row : rows_) {
       if (index < row.size()) {
@@ -93,7 +93,7 @@ private:
     return result;
   }
 
-  size_t get_row_height(size_t index) {
+  size_t get_row_height(size_t index) const {
     size_t result{1};
     if (index < rows_.size()) {
       result = std::max(result, rows_[index].height());
@@ -101,7 +101,7 @@ private:
     return result;
   }
 
-  void print_padding_row(std::ostream& stream, size_t row_index) {
+  void print_padding_row(std::ostream& stream, size_t row_index) const {
     for (size_t col_index = 0; col_index < rows_[row_index].size(); ++col_index) {
       auto width = get_column_width(col_index);
       auto height = get_row_height(row_index);
@@ -122,7 +122,7 @@ private:
     stream << format_.border_right_;
   }
 
-  void print_content_row(std::ostream& stream, std::vector<std::string> row_contents, std::vector<size_t> column_widths) {
+  void print_content_row(std::ostream& stream, std::vector<std::string> row_contents, std::vector<size_t> column_widths) const {
     for (size_t i = 0; i < row_contents.size(); ++i) {
       auto cell_content = row_contents[i];
       stream << format_.border_left_;
@@ -145,7 +145,7 @@ private:
     std::cout << "\n";
   }
 
-  void print_cell_header(std::ostream& stream, size_t row_index, size_t col_index) {
+  void print_cell_header(std::ostream& stream, size_t row_index, size_t col_index) const {
     auto width = get_column_width(col_index);
     auto height = get_row_height(row_index);
     auto cell = rows_[row_index].get_cell(col_index);
@@ -172,7 +172,7 @@ private:
     stream << format_.corners_;
   }
 
-  void print_cell_footer(std::ostream& stream, size_t row_index, size_t col_index) {
+  void print_cell_footer(std::ostream& stream, size_t row_index, size_t col_index) const {
     auto width = get_column_width(col_index);
     auto height = get_row_height(row_index);
     auto cell = rows_[row_index].get_cell(col_index);
@@ -202,5 +202,10 @@ private:
   std::vector<Row> rows_;
   Format format_;
 };
+
+std::ostream& operator<<(std::ostream &os, const Table& table) {
+  table.print(os);
+  return os;
+}  
 
 }
