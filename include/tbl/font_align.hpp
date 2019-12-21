@@ -2,10 +2,5 @@
 
 namespace tbl {
 
-enum class FontAlign {
-  left,
-  right,
-  center
-};
-
+enum class FontAlign { left, right, center };
 }

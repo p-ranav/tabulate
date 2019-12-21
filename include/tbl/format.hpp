@@ -1,115 +1,145 @@
 #include <cstddef>
-#include <string>
 #include <optional>
+#include <string>
+#include <vector>
 #include <tbl/color.hpp>
-#include <tbl/font_style.hpp>
 #include <tbl/font_align.hpp>
+#include <tbl/font_style.hpp>
 
 namespace tbl {
 
 class Format {
 public:
-  Format& width(size_t value) {
+  Format &width(size_t value) {
     width_ = value;
     return *this;
   }
 
-  Format& height(size_t value) {
+  Format &height(size_t value) {
     height_ = value;
     return *this;
   }
 
-  Format& margin_left(size_t value) {
+  Format &margin(size_t value) {
     margin_left_ = value;
-    return *this;
-  }
-
-  Format& margin_right(size_t value) {
     margin_right_ = value;
-    return *this;
-  }
-
-  Format& margin_top(size_t value) {
     margin_top_ = value;
-    return *this;
-  }
-
-  Format& margin_bottom(size_t value) {
     margin_bottom_ = value;
     return *this;
   }
 
-  Format& padding_left(size_t value) {
+  Format &margin_left(size_t value) {
+    margin_left_ = value;
+    return *this;
+  }
+
+  Format &margin_right(size_t value) {
+    margin_right_ = value;
+    return *this;
+  }
+
+  Format &margin_top(size_t value) {
+    margin_top_ = value;
+    return *this;
+  }
+
+  Format &margin_bottom(size_t value) {
+    margin_bottom_ = value;
+    return *this;
+  }
+
+  Format &padding(size_t value) {
     padding_left_ = value;
-    return *this;
-  }
-
-  Format& padding_right(size_t value) {
     padding_right_ = value;
-    return *this;
-  }
-
-  Format& padding_top(size_t value) {
     padding_top_ = value;
-    return *this;
-  }
-
-  Format& padding_bottom(size_t value) {
     padding_bottom_ = value;
     return *this;
   }
 
-  Format& border_left(std::string value) {
+  Format &padding_left(size_t value) {
+    padding_left_ = value;
+    return *this;
+  }
+
+  Format &padding_right(size_t value) {
+    padding_right_ = value;
+    return *this;
+  }
+
+  Format &padding_top(size_t value) {
+    padding_top_ = value;
+    return *this;
+  }
+
+  Format &padding_bottom(size_t value) {
+    padding_bottom_ = value;
+    return *this;
+  }
+
+  Format &border(const std::string &value) {
     border_left_ = value;
-    return *this;
-  }
-
-  Format& border_right(std::string value) {
     border_right_ = value;
-    return *this;
-  }
-
-  Format& border_top(std::string value) {
     border_top_ = value;
-    return *this;
-  }
-
-  Format& border_bottom(std::string value) {
     border_bottom_ = value;
     return *this;
   }
 
-  Format& corners(std::string value) {
-    corners_ = value;
+  Format &border_left(const std::string &value) {
+    border_left_ = value;
     return *this;
   }
 
-  Format& column_separator(std::string value) {
+  Format &border_right(const std::string &value) {
+    border_right_ = value;
+    return *this;
+  }
+
+  Format &border_top(const std::string &value) {
+    border_top_ = value;
+    return *this;
+  }
+
+  Format &border_bottom(const std::string &value) {
+    border_bottom_ = value;
+    return *this;
+  }
+
+  Format &corner(const std::string &value) {
+    corner_ = value;
+    return *this;
+  }
+
+  Format &column_separator(const std::string &value) {
     column_separator_ = value;
     return *this;
   }
 
-  Format& font_align(FontAlign value) {
+  Format &font_align(FontAlign value) {
     font_align_ = value;
     return *this;
   }
 
-  Format& font_style(const std::vector<FontStyle>& style) {
-    for (auto& s : style)
+  Format &font_style(const std::vector<FontStyle> &style) {
+    for (auto &s : style)
       font_style_.push_back(s);
     return *this;
   }
 
-  Format& color(Color value) {
+  Format &color(Color value) {
     color_ = value;
     return *this;
   }
 
-  Format& background_color(Color value) {
+  Format &background_color(Color value) {
     background_color_ = value;
     return *this;
-  }  
-  
+  }
+
+  Format &word_wrap(bool value) {
+    word_wrap_ = value;
+    return *this;
+  }
+
 private:
   friend class Cell;
   friend class Row;
@@ -122,12 +152,12 @@ private:
 
   std::optional<Color> color_;
   std::optional<Color> background_color_;
-  
+
   size_t margin_left_{1};
   size_t margin_top_{1};
   size_t margin_right_{1};
-  size_t margin_bottom_{1}; 
-  
+  size_t margin_bottom_{1};
+
   size_t padding_left_{1};
   size_t padding_top_{1};
   size_t padding_right_{1};
@@ -136,10 +166,12 @@ private:
   std::string border_top_{"-"};
   std::string border_bottom_{"-"};
   std::string border_left_{"|"};
-  std::string border_right_{"|"};  
+  std::string border_right_{"|"};
 
-  std::string corners_{"+"};
+  std::string corner_{"+"};
   std::string column_separator_{"|"};
+
+  bool word_wrap_{false};
 };
-  
-};
+
+}; // namespace tbl
