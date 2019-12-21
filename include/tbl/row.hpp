@@ -26,7 +26,7 @@ public:
   size_t height() const {
     size_t result{1};
     for (auto &cell : cells_) {
-      auto cell_data = cell.data();
+      auto cell_data = cell.data_;
       if (cell.format_.has_value()) {
         auto format_width = cell.format_.value().width_;
         // If cell contents are wider than the

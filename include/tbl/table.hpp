@@ -54,7 +54,7 @@ private:
         std::vector<size_t> column_widths;
         for (size_t l = 0; l < cells.size(); ++l) {
           auto column_width = get_column_width(l);
-          auto cell_contents = cells[l].data();
+          auto cell_contents = cells[l].data_;
           auto pos = k * column_width;
           auto size = cell_contents.size();
           if (pos < size) {
