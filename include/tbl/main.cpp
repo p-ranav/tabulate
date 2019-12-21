@@ -106,7 +106,7 @@ int main() {
     table.add_row({"123", "", "3"});
     table.add_row({"4", "5", "678910"});
     table[0].format().color(Color::green).font_style({FontStyle::bold});
-    table[1].format().font_align(FontAlign::center);
+    table[1].format().corner("+").border_top("-").font_align(FontAlign::center);
     std::cout << table << "\n";
   }
 
