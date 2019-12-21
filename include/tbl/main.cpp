@@ -140,6 +140,7 @@ int main() {
     std::cout << "Mario:\n";
     Table mario;
     mario.format()
+      .color(Color::white)
       .font_style({FontStyle::dark})
       .border("")
       .corner("")
@@ -154,13 +155,45 @@ int main() {
       }
       mario.add_row(row);
     }
+    // Row 5
+    for (size_t i = 1; i < 9; ++i) {
+      mario[5][i].format().color(Color::yellow);      
+    }     
+    for (size_t i = 9; i < 20; ++i) {
+      mario[5][i].format().color(Color::red);      
+    } 
+    for (size_t i = 20; i < 26; ++i) {
+      mario[5][i].format().color(Color::yellow);      
+    } 
+    // Row 6
+    for (size_t i = 1; i < 7; ++i) {
+      mario[6][i].format().color(Color::yellow);      
+    } 
+    for (size_t i = 22; i < 26; ++i) {
+      mario[6][i].format().color(Color::yellow);      
+    } 
+    for (size_t i = 7; i < 22; ++i) {
+      mario[6][i].format().color(Color::red);      
+    }    
+    // Row 7
     for (size_t i = 5; i < 12; ++i) {
       mario[7][i].format().color(Color::red);      
     }
+    for (size_t i = 15; i < 22; ++i) {
+      mario[7][i].format().color(Color::red);      
+    }
+    // Row 8
     for (size_t i = 3; i < 10; ++i) {
       mario[8][i].format().color(Color::grey);      
     }
+    for (size_t i = 17; i < 24; ++i) {
+      mario[8][i].format().color(Color::grey);      
+    }
+    // Row 9
     for (size_t i = 1; i < 10; ++i) {
+      mario[9][i].format().color(Color::grey);      
+    }
+    for (size_t i = 17; i < 26; ++i) {
       mario[9][i].format().color(Color::grey);      
     }
     std::cout << mario;
