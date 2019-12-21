@@ -143,58 +143,97 @@ int main() {
       .color(Color::white)
       .font_style({FontStyle::dark})
       .border("")
+      .border_left(" ")
       .corner("")
       .column_separator("")
       .padding(0);
-    auto rows = 10;
+    auto rows = 16;
     for (size_t i = 0; i < rows; ++i) {
       std::vector<std::string> row;
-      auto cols = 80;
+      auto cols = 30;
       for (size_t j = 0; j < cols; ++j) {
         row.push_back("█");
       }
       mario.add_row(row);
     }
-    // Row 5
+    // Row 9
+    for (size_t i = 1; i < 11; ++i) {
+      mario[9][i].format().color(Color::green);      
+    } 
+    for (size_t i = 11; i < 18; ++i) {
+      mario[9][i].format().color(Color::red);      
+    }      
+    for (size_t i = 18; i < 26; ++i) {
+      mario[9][i].format().color(Color::green);      
+    }      
+    // Row 10
+    for (size_t i = 1; i < 7; ++i) {
+      mario[10][i].format().color(Color::yellow);      
+    }  
+    for (size_t i = 7; i < 9; ++i) {
+      mario[10][i].format().color(Color::green);      
+    }     
+    for (size_t i = 9; i < 11; ++i) {
+      mario[10][i].format().color(Color::red);      
+    }     
+    for (size_t i = 11; i < 13; ++i) {
+      mario[10][i].format().color(Color::yellow);      
+    } 
+    for (size_t i = 13; i < 16; ++i) {
+      mario[10][i].format().color(Color::red);      
+    }     
+    for (size_t i = 16; i < 18; ++i) {
+      mario[10][i].format().color(Color::yellow);      
+    } 
+    for (size_t i = 18; i < 20; ++i) {
+      mario[10][i].format().color(Color::red);      
+    } 
+    for (size_t i = 20; i < 22; ++i) {
+      mario[10][i].format().color(Color::green);      
+    }     
+    for (size_t i = 22; i < 26; ++i) {
+      mario[10][i].format().color(Color::yellow);      
+    }     
+    // Row 11
     for (size_t i = 1; i < 9; ++i) {
-      mario[5][i].format().color(Color::yellow);      
+      mario[11][i].format().color(Color::yellow);      
     }     
     for (size_t i = 9; i < 20; ++i) {
-      mario[5][i].format().color(Color::red);      
+      mario[11][i].format().color(Color::red);      
     } 
     for (size_t i = 20; i < 26; ++i) {
-      mario[5][i].format().color(Color::yellow);      
+      mario[11][i].format().color(Color::yellow);      
     } 
-    // Row 6
+    // Row 12
     for (size_t i = 1; i < 7; ++i) {
-      mario[6][i].format().color(Color::yellow);      
+      mario[12][i].format().color(Color::yellow);      
     } 
     for (size_t i = 22; i < 26; ++i) {
-      mario[6][i].format().color(Color::yellow);      
+      mario[12][i].format().color(Color::yellow);      
     } 
     for (size_t i = 7; i < 22; ++i) {
-      mario[6][i].format().color(Color::red);      
+      mario[12][i].format().color(Color::red);      
     }    
-    // Row 7
+    // Row 13
     for (size_t i = 5; i < 12; ++i) {
-      mario[7][i].format().color(Color::red);      
+      mario[13][i].format().color(Color::red);      
     }
     for (size_t i = 15; i < 22; ++i) {
-      mario[7][i].format().color(Color::red);      
+      mario[13][i].format().color(Color::red);      
     }
-    // Row 8
+    // Row 14
     for (size_t i = 3; i < 10; ++i) {
-      mario[8][i].format().color(Color::grey);      
+      mario[14][i].format().color(Color::grey);      
     }
     for (size_t i = 17; i < 24; ++i) {
-      mario[8][i].format().color(Color::grey);      
+      mario[14][i].format().color(Color::grey);      
     }
-    // Row 9
+    // Row 15
     for (size_t i = 1; i < 10; ++i) {
-      mario[9][i].format().color(Color::grey);      
+      mario[15][i].format().color(Color::grey);      
     }
     for (size_t i = 17; i < 26; ++i) {
-      mario[9][i].format().color(Color::grey);      
+      mario[15][i].format().color(Color::grey);      
     }
     std::cout << mario;
   }
