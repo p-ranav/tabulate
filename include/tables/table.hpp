@@ -143,9 +143,7 @@ private:
   void print_padding_row(std::ostream& stream, size_t row_index) const {
     for (size_t col_index = 0; col_index < rows_[row_index].size(); ++col_index) {
       auto width = get_column_width(col_index);
-      auto height = get_row_height(row_index);
-      auto cell = rows_[row_index].get_cell(col_index);
-      
+
       // add padding to width
       width += format_.padding_left_;
       width += format_.padding_right_;
@@ -176,14 +174,19 @@ private:
       for (size_t j = 0; j < format_.padding_left_; ++j) {
 	stream << " ";     
       }
-      stream << cell_content;
-      auto content_width = cell_content.size();
-      auto column_width = column_widths[i];
-      if (content_width < column_width) {
-	for (size_t j = 0; j < (column_width - content_width); ++j) {
-	  stream << " ";
-	}
+
+      switch(format_.font_align_) {
+      case FontAlign::left:
+	print_content_left_aligned(stream, cell_content, column_widths[i]);
+	break;
+      case FontAlign::center:
+	print_content_center_aligned(stream, cell_content, column_widths[i]);
+	break;	
+      case FontAlign::right:
+	print_content_right_aligned(stream, cell_content, column_widths[i]);
+	break;
       }
+      
       for (size_t j = 0; j < format_.padding_right_; ++j) {
 	stream << " ";
       }
@@ -192,14 +195,48 @@ private:
     std::cout << "\n";
   }
 
+  void print_content_left_aligned(std::ostream& stream, std::string cell_content, size_t column_width) const {
+    stream << cell_content;
+    auto content_width = cell_content.size();
+    if (content_width < column_width) {
+      for (size_t j = 0; j < (column_width - content_width); ++j) {
+	stream << " ";
+      }
+    }
+  }
+
+  void print_content_center_aligned(std::ostream& stream, std::string cell_content, size_t column_width) const {
+    auto content_width = cell_content.size();
+    auto num_spaces = column_width - content_width;
+    if (num_spaces % 2 == 0) {
+      // Even spacing on either side
+      for (size_t j = 0; j < num_spaces / 2; ++j)
+	stream << " ";
+      stream << cell_content;
+      for (size_t j = 0; j < num_spaces / 2; ++j)
+	stream << " ";
+    } else {
+      auto num_spaces_before = num_spaces / 2 + 1;
+      for (size_t j = 0; j < num_spaces_before; ++j)
+	stream << " ";
+      stream << cell_content;
+      for (size_t j = 0; j < num_spaces - num_spaces_before; ++j)
+	stream << " ";            
+    }
+  }  
+
+  void print_content_right_aligned(std::ostream& stream, std::string cell_content, size_t column_width) const {
+    auto content_width = cell_content.size();
+    if (content_width < column_width) {
+      for (size_t j = 0; j < (column_width - content_width); ++j) {
+	stream << " ";
+      }
+    }    
+    stream << cell_content;
+  }
+
   void print_cell_header(std::ostream& stream, size_t row_index, size_t col_index) const {
     auto width = get_column_width(col_index);
-    auto height = get_row_height(row_index);
-    auto cell = rows_[row_index].get_cell(col_index);
-    std::string cell_contents{""};
-    if (cell.has_value()) {
-      cell_contents = cell.value().data();
-    }
 
     // Print first row of cell
     
@@ -221,12 +258,6 @@ private:
 
   void print_cell_footer(std::ostream& stream, size_t row_index, size_t col_index) const {
     auto width = get_column_width(col_index);
-    auto height = get_row_height(row_index);
-    auto cell = rows_[row_index].get_cell(col_index);
-    std::string cell_contents{""};
-    if (cell.has_value()) {
-      cell_contents = cell.value().data();
-    }
 
     // Print first row of cell
     

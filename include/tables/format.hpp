@@ -2,6 +2,7 @@
 #include <string>
 #include <optional>
 #include <tables/font_style.hpp>
+#include <tables/font_align.hpp>
 
 namespace tables {
 
@@ -87,6 +88,11 @@ public:
     return *this;
   }
 
+  Format& font_align(FontAlign value) {
+    font_align_ = value;
+    return *this;
+  }
+
   Format& font_style(const std::vector<FontStyle>& style) {
     font_style_ = style;
     return *this;
@@ -99,6 +105,7 @@ private:
   std::optional<size_t> width_{};
   std::optional<size_t> height_{};
 
+  FontAlign font_align_{FontAlign::left};
   std::vector<FontStyle> font_style_{};
   
   size_t margin_left_{1};
