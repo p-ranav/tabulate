@@ -56,6 +56,11 @@ public:
     }
     return result;
   }
+
+  Format& format() {
+    format_ = Format();
+    return format_.value();
+  }
   
 private:
   friend class Table;

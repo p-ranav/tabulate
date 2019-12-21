@@ -19,6 +19,11 @@ public:
     return data_.size();
   }
 
+  Format& format() {
+    format_ = Format();
+    return format_.value();
+  }  
+
 private:
   friend class Row;
   friend class Table;
