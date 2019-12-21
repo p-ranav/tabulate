@@ -29,23 +29,26 @@ public:
 private:
   friend std::ostream& operator<<(std::ostream &os, const Table& table);
   
-  void print(std::ostream& stream = std::cout) const {
-    apply_font_style(stream);
-    
+  void print(std::ostream& stream = std::cout) const {    
     for (size_t i = 0; i < rows_.size(); ++i) {
       auto& row = rows_[i];
+      auto row_format = row.format_;
       auto row_height = get_row_height(i);
       const auto& cells = row.cells();
+      
       // Header row
       for (size_t j = 0; j < cells.size(); ++j) {
 	print_cell_header(stream, i, j);
       }
       stream << "\n";
+
       // Padding top
-      for (size_t k = 0; k < format_.padding_top_; ++k) {
+      Format format = get_format(row_format, {});
+      for (size_t k = 0; k < format.padding_top_; ++k) {
 	print_padding_row(stream, i);
 	stream << "\n";
       }
+
       // Row contents
       for (size_t k = 0; k < row_height; ++k) {
 	std::vector<std::string> sub_row_contents;
@@ -66,14 +69,15 @@ private:
 	  }
 	  column_widths.push_back(column_width);
 	}
-	print_content_row(stream, sub_row_contents, column_widths);
+	print_content_row(stream, i, sub_row_contents, column_widths);
       }
       
       // Padding bottom
-      for (size_t k = 0; k < format_.padding_bottom_; ++k) {
+      for (size_t k = 0; k < format.padding_bottom_; ++k) {
 	print_padding_row(stream, i);
 	stream << "\n";
       }
+
       // Footer row      
       if (i + 1 == rows_.size()) {
 	for (size_t j = 0; j < cells.size(); ++j) {
@@ -81,11 +85,11 @@ private:
 	}
       }
     }
-    reset_style(stream);
   }
 
-  void apply_font_style(std::ostream& stream) const {
-    auto font_style = format_.font_style_;
+  void apply_font_style(std::ostream& stream, Format format) const {
+    reset_style(stream);
+    auto font_style = format.font_style_;
     for (auto& style : font_style) {
       switch(style) {
       case FontStyle::bold:
@@ -141,17 +145,27 @@ private:
   }
 
   void print_padding_row(std::ostream& stream, size_t row_index) const {
-    for (size_t col_index = 0; col_index < rows_[row_index].size(); ++col_index) {
+    Format format;
+    auto row = rows_[row_index];
+    auto row_format = row.format_;
+    for (size_t col_index = 0; col_index < row.size(); ++col_index) {
+      auto cell = row[col_index];
+      auto cell_format = cell.format_;
+
+      format = get_format(row_format, cell_format);
+      
       auto width = get_column_width(col_index);
 
       // add padding to width
-      width += format_.padding_left_;
-      width += format_.padding_right_;
+      width += format.padding_left_;
+      width += format.padding_right_;
+
+      apply_font_style(stream, format);
 
       if (col_index == 0)
-	stream << format_.border_left_;
+	stream << format.border_left_;
       else
-	stream << format_.column_separator_;
+	stream << format.column_separator_;
       
       size_t i = 0;
       while(i < width) {
@@ -159,23 +173,34 @@ private:
 	++i;
       }
     }
-    stream << format_.border_right_;
+    stream << format.border_right_;
+    reset_style(stream);
   }
 
-  void print_content_row(std::ostream& stream, std::vector<std::string> row_contents, std::vector<size_t> column_widths) const {
+  void print_content_row(std::ostream& stream, size_t row_index,
+			 std::vector<std::string> row_contents, std::vector<size_t> column_widths) const {
+    Format format;
+    auto row = rows_[row_index];
+    auto row_format = row.format_;
     for (size_t i = 0; i < row_contents.size(); ++i) {
+      auto cell = row[i];
+      auto cell_format = cell.format_;
+
+      format = get_format(row_format, cell_format);
+      apply_font_style(stream, format);
+      
       auto cell_content = row_contents[i];
 
       if (i == 0)
-	stream << format_.border_left_;
+	stream << format.border_left_;
       else
-	stream << format_.column_separator_;      
+	stream << format.column_separator_;      
 
-      for (size_t j = 0; j < format_.padding_left_; ++j) {
+      for (size_t j = 0; j < format.padding_left_; ++j) {
 	stream << " ";     
       }
 
-      switch(format_.font_align_) {
+      switch(format.font_align_) {
       case FontAlign::left:
 	print_content_left_aligned(stream, cell_content, column_widths[i]);
 	break;
@@ -187,11 +212,12 @@ private:
 	break;
       }
       
-      for (size_t j = 0; j < format_.padding_right_; ++j) {
+      for (size_t j = 0; j < format.padding_right_; ++j) {
 	stream << " ";
       }
     }
-    stream << format_.border_right_;
+    stream << format.border_right_;
+    reset_style(stream);
     std::cout << "\n";
   }
 
@@ -236,46 +262,78 @@ private:
   }
 
   void print_cell_header(std::ostream& stream, size_t row_index, size_t col_index) const {
+    auto row = rows_[row_index];
+    auto row_format = row.format_;
+    auto cell_format = row[col_index].format_;
+
     auto width = get_column_width(col_index);
 
-    // Print first row of cell
-    
+    Format format = get_format(row_format, cell_format);
+    apply_font_style(stream, format);
+
     // add padding to width
-    width += format_.padding_left_;
-    width += format_.padding_right_;
+    width += format.padding_left_;
+    width += format.padding_right_;
 
     if (col_index == 0)
-      stream << format_.corners_;
+      stream << format.corners_;
 
     size_t i = 0;
     while(i < width) {
-      stream << format_.border_top_;
+      stream << format.border_top_;
       ++i;
     }
 
-    stream << format_.corners_;
+    stream << format.corners_;
+    reset_style(stream);
   }
 
   void print_cell_footer(std::ostream& stream, size_t row_index, size_t col_index) const {
+    auto row = rows_[row_index];
+    auto row_format = row.format_;
+    auto cell_format = row[col_index].format_;
+
     auto width = get_column_width(col_index);
 
-    // Print first row of cell
-    
+    Format format = get_format(row_format, cell_format);
+    apply_font_style(stream, format);
+
     // add padding to width
-    width += format_.padding_left_;
-    width += format_.padding_right_;
+    width += format.padding_left_;
+    width += format.padding_right_;
 
     if (col_index == 0)
-      stream << format_.corners_;
+      stream << format.corners_;
 
     size_t i = 0;
     while(i < width) {
-      stream << format_.border_bottom_;
+      stream << format.border_bottom_;
       ++i;
     }
 
-    stream << format_.corners_;
-  }  
+    stream << format.corners_;
+    reset_style(stream);
+  }
+
+  Format get_format(std::optional<Format> row_format, std::optional<Format> cell_format) const {
+    Format result;
+    // Check for cell-level formatting override
+    // This format takes preference
+    if (cell_format.has_value()) {
+      result = cell_format.value();
+    }
+    // No cell formatting override
+    // Check for row-level formatting
+    else if (row_format.has_value()) {
+      result = row_format.value();
+    }
+    // No cell or row formatting overrides
+    // Use table-level formatting
+    else {
+      result = format_;
+    }
+    return result;
+  }
   
   std::vector<Row> rows_;
   Format format_;

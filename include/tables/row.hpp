@@ -58,6 +58,7 @@ public:
   }
   
 private:
+  friend class Table;
   std::vector<Cell> cells_;
   std::optional<Format> format_;
 };

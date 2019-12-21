@@ -21,6 +21,7 @@ public:
 
 private:
   friend class Row;
+  friend class Table;
   std::string data_;
   std::optional<Format> format_;
 };
