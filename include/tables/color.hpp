@@ -2,5 +2,7 @@
 #include <tables/termcolor.hpp>
 
 namespace tables {
-enum class Color { GREY, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE };
+
+enum class Color { grey, red, green, yellow, blue, magenta, cyan, white };
+
 }
