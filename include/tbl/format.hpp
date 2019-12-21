@@ -1,11 +1,11 @@
 #include <cstddef>
 #include <string>
 #include <optional>
-#include <tables/color.hpp>
-#include <tables/font_style.hpp>
-#include <tables/font_align.hpp>
+#include <tbl/color.hpp>
+#include <tbl/font_style.hpp>
+#include <tbl/font_align.hpp>
 
-namespace tables {
+namespace tbl {
 
 class Format {
 public:

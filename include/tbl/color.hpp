@@ -1,7 +1,7 @@
 #pragma once
-#include <tables/termcolor.hpp>
+#include <tbl/termcolor.hpp>
 
-namespace tables {
+namespace tbl {
 
 enum class Color { grey, red, green, yellow, blue, magenta, cyan, white };
 

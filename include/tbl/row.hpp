@@ -2,10 +2,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <tables/cell.hpp>
+#include <tbl/cell.hpp>
 #include <optional>
 
-namespace tables {
+namespace tbl {
 
 class Row {
 public:

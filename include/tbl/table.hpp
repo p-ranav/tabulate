@@ -1,11 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <tables/row.hpp>
-#include <tables/termcolor.hpp>
-#include <tables/font_style.hpp>
+#include <tbl/row.hpp>
+#include <tbl/termcolor.hpp>
+#include <tbl/font_style.hpp>
 
-namespace tables {
+namespace tbl {
 
 class Table {
 public:

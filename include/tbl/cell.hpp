@@ -3,9 +3,9 @@
 #include <vector>
 #include <string>
 #include <optional>
-#include <tables/format.hpp>
+#include <tbl/format.hpp>
 
-namespace tables {
+namespace tbl {
 
 class Cell {
 public:
