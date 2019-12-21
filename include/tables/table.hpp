@@ -231,12 +231,15 @@ private:
 	stream << format.border_left_;
       else
 	stream << format.column_separator_;
+
+      apply_font_style(stream, format);      
       
       size_t i = 0;
       while(i < width) {
 	stream << " ";
 	++i;
       }
+      reset_style(stream);
     }
     stream << format.border_right_;
   }
@@ -259,11 +262,11 @@ private:
       else
 	stream << format.column_separator_;      
 
+      apply_font_style(stream, format);
       for (size_t j = 0; j < format.padding_left_; ++j) {
 	stream << " ";     
       }
 
-      apply_font_style(stream, format);
       switch(format.font_align_) {
       case FontAlign::left:
 	print_content_left_aligned(stream, cell_content, column_widths[i]);
@@ -275,11 +278,11 @@ private:
 	print_content_right_aligned(stream, cell_content, column_widths[i]);
 	break;
       }
-      reset_style(stream);
       
       for (size_t j = 0; j < format.padding_right_; ++j) {
 	stream << " ";
       }
+      reset_style(stream);      
     }
     stream << format.border_right_;
     std::cout << "\n";
