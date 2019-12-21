@@ -97,6 +97,16 @@ public:
     font_style_ = style;
     return *this;
   }
+
+  Format& color(Color value) {
+    color_ = value;
+    return *this;
+  }
+
+  Format& background_color(Color value) {
+    background_color_ = value;
+    return *this;
+  }  
   
 private:
   friend class Cell;
@@ -107,6 +117,9 @@ private:
 
   FontAlign font_align_{FontAlign::left};
   std::vector<FontStyle> font_style_{};
+
+  std::optional<Color> color_;
+  std::optional<Color> background_color_;
   
   size_t margin_left_{1};
   size_t margin_top_{1};
