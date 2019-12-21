@@ -99,6 +99,7 @@ public:
     return *this;
   }
 
+
   Format &border_bottom(const std::string &value) {
     border_bottom_ = value;
     return *this;
