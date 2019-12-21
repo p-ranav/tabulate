@@ -84,10 +84,25 @@ private:
     }
   }
 
-  void apply_font_style(std::ostream &stream, Format format) const {
+  void apply_element_style(std::ostream &stream, Format format) const {
     reset_style(stream);
     auto font_style = format.font_style_;
     for (auto &style : font_style) {
+      apply_font_style(stream, style);
+    }
+
+    auto color = format.color_;
+    if (color.has_value()) {
+      apply_color(stream, color.value());
+    }
+
+    auto background_color = format.background_color_;
+    if (background_color.has_value()) {
+      apply_background_color(stream, background_color.value());
+    }
+  }
+
+  void apply_font_style(std::ostream& stream, FontStyle style) const {
       switch (style) {
       case FontStyle::bold:
         stream << termcolor::bold;
@@ -116,68 +131,65 @@ private:
       default:
         break;
       }
-    }
-
-    auto color = format.color_;
-    if (color.has_value()) {
-      switch (color.value()) {
-      case Color::grey:
-        std::cout << termcolor::grey;
-        break;
-      case Color::red:
-        std::cout << termcolor::red;
-        break;
-      case Color::green:
-        std::cout << termcolor::green;
-        break;
-      case Color::yellow:
-        std::cout << termcolor::yellow;
-        break;
-      case Color::blue:
-        std::cout << termcolor::blue;
-        break;
-      case Color::magenta:
-        std::cout << termcolor::magenta;
-        break;
-      case Color::cyan:
-        std::cout << termcolor::cyan;
-        break;
-      case Color::white:
-        std::cout << termcolor::white;
-        break;
-      }
-    }
-
-    auto background_color = format.background_color_;
-    if (background_color.has_value()) {
-      switch (background_color.value()) {
-      case Color::grey:
-        std::cout << termcolor::on_grey;
-        break;
-      case Color::red:
-        std::cout << termcolor::on_red;
-        break;
-      case Color::green:
-        std::cout << termcolor::on_green;
-        break;
-      case Color::yellow:
-        std::cout << termcolor::on_yellow;
-        break;
-      case Color::blue:
-        std::cout << termcolor::on_blue;
-        break;
-      case Color::magenta:
-        std::cout << termcolor::on_magenta;
-        break;
-      case Color::cyan:
-        std::cout << termcolor::on_cyan;
-        break;
-      case Color::white:
-        std::cout << termcolor::on_white;
-        break;
-      }
-    }
   }
+
+  void apply_color(std::ostream& stream, Color color) const {
+      switch (color) {
+      case Color::grey:
+        stream << termcolor::grey;
+        break;
+      case Color::red:
+        stream << termcolor::red;
+        break;
+      case Color::green:
+        stream << termcolor::green;
+        break;
+      case Color::yellow:
+        stream << termcolor::yellow;
+        break;
+      case Color::blue:
+        stream << termcolor::blue;
+        break;
+      case Color::magenta:
+        stream << termcolor::magenta;
+        break;
+      case Color::cyan:
+        stream << termcolor::cyan;
+        break;
+      case Color::white:
+        stream << termcolor::white;
+        break;
+      }
+  }
+
+  void apply_background_color(std::ostream& stream, Color background_color) const {
+      switch (background_color) {
+      case Color::grey:
+        stream << termcolor::on_grey;
+        break;
+      case Color::red:
+        stream << termcolor::on_red;
+        break;
+      case Color::green:
+        stream << termcolor::on_green;
+        break;
+      case Color::yellow:
+        stream << termcolor::on_yellow;
+        break;
+      case Color::blue:
+        stream << termcolor::on_blue;
+        break;
+      case Color::magenta:
+        stream << termcolor::on_magenta;
+        break;
+      case Color::cyan:
+        stream << termcolor::on_cyan;
+        break;
+      case Color::white:
+        stream << termcolor::on_white;
+        break;
+      }
+  }  
 
   void reset_style(std::ostream &stream) const { stream << termcolor::reset; }
 
@@ -226,7 +238,7 @@ private:
       else
         stream << format.column_separator_;
 
-      apply_font_style(stream, format);
+      apply_element_style(stream, format);
 
       size_t i = 0;
       while (i < width) {
@@ -257,7 +269,7 @@ private:
       else
         stream << format.column_separator_;
 
-      apply_font_style(stream, format);
+      apply_element_style(stream, format);
       for (size_t j = 0; j < format.padding_left_; ++j) {
         stream << " ";
       }
