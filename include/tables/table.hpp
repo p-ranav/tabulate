@@ -149,8 +149,11 @@ private:
       // add padding to width
       width += format_.padding_left_;
       width += format_.padding_right_;
-      
-      stream << format_.border_left_;
+
+      if (col_index == 0)
+	stream << format_.border_left_;
+      else
+	stream << format_.column_separator_;
       
       size_t i = 0;
       while(i < width) {
@@ -164,7 +167,12 @@ private:
   void print_content_row(std::ostream& stream, std::vector<std::string> row_contents, std::vector<size_t> column_widths) const {
     for (size_t i = 0; i < row_contents.size(); ++i) {
       auto cell_content = row_contents[i];
-      stream << format_.border_left_;
+
+      if (i == 0)
+	stream << format_.border_left_;
+      else
+	stream << format_.column_separator_;      
+
       for (size_t j = 0; j < format_.padding_left_; ++j) {
 	stream << " ";     
       }
