@@ -20,7 +20,8 @@ public:
   }
 
   Format& format() {
-    format_ = Format();
+    if (!format_.has_value())
+      format_ = inherited_format_;    
     return format_.value();
   }  
 
@@ -28,6 +29,7 @@ private:
   friend class Row;
   friend class Table;
   std::string data_;
+  Format inherited_format_;
   std::optional<Format> format_;
 };
 
