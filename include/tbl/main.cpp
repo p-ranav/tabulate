@@ -133,8 +133,37 @@ int main() {
     // Special rule for second cell on second row
     table[2][1].format()
       .background_color(Color::red);
-    std::cout << table << std::endl;
+    std::cout << table << "\n" << std::endl;
   }
 
+  { // Mario
+    std::cout << "Mario:\n";
+    Table mario;
+    mario.format()
+      .font_style({FontStyle::dark})
+      .border("")
+      .corner("")
+      .column_separator("")
+      .padding(0);
+    auto rows = 10;
+    for (size_t i = 0; i < rows; ++i) {
+      std::vector<std::string> row;
+      auto cols = 80;
+      for (size_t j = 0; j < cols; ++j) {
+        row.push_back("█");
+      }
+      mario.add_row(row);
+    }
+    for (size_t i = 5; i < 12; ++i) {
+      mario[7][i].format().color(Color::red);      
+    }
+    for (size_t i = 3; i < 10; ++i) {
+      mario[8][i].format().color(Color::grey);      
+    }
+    for (size_t i = 1; i < 10; ++i) {
+      mario[9][i].format().color(Color::grey);      
+    }
+    std::cout << mario;
+  }
   return 0;
 }
