@@ -30,7 +30,8 @@ public:
     size_t result{1};
     for (auto& cell: cells_) {
       auto cell_data = cell.data();
-      auto cell_width = cell.format().width;
+      auto format_width = cell.format().width;
+      auto cell_width = format_width.has_value() ? format_width.value() : 1;
       // If cell contents are wider than the
       // cell format.width, then the height of
       // the row haas to be incremented to
@@ -42,7 +43,7 @@ public:
       // -D
       // So, the returned height = 2
       if (cell_data.size() > cell_width) {
-	result = std::max(result, cell_data.size() % cell_width);
+	result = std::max(result, cell_data.size() / cell_width);
       }
     }
     return result;

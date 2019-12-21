@@ -1,11 +1,12 @@
 #include <cstddef>
 #include <string>
+#include <optional>
 
 namespace tables {
 
 struct Format {
-  size_t width{0};
-  size_t height{0};
+  std::optional<size_t> width{3};
+  std::optional<size_t> height{};
   
   size_t margin_left{1};
   size_t margin_top{1};
