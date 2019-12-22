@@ -13,11 +13,8 @@ int main() {
 
   // Format the header
   employees[0].format()
-    .color(Color::white)
-    .background_color(Color::blue)
-    .font_style({FontStyle::bold})
-    .padding_top(0)
-    .padding_bottom(0);
+    .font_color(Color::white)
+    .font_style({FontStyle::bold});
 
   // Print the table
   std::cout << employees << std::endl;
