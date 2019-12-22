@@ -13,7 +13,7 @@ int main() {
 
   // Format the header
   employees[0].format()
-    .font_color(Color::white)
+    .font_color(Color::yellow)
     .font_style({FontStyle::bold});
 
   // Print the table
