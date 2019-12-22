@@ -201,13 +201,27 @@ public:
     return *this;
   }
 
+  Format &font_color(Color value) {
+    font_color_ = value;
+    return *this;
+  }
+
+  Format &font_background_color(Color value) {
+    font_background_color_ = value;
+    return *this;
+  }
+
   Format &color(Color value) {
-    color_ = value;
+    font_color(value);
+    border_color(value);
+    corner_color(value);
     return *this;
   }
 
   Format &background_color(Color value) {
-    background_color_ = value;
+    font_background_color(value);
+    border_background_color(value);
+    corner_background_color(value);
     return *this;
   }
 
@@ -226,8 +240,8 @@ private:
   FontAlign font_align_{FontAlign::left};
   std::vector<FontStyle> font_style_{};
 
-  std::optional<Color> color_;
-  std::optional<Color> background_color_;
+  std::optional<Color> font_color_;
+  std::optional<Color> font_background_color_;
 
   size_t margin_left_{1};
   size_t margin_top_{1};

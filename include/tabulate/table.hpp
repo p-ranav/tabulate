@@ -91,12 +91,12 @@ private:
       apply_font_style(stream, style);
     }
 
-    auto color = format.color_;
+    auto color = format.font_color_;
     if (color.has_value()) {
       apply_color(stream, color.value());
     }
 
-    auto background_color = format.background_color_;
+    auto background_color = format.font_background_color_;
     if (background_color.has_value()) {
       apply_background_color(stream, background_color.value());
     }
@@ -475,7 +475,14 @@ private:
     if (format.border_bottom_ != "") {
       size_t i = 0;
       while (i < width) {
+	if (format.border_bottom_color_.has_value()) {
+	  apply_color(stream, format.border_bottom_color_.value());
+	}
+	if (format.border_bottom_background_color_.has_value()) {
+	  apply_background_color(stream, format.border_bottom_background_color_.value());
+	}	
         stream << format.border_bottom_;
+	reset_style(stream);
         ++i;
       }
     }

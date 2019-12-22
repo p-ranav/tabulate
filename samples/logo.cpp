@@ -12,8 +12,7 @@ int main() {
   logo.format()
     .font_style({FontStyle::bold})
     .font_align(FontAlign::center)
-    .color(Color::white)
-    .border_color(Color::yellow);
+    .font_color(Color::yellow);
 
   // Print the table
   std::cout << logo << std::endl;
