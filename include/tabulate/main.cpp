@@ -120,7 +120,6 @@ int main() {
     table.format().color(Color::white).font_style({FontStyle::bold});
     // Special rule for first row
     table[1].format().color(Color::yellow).font_style({FontStyle::italic});
-    table[2].format().padding(0);
     // Special rule for last cell on first row
     table[1][2].format().color(Color::white).background_color(Color::yellow);
     // Special rule for second cell on second row

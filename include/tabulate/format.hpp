@@ -235,9 +235,9 @@ private:
   size_t margin_bottom_{1};
 
   size_t padding_left_{1};
-  size_t padding_top_{1};
+  size_t padding_top_{0};
   size_t padding_right_{1};
-  size_t padding_bottom_{1};
+  size_t padding_bottom_{0};
 
   std::string border_top_{"-"};
   std::optional<Color> border_top_color_;
