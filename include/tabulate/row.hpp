@@ -80,7 +80,7 @@ private:
     auto format = cell.format();
     if (format.padding_top_.has_value())
       result += format.padding_top_.value();
-    result += cell.get_text().size() / column_width;
+    result += 1 + cell.get_text().size() / column_width; // At least one row
     if (format.padding_bottom_.has_value())
       result += format.padding_bottom_.value();
 

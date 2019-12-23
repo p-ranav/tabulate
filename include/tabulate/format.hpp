@@ -237,7 +237,7 @@ private:
   friend class TableInternal;
 
   void set_defaults() {
-    width_ = height_ = 1;
+    // NOTE: width and height are not set here
     font_align_ = FontAlign::left;
     font_style_ = std::vector<FontStyle>{};
     font_color_ = font_background_color_ = Color::none;

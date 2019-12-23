@@ -85,17 +85,43 @@ Format &Row::format() {
 }
 
 void Printer::print(TableInternal& table, std::ostream& stream) {
+  size_t num_rows = table.size();
   size_t num_columns = table.estimate_num_columns();
-  std::vector<size_t> column_widths{};
+
+  std::vector<size_t> row_heights, column_widths{};
+  
   for (size_t i = 0; i < num_columns; ++i) {
     Column column = table.column(i);
     size_t configured_width = column.get_configured_width();
     size_t computed_width = column.get_computed_width();
+    // column_widths.push_back(std::max(configured_width, computed_width));
     if (configured_width != 0)
       column_widths.push_back(configured_width);
     else
       column_widths.push_back(computed_width);
   }
+
+  for(size_t i = 0; i < num_rows; ++i) {
+    Row row = table[i];
+    size_t configured_height = row.get_configured_height();
+    size_t computed_height = row.get_computed_height(column_widths);
+    row_heights.push_back(std::max(configured_height, computed_height));
+    // if (configured_height != 0)
+    //   row_heights.push_back(configured_height);
+    // else
+    //   row_heights.push_back(computed_height);
+  }
+
+  for (size_t i = 0; i < num_rows; ++i) {
+    auto row_height = row_heights[i];
+    for (size_t j = 0; j < num_columns; ++j) {
+      auto column_width = column_widths[j];
+      std::cout << row_height << "x" << column_width << " ";
+    }
+    std::cout << "\n";
+  }
+
+  std::cout << "\n";
 }
 
 } // namespace tabulate

@@ -6,9 +6,9 @@ int main() {
   Table employees;
 
   // Add rows
-  employees.add_row({"Emp. ID", "First Name", "Last Name", "Department"});
+  employees.add_row({"Emp. ID", "First Name", "Last Name", "Department / Business Unit"});
   employees.add_row({"101", "Donald", "Patrick", "Finance"});
-  employees.add_row({"102", "Donald", "Patrick", "Marketing"});
+  employees.add_row({"102", "Donald", "Patrick", "Marketing and Operational Logistics Planning"});
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
   employees.format()
