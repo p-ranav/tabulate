@@ -10,9 +10,9 @@ namespace tabulate {
 class Table {
 public:
   void add_row(const std::vector<std::string> &cells) {
-    Row row(format_);
+    Row row(*this, format_);
     for (auto &c : cells) {
-      auto cell = Cell(format_);
+      auto cell = Cell(row, format_);
       cell.data_ = c;
       row.add_cell(std::move(cell));
     }

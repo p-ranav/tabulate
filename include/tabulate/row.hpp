@@ -21,6 +21,7 @@ public:
   std::optional<Cell> get_cell(size_t index) const {
     if (index < cells_.size())
       return cells_[index];
+    else return {};
   }
 
   size_t height() const {
@@ -56,10 +57,11 @@ public:
   }
 
 private:
-  explicit Row(Format &table_format) : table_format_(table_format) {}
+  explicit Row(class Table& parent, Format &table_format) : parent_(parent), table_format_(table_format) {}
 
   friend class Table;
   std::vector<Cell> cells_;
+  std::reference_wrapper<class Table> parent_;
   std::reference_wrapper<Format> table_format_;
   std::optional<Format> format_;
 };
