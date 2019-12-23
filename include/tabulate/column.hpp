@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <functional>
 #include <iostream>
 #include <memory>
@@ -7,7 +8,6 @@
 #include <tabulate/cell.hpp>
 #include <tabulate/column_format.hpp>
 #include <vector>
-#include <algorithm>
 
 namespace tabulate {
 
@@ -42,14 +42,14 @@ private:
       if (format.width_.has_value())
         result = std::max(result, format.width_.value());
     }
-    return result;    
+    return result;
   }
 
   // Computes the width of the column based on cell contents
   // and configured cell padding
   // For each cell, compute padding_left + cell_contents + padding_right
   // and return the largest value
-  // 
+  //
   // This is useful when no cell.format.width is configured
   // Call get_configured_width()
   // - If this returns 0, then use get_computed_width()
@@ -65,7 +65,7 @@ private:
   // for a given cell in the column
   size_t get_cell_width(size_t cell_index) {
     size_t result{0};
-    Cell& cell = cells_[cell_index].get();
+    Cell &cell = cells_[cell_index].get();
     auto format = cell.format();
     if (format.padding_left_.has_value())
       result += format.padding_left_.value();

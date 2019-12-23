@@ -16,9 +16,7 @@ public:
 
   Format &format() { return table_->format(); }
 
-  void print(std::ostream& stream) {
-    table_->print(stream);
-  }
+  void print(std::ostream &stream) { table_->print(stream); }
 
 private:
   std::shared_ptr<TableInternal> table_;

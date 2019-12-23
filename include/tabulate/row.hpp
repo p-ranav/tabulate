@@ -40,7 +40,7 @@ private:
       if (format.height_.has_value())
         result = std::max(result, format.height_.value());
     }
-    return result;    
+    return result;
   }
 
   // Computes the height of the row based on cell contents
@@ -48,11 +48,11 @@ private:
   // For each cell, compute:
   //   padding_top + (cell_contents / column height) + padding_bottom
   // and return the largest value
-  // 
+  //
   // This is useful when no cell.format.height is configured
   // Call get_configured_height()
   // - If this returns 0, then use get_computed_height()
-  size_t get_computed_height(const std::vector<size_t>& column_widths) {
+  size_t get_computed_height(const std::vector<size_t> &column_widths) {
     size_t result{0};
     for (size_t i = 0; i < size(); ++i) {
       result = std::max(result, get_cell_height(i, column_widths[i]));
@@ -68,7 +68,7 @@ private:
   // padding top and padding bottom are 1
   // then, cell height = 1 + (15 / 5) + 1 = 1 + 3 + 1 = 5
   // The cell will look like this:
-  // 
+  //
   // .....
   // I lov
   // e tab
@@ -76,7 +76,7 @@ private:
   // .....
   size_t get_cell_height(size_t cell_index, size_t column_width) {
     size_t result{0};
-    Cell& cell = *(cells_[cell_index]);
+    Cell &cell = *(cells_[cell_index]);
     auto format = cell.format();
     if (format.padding_top_.has_value())
       result += format.padding_top_.value();
@@ -85,7 +85,7 @@ private:
       result += format.padding_bottom_.value();
 
     return result;
-  }  
+  }
 
   std::vector<std::shared_ptr<Cell>> cells_;
   std::weak_ptr<class TableInternal> parent_;
