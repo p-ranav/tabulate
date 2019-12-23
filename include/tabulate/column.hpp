@@ -28,7 +28,31 @@ public:
 private:
   friend class ColumnFormat;
 
-  size_t get_width() {
+  // Returns the column width as configured
+  // For each cell in the column, check the cell.format.width
+  // property and return the largest configured column width
+  // This is used to ensure that all cells in a column are
+  // aligned when printing the column
+  size_t get_configured_width() {
+    size_t result{0};
+    for (size_t i = 0; i < size(); ++i) {
+      auto cell = cells_[i];
+      auto format = cell.get().format();
+      if (format.width_.has_value())
+        result = std::max(result, format.width_.value());
+    }
+    return result;    
+  }
+
+  // Computes the width of the column based on cell contents
+  // and configured cell padding
+  // For each cell, compute padding_left + cell_contents + padding_right
+  // and return the largest value
+  // 
+  // This is useful when no cell.format.width is configured
+  // Call get_configured_width()
+  // - If this returns 0, then use get_computed_width()
+  size_t get_computed_width() {
     size_t result{0};
     for (size_t i = 0; i < size(); ++i) {
       result = std::max(result, get_cell_width(i));

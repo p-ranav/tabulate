@@ -8,9 +8,6 @@ public:
     
   }
 
-private:
-
-
 };
 
 }
