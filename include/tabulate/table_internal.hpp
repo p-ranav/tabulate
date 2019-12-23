@@ -96,8 +96,6 @@ void Printer::print(TableInternal& table, std::ostream& stream) {
     else
       column_widths.push_back(computed_width);
   }
-  for (auto& w : column_widths)
-    std::cout << w << " ";
 }
 
 } // namespace tabulate
