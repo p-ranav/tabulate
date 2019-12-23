@@ -134,10 +134,20 @@ void Printer::print_table(std::ostream& stream, TableInternal& table) {
   auto row_heights = dimensions.first;
   auto column_widths = dimensions.second;
 
+  // For each row,
   for (size_t i = 0; i < num_rows; ++i) {
+
+    // Print top border
+    for (size_t j = 0; j < num_columns; ++j) {
+      print_cell_border_top(stream, table, {i, j}, {row_heights[i], column_widths[j]});
+    }
+    stream << "\n";
+
+    // Print cell contents
     for (size_t j = 0; j < num_columns; ++j) {
       print_cell(stream, table, {i, j}, {row_heights[i], column_widths[j]});
     }
+
     std::cout << "\n";
   }
 }
@@ -149,11 +159,31 @@ void Printer::print_cell(std::ostream& stream, TableInternal& table, const std::
   auto text_size = text.size();
   auto text_with_padding_size = format.padding_left_.value() + text_size + format.padding_right_.value(); 
   auto column_width = dimension.second;
-  // Column width is adequate - We can fit padding + cell contents
+
+  // Print cell border_left
+  stream << format.border_left_.value();
+
+  // Column width is adequate - We can fit padding + all of cell contents
   if (column_width >= text_with_padding_size) {
     stream << std::string(format.padding_left_.value(), ' ') << text << std::string(format.padding_right_.value(), ' ')
            << std::string(column_width - text_with_padding_size, ' ');
+  } else {
+    auto row_height = dimension.first;
+    // Multiple rows required for this cell
+
   }
+}
+
+void Printer::print_cell_border_top(std::ostream& stream, TableInternal& table, const std::pair<size_t, size_t>& index, const std::pair<size_t, size_t>& dimension) {
+  auto cell = table[index.first][index.second];
+  auto format = cell.format();
+  auto column_width = dimension.second;
+
+  auto corner = format.corner_.value();
+  auto border_top = format.border_top_.value();
+  stream << corner;
+  for (size_t i = 0; i < column_width; ++i)
+    stream << border_top;
 }
 
 } // namespace tabulate

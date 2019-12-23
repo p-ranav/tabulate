@@ -12,6 +12,8 @@ public:
 
   static void print_cell(std::ostream& stream, TableInternal& table, const std::pair<size_t, size_t>& index, const std::pair<size_t, size_t>& dimension);
 
+  static void print_cell_border_top(std::ostream& stream, TableInternal& table, const std::pair<size_t, size_t>& index, const std::pair<size_t, size_t>& dimension);
+
 };
 
 }
