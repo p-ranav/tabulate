@@ -1,6 +1,6 @@
 #pragma once
-#include <memory>
 #include <iostream>
+#include <memory>
 #include <optional>
 #include <string>
 #include <tabulate/format.hpp>
@@ -10,7 +10,7 @@ namespace tabulate {
 
 class Cell {
 public:
-  explicit Cell(std::weak_ptr<class Row> parent) : parent_(parent) {}
+  explicit Cell(std::shared_ptr<class Row> parent) : parent_(parent) {}
 
   void set_text(const std::string &text) { data_ = text; }
 

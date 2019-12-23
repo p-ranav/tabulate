@@ -10,11 +10,15 @@ namespace tabulate {
 
 class Format {
 public:
+  Format& width(size_t value) {
+    width_ = value;
+    return *this;
+  }
 
 private:
   friend class Cell;
   friend class Row;
-  friend class Table;
+  friend class TableInternal;
 
   // Element width and height
   std::optional<size_t> width_{};

@@ -1,58 +1,29 @@
-#include <iostream>
-#include <string>
-#include <tabulate/font_style.hpp>
-#include <tabulate/row.hpp>
-#include <tabulate/termcolor.hpp>
-#include <vector>
+#include <tabulate/table_internal.hpp>
 
 namespace tabulate {
 
-Format &Cell::format() {
-  if (!format_.has_value()) {         // no cell format
-    std::shared_ptr<Row> parent = parent_.lock();
-    format_ = parent->format(); // Use parent row format
-  }
-  return format_.value();
-}
-
 class Table {
 public:
-  void add_row(const std::vector<std::string> &cells) {
-    auto row = std::make_shared<Row>(this);
-    for (auto &c : cells) {
-      auto cell = std::make_shared<Cell>(row);
-      cell->set_text(c);
-      row->add_cell(cell);
-    }
-    rows_.push_back(row);
+  Table() {
+    table_ = TableInternal::create();
   }
 
-  Format &format() { return format_; }
+  void add_row(const std::vector<std::string> &cells) {
+    table_->add_row(cells);
+  }
+
+  Row& operator[](size_t index) {
+    return (*table_)[index];
+  }
 
 private:
   friend std::ostream &operator<<(std::ostream &os, const Table &table);
-
-  void print(std::ostream& stream) const {
-    for (auto& row : rows_)
-      for (auto& cell : row->cells())
-        if (cell->format().width_.has_value())
-          std::cout << cell->format().width_.value() << std::endl;
-  }
-
-  std::vector<std::shared_ptr<Row>> rows_;
-  Format format_;
+  std::shared_ptr<TableInternal> table_;
 };
 
-Format &Row::format() {
-  if (!format_.has_value()) {      // no row format
-    format_ = parent_->format(); // Use parent table format
-  }
-  return format_.value();
-}
-
-std::ostream &operator<<(std::ostream &stream, const Table &table) {
-  table.print(stream);
-  return stream;
+std::ostream &operator<<(std::ostream &os, const Table &table) {
+  table.table_->print(os);
+  return os;
 }
 
 } // namespace tabulate
