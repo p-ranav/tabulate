@@ -19,7 +19,9 @@ Format &Cell::format() {
 class TableInternal : public std::enable_shared_from_this<TableInternal> {
 public:
   static std::shared_ptr<TableInternal> create() {
-    return std::shared_ptr<TableInternal>(new TableInternal());
+    auto result = std::shared_ptr<TableInternal>(new TableInternal());
+    result->format_.set_defaults();
+    return result;
   }
 
   void add_row(const std::vector<std::string> &cells) {

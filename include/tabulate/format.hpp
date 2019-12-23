@@ -11,6 +11,7 @@ namespace tabulate {
 
 class Format {
 public:
+
   Format &width(size_t value) {
     width_ = value;
     return *this;
@@ -25,6 +26,26 @@ private:
   friend class Cell;
   friend class Row;
   friend class TableInternal;
+
+  void set_defaults() {
+    width_ = height_ = 1;
+    font_align_ = FontAlign::left;
+    font_style_ = std::vector<FontStyle>{};
+    font_color_ = font_background_color_ = Color::none;
+    margin_left_ = margin_right_ = margin_top_ = margin_bottom_ = 0;
+    padding_left_ = padding_right_ = 1;
+    padding_top_ = padding_bottom_ = 0;
+    border_top_ = border_bottom_ = "-";
+    border_left_ = border_right_ = "|";
+    border_top_color_ = border_top_background_color_ =
+      border_bottom_color_ = border_bottom_background_color_ =
+      border_left_color_ = border_left_background_color_ =
+      border_right_color_ = border_right_background_color_ = Color::none;
+    corner_ = "+";
+    corner_color_ = corner_background_color_ = Color::none;
+    column_separator_ = "|";
+    column_separator_color_ = column_separator_background_color_ = Color::none; 
+  }
 
   // Element width and height
   std::optional<size_t> width_{};

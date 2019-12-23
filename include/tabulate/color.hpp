@@ -3,5 +3,5 @@
 
 namespace tabulate {
 
-enum class Color { grey, red, green, yellow, blue, magenta, cyan, white };
+enum class Color { none, grey, red, green, yellow, blue, magenta, cyan, white };
 }
