@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <tabulate/column.hpp>
 #include <tabulate/font_style.hpp>
 #include <tabulate/row.hpp>
 #include <tabulate/termcolor.hpp>
@@ -33,6 +34,16 @@ public:
 
   Row &operator[](size_t index) { return *(rows_[index]); }
 
+  Column column(size_t index) {
+    Column column(shared_from_this());
+    for (size_t i = 0; i < rows_.size(); ++i) {
+      auto row = rows_[i];
+      auto& cell = row->cell(index);
+      column.add_cell(cell);
+    }
+    return column;
+  }
+
   Format &format() { return format_; }
 
   void print(std::ostream &stream) const {
@@ -46,9 +57,6 @@ public:
 
 private:
   TableInternal() {}
-
-  // Make operator= and C(const C&) private unimplemented
-  // so the used cant do bad things like C c( * c_ptr );
   TableInternal &operator=(const TableInternal &);
   TableInternal(const TableInternal &);
 

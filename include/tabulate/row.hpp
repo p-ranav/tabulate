@@ -14,14 +14,15 @@ public:
 
   void add_cell(std::shared_ptr<Cell> cell) { cells_.push_back(cell); }
 
-  Cell &operator[](size_t index) { return *(cells_[index]); }
+  Cell& operator[](size_t index) { return cell(index); }
+
+  Cell& cell(size_t index) { return *(cells_[index]); }
 
   std::vector<std::shared_ptr<Cell>> cells() const { return cells_; }
 
   size_t size() const { return cells_.size(); }
 
   Format &format();
-  const Format &format() const;
 
 private:
   std::vector<std::shared_ptr<Cell>> cells_;

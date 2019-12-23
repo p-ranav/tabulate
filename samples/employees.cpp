@@ -21,5 +21,12 @@ int main() {
     .width(20);
 
   // Print the table
-  std::cout << employees;
+  std::cout << employees << std::endl;
+
+  // Set width of column 1 to 13
+  employees.column(1).format()
+    .width(13);
+
+  // Print the table
+  std::cout << employees << std::endl;
 }

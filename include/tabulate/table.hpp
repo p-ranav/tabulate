@@ -8,7 +8,13 @@ public:
 
   void add_row(const std::vector<std::string> &cells) { table_->add_row(cells); }
 
-  Row &operator[](size_t index) { return (*table_)[index]; }
+  Row & operator[](size_t index) { return row(index); }
+
+  Row & row(size_t index) { return (*table_)[index]; }
+
+  Column column(size_t index) {
+    return table_->column(index);
+  }
 
   Format& format() {
     return table_->format();
