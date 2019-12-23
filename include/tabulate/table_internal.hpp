@@ -40,7 +40,7 @@ public:
     Column column(shared_from_this());
     for (size_t i = 0; i < rows_.size(); ++i) {
       auto row = rows_[i];
-      auto& cell = row->cell(index);
+      auto &cell = row->cell(index);
       column.add_cell(cell);
     }
     return column;

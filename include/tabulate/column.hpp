@@ -14,7 +14,7 @@ class Column {
 public:
   explicit Column(std::shared_ptr<class TableInternal> parent) { parent_ = parent; }
 
-  void add_cell(Cell& cell) { cells_.push_back(cell); }
+  void add_cell(Cell &cell) { cells_.push_back(cell); }
 
   Cell &operator[](size_t index) { return cells_[index]; }
 
@@ -22,9 +22,7 @@ public:
 
   size_t size() const { return cells_.size(); }
 
-  ColumnFormat format() {
-    return ColumnFormat(*this);
-  }
+  ColumnFormat format() { return ColumnFormat(*this); }
 
 private:
   friend class ColumnFormat;
@@ -33,15 +31,15 @@ private:
 };
 
 Format &ColumnFormat::width(size_t value) {
-  for (auto& cell: column_.get().cells_)
+  for (auto &cell : column_.get().cells_)
     cell.get().format().width(value);
-    return *this;
+  return *this;
 }
 
 Format &ColumnFormat::height(size_t value) {
-  for (auto& cell: column_.get().cells_)
+  for (auto &cell : column_.get().cells_)
     cell.get().format().height(value);
-    return *this;
+  return *this;
 }
 
 } // namespace tabulate

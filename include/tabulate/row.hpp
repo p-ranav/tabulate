@@ -14,9 +14,9 @@ public:
 
   void add_cell(std::shared_ptr<Cell> cell) { cells_.push_back(cell); }
 
-  Cell& operator[](size_t index) { return cell(index); }
+  Cell &operator[](size_t index) { return cell(index); }
 
-  Cell& cell(size_t index) { return *(cells_[index]); }
+  Cell &cell(size_t index) { return *(cells_[index]); }
 
   std::vector<std::shared_ptr<Cell>> cells() const { return cells_; }
 
