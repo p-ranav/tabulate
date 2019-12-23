@@ -187,9 +187,14 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
   } else if (row_index >= padding_top &&
              (row_index <= (padding_top + text_with_padding_size / column_width))) {
     if (column_width >= text_with_padding_size) {
-      stream << std::string(format.padding_left_.value(), ' ') << text
-             << std::string(format.padding_right_.value(), ' ')
-             << std::string(column_width - text_with_padding_size, ' ');
+      row_index -= padding_top;
+      if (row_index * column_width < text.size()) {
+        stream << std::string(format.padding_left_.value(), ' ') << text
+                << std::string(format.padding_right_.value(), ' ')
+                << std::string(column_width - text_with_padding_size, ' ');
+      } else {
+        stream << std::string(column_width, ' ');
+      }
     } else {
       // Multiple rows required for this cell
       auto text_section_width =
@@ -205,16 +210,6 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
                                 ' ');
         stream << std::string(format.padding_right_.value(), ' ');
       }
-      // else if (text_size > row_index * text_section_width) {
-      //   auto sub_string = text.substr(row_index * text_section_width, text_size -
-      //   text_section_width); stream << std::string(format.padding_left_.value(), ' ')
-      //          << sub_string
-      //          << std::string(column_width - sub_string.size(), ' ')
-      //          << std::string(format.padding_right_.value(), ' ');
-      // } else {
-      //   std::cout << row_index * text_section_width << ";" << (row_index * text_section_width +
-      //   text_section_width) << ";" << text_size;
-      // }
     }
   } else {
     // Padding bottom

@@ -15,6 +15,9 @@ int main() {
     .padding_top(1)
     .padding_bottom(1);
 
+  employees.column(3).format()
+    .width(16);
+
   // employees[1].format()
   //   .width(15);
 
