@@ -1,5 +1,5 @@
 #pragma once
-#include <functional>
+#include <memory>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -10,6 +10,8 @@ namespace tabulate {
 
 class Cell {
 public:
+  explicit Cell(std::weak_ptr<class Row> parent) : parent_(parent) {}
+
   void set_text(const std::string &text) { data_ = text; }
 
   size_t size() const { return data_.size(); }
@@ -17,12 +19,8 @@ public:
   Format &format();
 
 private:
-  explicit Cell(class Row &parent) : parent_(parent) {}
-
-  friend class Row;
-  friend class Table;
   std::string data_;
-  std::reference_wrapper<class Row> parent_;
+  std::weak_ptr<class Row> parent_;
   std::optional<Format> format_;
 };
 

@@ -11,11 +11,6 @@ int main() {
   employees.add_row({"102", "Donald", "Patrick", "Marketing"});
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
-  // Format the header
-  employees[0].format()
-    .font_color(Color::yellow)
-    .font_style({FontStyle::bold});
-
   // Print the table
   std::cout << employees << std::endl;
 }

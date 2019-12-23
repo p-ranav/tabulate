@@ -1,5 +1,5 @@
 #pragma once
-#include <functional>
+#include <memory>
 #include <iostream>
 #include <optional>
 #include <string>
@@ -10,55 +10,24 @@ namespace tabulate {
 
 class Row {
 public:
-  void add_cell(const Cell &cell) { cells_.push_back(cell); }
+  explicit Row(class Table * parent) : parent_(parent) {}
 
-  Cell &operator[](size_t index) { return cells_[index]; }
+  void add_cell(std::shared_ptr<Cell> cell) { cells_.push_back(cell); }
 
-  std::vector<Cell> cells() const { return cells_; }
+  Cell &operator[](size_t index) { return *(cells_[index]); }
+
+  std::vector<std::shared_ptr<Cell>> cells() const {
+    return cells_;
+  }
 
   size_t size() const { return cells_.size(); }
 
-  std::optional<Cell> get_cell(size_t index) const {
-    if (index < cells_.size())
-      return cells_[index];
-    else
-      return {};
-  }
-
-  size_t height() const {
-    size_t result{1};
-    for (auto &cell : cells_) {
-      auto cell_data = cell.data_;
-      if (cell.format_.has_value()) {
-        auto format_width = cell.format_.value().width_;
-        // If cell contents are wider than the
-        // cell format.width, then the height of
-        // the row haas to be incremented to
-        // fit the cell contents
-        //
-        // e.g., if cell text = "ABCD" and format.width = 3
-        // then, cell should show:
-        // ABC
-        // -D
-        // So, the returned height = 2
-        if (format_width.has_value() && cell_data.size() > format_width.value()) {
-          result = std::max(result, cell_data.size() / format_width.value());
-        } else {
-          result = std::max(result, size_t(1));
-        }
-      }
-    }
-    return result;
-  }
-
   Format &format();
+  const Format& format() const;
 
 private:
-  explicit Row(class Table &parent) : parent_(parent) {}
-
-  friend class Table;
-  std::vector<Cell> cells_;
-  std::reference_wrapper<class Table> parent_;
+  std::vector<std::shared_ptr<Cell>> cells_;
+  class Table * parent_;
   std::optional<Format> format_;
 };
 
