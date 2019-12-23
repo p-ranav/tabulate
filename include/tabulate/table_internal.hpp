@@ -145,14 +145,14 @@ void Printer::print_table(std::ostream& stream, TableInternal& table) {
 
     // Print cell contents
     for (size_t j = 0; j < num_columns; ++j) {
-      print_cell(stream, table, {i, j}, {row_heights[i], column_widths[j]});
+      print_cell(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns);
     }
 
     std::cout << "\n";
   }
 }
 
-void Printer::print_cell(std::ostream& stream, TableInternal& table, const std::pair<size_t, size_t>& index, const std::pair<size_t, size_t>& dimension) {
+void Printer::print_cell(std::ostream& stream, TableInternal& table, const std::pair<size_t, size_t>& index, const std::pair<size_t, size_t>& dimension, size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto format = cell.format();
   auto text = cell.get_text();
@@ -170,8 +170,13 @@ void Printer::print_cell(std::ostream& stream, TableInternal& table, const std::
   } else {
     auto row_height = dimension.first;
     // Multiple rows required for this cell
-
   }
+
+  if (index.second + 1 == num_columns) {
+    // Print right border after last column
+    stream << format.border_right_.value();
+  }
+
 }
 
 void Printer::print_cell_border_top(std::ostream& stream, TableInternal& table, const std::pair<size_t, size_t>& index, const std::pair<size_t, size_t>& dimension) {
