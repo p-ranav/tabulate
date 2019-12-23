@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <tabulate/column.hpp>
@@ -37,6 +38,8 @@ public:
 
   Row &operator[](size_t index) { return *(rows_[index]); }
 
+  const Row &operator[](size_t index) const { return *(rows_[index]); }
+
   Column column(size_t index) {
     Column column(shared_from_this());
     for (size_t i = 0; i < rows_.size(); ++i) {
@@ -47,10 +50,21 @@ public:
     return column;
   }
 
+  size_t size() const { return rows_.size(); }
+
   Format &format() { return format_; }
 
-  void print(std::ostream &stream) const {
+  void print(std::ostream &stream) {
     Printer::print(*this, stream);
+  }
+
+  size_t estimate_num_columns() const {
+    size_t result{0};
+    if (size()) {
+      auto first_row = operator[](size_t(0));
+      result = first_row.size();
+    }
+    return result;
   }
 
 private:
@@ -68,6 +82,22 @@ Format &Row::format() {
     format_ = parent->format(); // Use parent table format
   }
   return format_.value();
+}
+
+void Printer::print(TableInternal& table, std::ostream& stream) {
+  size_t num_columns = table.estimate_num_columns();
+  std::vector<size_t> column_widths{};
+  for (size_t i = 0; i < num_columns; ++i) {
+    Column column = table.column(i);
+    size_t configured_width = column.get_configured_width();
+    size_t computed_width = column.get_computed_width();
+    if (configured_width != 0)
+      column_widths.push_back(configured_width);
+    else
+      column_widths.push_back(computed_width);
+  }
+  for (auto& w : column_widths)
+    std::cout << w << " ";
 }
 
 } // namespace tabulate

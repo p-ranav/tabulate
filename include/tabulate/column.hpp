@@ -27,6 +27,7 @@ public:
 
 private:
   friend class ColumnFormat;
+  friend class Printer;
 
   // Returns the column width as configured
   // For each cell in the column, check the cell.format.width
@@ -60,6 +61,8 @@ private:
     return result;
   }
 
+  // Returns padding_left + cell_contents.size() + padding_right
+  // for a given cell in the column
   size_t get_cell_width(size_t cell_index) {
     size_t result{0};
     Cell& cell = cells_[cell_index].get();

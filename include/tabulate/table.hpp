@@ -16,14 +16,12 @@ public:
 
   Format &format() { return table_->format(); }
 
+  void print(std::ostream& stream) {
+    table_->print(stream);
+  }
+
 private:
-  friend std::ostream &operator<<(std::ostream &os, const Table &table);
   std::shared_ptr<TableInternal> table_;
 };
-
-std::ostream &operator<<(std::ostream &os, const Table &table) {
-  table.table_->print(os);
-  return os;
-}
 
 } // namespace tabulate
