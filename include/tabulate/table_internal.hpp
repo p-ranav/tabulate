@@ -17,7 +17,9 @@ Format &Cell::format() {
 
 class TableInternal : public std::enable_shared_from_this<TableInternal> {
 public:
-  static std::shared_ptr<TableInternal> create() { return std::shared_ptr<TableInternal>(new TableInternal()); }
+  static std::shared_ptr<TableInternal> create() {
+    return std::shared_ptr<TableInternal>(new TableInternal());
+  }
 
   void add_row(const std::vector<std::string> &cells) {
     auto row = std::make_shared<Row>(shared_from_this());
@@ -29,15 +31,13 @@ public:
     rows_.push_back(row);
   }
 
-  Row& operator[](size_t index) {
-    return *(rows_[index]);
-  }
+  Row &operator[](size_t index) { return *(rows_[index]); }
 
   Format &format() { return format_; }
 
   void print(std::ostream &stream) const {
-    for (auto& row : rows_)
-      for (auto& cell : row->cells())
+    for (auto &row : rows_)
+      for (auto &cell : row->cells())
         if (cell->format().width_.has_value())
           std::cout << cell->format().width_.value() << std::endl;
         else
@@ -64,4 +64,4 @@ Format &Row::format() {
   return format_.value();
 }
 
-}
+} // namespace tabulate

@@ -10,7 +10,7 @@ namespace tabulate {
 
 class Format {
 public:
-  Format& width(size_t value) {
+  Format &width(size_t value) {
     width_ = value;
     return *this;
   }

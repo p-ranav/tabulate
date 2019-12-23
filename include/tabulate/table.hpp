@@ -4,17 +4,11 @@ namespace tabulate {
 
 class Table {
 public:
-  Table() {
-    table_ = TableInternal::create();
-  }
+  Table() { table_ = TableInternal::create(); }
 
-  void add_row(const std::vector<std::string> &cells) {
-    table_->add_row(cells);
-  }
+  void add_row(const std::vector<std::string> &cells) { table_->add_row(cells); }
 
-  Row& operator[](size_t index) {
-    return (*table_)[index];
-  }
+  Row &operator[](size_t index) { return (*table_)[index]; }
 
 private:
   friend std::ostream &operator<<(std::ostream &os, const Table &table);
