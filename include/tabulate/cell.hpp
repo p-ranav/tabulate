@@ -14,6 +14,8 @@ public:
 
   void set_text(const std::string &text) { data_ = text; }
 
+  const std::string& get_text() { return data_; }
+
   size_t size() const { return data_.size(); }
 
   Format &format();

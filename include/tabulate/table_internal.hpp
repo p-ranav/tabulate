@@ -39,9 +39,9 @@ public:
     for (auto &row : rows_)
       for (auto &cell : row->cells())
         if (cell->format().width_.has_value())
-          std::cout << cell->format().width_.value() << std::endl;
+          std::cout << cell->format().width_.value() << cell->get_text() << std::endl;
         else
-          std::cout << 0 << std::endl;
+          std::cout << 0 << cell->get_text() << std::endl;
   }
 
 private:

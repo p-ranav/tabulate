@@ -15,6 +15,11 @@ public:
     return *this;
   }
 
+  Format &height(size_t value) {
+    height_ = value;
+    return *this;
+  }
+
 private:
   friend class Cell;
   friend class Row;
