@@ -233,6 +233,7 @@ public:
 private:
   friend class Cell;
   friend class Row;
+  friend class Column;
   friend class TableInternal;
 
   void set_defaults() {

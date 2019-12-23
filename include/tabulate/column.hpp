@@ -7,6 +7,7 @@
 #include <tabulate/cell.hpp>
 #include <tabulate/column_format.hpp>
 #include <vector>
+#include <algorithm>
 
 namespace tabulate {
 
@@ -26,6 +27,28 @@ public:
 
 private:
   friend class ColumnFormat;
+
+  size_t get_width() {
+    size_t result{0};
+    for (size_t i = 0; i < size(); ++i) {
+      result = std::max(result, get_cell_width(i));
+    }
+    return result;
+  }
+
+  size_t get_cell_width(size_t cell_index) {
+    size_t result{0};
+    Cell& cell = cells_[cell_index].get();
+    auto format = cell.format();
+    if (format.padding_left_.has_value())
+      result += format.padding_left_.value();
+    result += cell.get_text().size();
+    if (format.padding_right_.has_value())
+      result += format.padding_right_.value();
+
+    return result;
+  }
+
   std::vector<std::reference_wrapper<Cell>> cells_;
   std::weak_ptr<class TableInternal> parent_;
 };
