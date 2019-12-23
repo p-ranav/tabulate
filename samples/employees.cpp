@@ -18,6 +18,9 @@ int main() {
   employees.column(3).format()
     .width(16);
 
+  employees[0][3].format()
+    .width(20);
+
   // employees[1].format()
   //   .width(15);
 
