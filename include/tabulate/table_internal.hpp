@@ -2,6 +2,7 @@
 #include <string>
 #include <tabulate/column.hpp>
 #include <tabulate/font_style.hpp>
+#include <tabulate/printer.hpp>
 #include <tabulate/row.hpp>
 #include <tabulate/termcolor.hpp>
 #include <vector>
@@ -49,12 +50,7 @@ public:
   Format &format() { return format_; }
 
   void print(std::ostream &stream) const {
-    for (auto &row : rows_)
-      for (auto &cell : row->cells())
-        if (cell->format().width_.has_value())
-          std::cout << cell->format().width_.value() << cell->get_text() << std::endl;
-        else
-          std::cout << 0 << cell->get_text() << std::endl;
+    Printer::print(*this, stream);
   }
 
 private:
