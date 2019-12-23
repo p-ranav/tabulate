@@ -10,6 +10,10 @@ public:
 
   Row &operator[](size_t index) { return (*table_)[index]; }
 
+  Format& format() {
+    return table_->format();
+  }
+
 private:
   friend std::ostream &operator<<(std::ostream &os, const Table &table);
   std::shared_ptr<TableInternal> table_;

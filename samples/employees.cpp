@@ -11,9 +11,15 @@ int main() {
   employees.add_row({"102", "Donald", "Patrick", "Marketing"});
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
+  employees.format()
+    .width(10);
+
   employees[1].format()
     .width(15);
 
+  employees[1][2].format()
+    .width(20);
+
   // Print the table
-  std::cout << employees << std::endl;
+  std::cout << employees;
 }
