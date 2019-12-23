@@ -84,7 +84,8 @@ Format &Row::format() {
   return format_.value();
 }
 
-void Printer::print(TableInternal& table, std::ostream& stream) {
+std::pair<std::vector<size_t>, std::vector<size_t>> Printer::compute_cell_dimensions(TableInternal& table) {
+  std::pair<std::vector<size_t>, std::vector<size_t>> result;
   size_t num_rows = table.size();
   size_t num_columns = table.estimate_num_columns();
 
@@ -109,16 +110,29 @@ void Printer::print(TableInternal& table, std::ostream& stream) {
     // b/w configured height and computed height
     // which means that .width() has higher precedence than .height()
     // when both are configured by the user
+    //
     // TODO: Maybe this can be configured?
     // If such a configuration is exposed, i.e., prefer height over width
     // then the logic will be reversed, i.e.,
     // column_widths.push_back(std::max(configured_width, computed_width)) 
     // and
     // row_height = configured_height if != 0 else computed_height
-    //
 
     row_heights.push_back(std::max(configured_height, computed_height));
   }
+
+  result.first = row_heights;
+  result.second = column_widths;
+
+  return result;
+}
+
+void Printer::print(TableInternal& table, std::ostream& stream) {
+  size_t num_rows = table.size();
+  size_t num_columns = table.estimate_num_columns();
+  auto dimensions = compute_cell_dimensions(table);
+  auto row_heights = dimensions.first;
+  auto column_widths = dimensions.second;
 
   for (size_t i = 0; i < num_rows; ++i) {
     auto row_height = row_heights[i];
