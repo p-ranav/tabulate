@@ -7,12 +7,19 @@
 
 namespace tabulate {
 
+Format &Cell::format() {
+  if (!format_.has_value()) {         // no cell format
+    format_ = parent_.get().format(); // Use parent row format
+  }
+  return format_.value();
+}
+
 class Table {
 public:
   void add_row(const std::vector<std::string> &cells) {
-    Row row(*this, format_);
+    Row row(*this);
     for (auto &c : cells) {
-      auto cell = Cell(row, format_);
+      auto cell = Cell(row);
       cell.data_ = c;
       row.add_cell(std::move(cell));
     }
@@ -102,94 +109,94 @@ private:
     }
   }
 
-  void apply_font_style(std::ostream& stream, FontStyle style) const {
-      switch (style) {
-      case FontStyle::bold:
-        stream << termcolor::bold;
-        break;
-      case FontStyle::dark:
-        stream << termcolor::dark;
-        break;
-      case FontStyle::italic:
-        stream << termcolor::italic;
-        break;
-      case FontStyle::underline:
-        stream << termcolor::underline;
-        break;
-      case FontStyle::blink:
-        stream << termcolor::blink;
-        break;
-      case FontStyle::reverse:
-        stream << termcolor::reverse;
-        break;
-      case FontStyle::concealed:
-        stream << termcolor::concealed;
-        break;
-      case FontStyle::crossed:
-        stream << termcolor::crossed;
-        break;
-      default:
-        break;
-      }
+  void apply_font_style(std::ostream &stream, FontStyle style) const {
+    switch (style) {
+    case FontStyle::bold:
+      stream << termcolor::bold;
+      break;
+    case FontStyle::dark:
+      stream << termcolor::dark;
+      break;
+    case FontStyle::italic:
+      stream << termcolor::italic;
+      break;
+    case FontStyle::underline:
+      stream << termcolor::underline;
+      break;
+    case FontStyle::blink:
+      stream << termcolor::blink;
+      break;
+    case FontStyle::reverse:
+      stream << termcolor::reverse;
+      break;
+    case FontStyle::concealed:
+      stream << termcolor::concealed;
+      break;
+    case FontStyle::crossed:
+      stream << termcolor::crossed;
+      break;
+    default:
+      break;
+    }
   }
 
-  void apply_color(std::ostream& stream, Color color) const {
-      switch (color) {
-      case Color::grey:
-        stream << termcolor::grey;
-        break;
-      case Color::red:
-        stream << termcolor::red;
-        break;
-      case Color::green:
-        stream << termcolor::green;
-        break;
-      case Color::yellow:
-        stream << termcolor::yellow;
-        break;
-      case Color::blue:
-        stream << termcolor::blue;
-        break;
-      case Color::magenta:
-        stream << termcolor::magenta;
-        break;
-      case Color::cyan:
-        stream << termcolor::cyan;
-        break;
-      case Color::white:
-        stream << termcolor::white;
-        break;
-      }
+  void apply_color(std::ostream &stream, Color color) const {
+    switch (color) {
+    case Color::grey:
+      stream << termcolor::grey;
+      break;
+    case Color::red:
+      stream << termcolor::red;
+      break;
+    case Color::green:
+      stream << termcolor::green;
+      break;
+    case Color::yellow:
+      stream << termcolor::yellow;
+      break;
+    case Color::blue:
+      stream << termcolor::blue;
+      break;
+    case Color::magenta:
+      stream << termcolor::magenta;
+      break;
+    case Color::cyan:
+      stream << termcolor::cyan;
+      break;
+    case Color::white:
+      stream << termcolor::white;
+      break;
+    }
   }
 
-  void apply_background_color(std::ostream& stream, Color background_color) const {
-      switch (background_color) {
-      case Color::grey:
-        stream << termcolor::on_grey;
-        break;
-      case Color::red:
-        stream << termcolor::on_red;
-        break;
-      case Color::green:
-        stream << termcolor::on_green;
-        break;
-      case Color::yellow:
-        stream << termcolor::on_yellow;
-        break;
-      case Color::blue:
-        stream << termcolor::on_blue;
-        break;
-      case Color::magenta:
-        stream << termcolor::on_magenta;
-        break;
-      case Color::cyan:
-        stream << termcolor::on_cyan;
-        break;
-      case Color::white:
-        stream << termcolor::on_white;
-        break;
-      }
-  }  
+  void apply_background_color(std::ostream &stream, Color background_color) const {
+    switch (background_color) {
+    case Color::grey:
+      stream << termcolor::on_grey;
+      break;
+    case Color::red:
+      stream << termcolor::on_red;
+      break;
+    case Color::green:
+      stream << termcolor::on_green;
+      break;
+    case Color::yellow:
+      stream << termcolor::on_yellow;
+      break;
+    case Color::blue:
+      stream << termcolor::on_blue;
+      break;
+    case Color::magenta:
+      stream << termcolor::on_magenta;
+      break;
+    case Color::cyan:
+      stream << termcolor::on_cyan;
+      break;
+    case Color::white:
+      stream << termcolor::on_white;
+      break;
+    }
+  }
 
   void reset_style(std::ostream &stream) const { stream << termcolor::reset; }
 
@@ -234,24 +241,23 @@ private:
       width += format.padding_right_;
 
       if (col_index == 0) {
-	if (format.border_left_color_.has_value()) {
-	  apply_color(stream, format.border_left_color_.value());
-	}
-	if (format.border_left_background_color_.has_value()) {
-	  apply_background_color(stream, format.border_left_background_color_.value());
-	}	
+        if (format.border_left_color_.has_value()) {
+          apply_color(stream, format.border_left_color_.value());
+        }
+        if (format.border_left_background_color_.has_value()) {
+          apply_background_color(stream, format.border_left_background_color_.value());
+        }
         stream << format.border_left_;
-	reset_style(stream);
-      }      
-      else {
-	if (format.column_separator_color_.has_value()) {
-	  apply_color(stream, format.column_separator_color_.value());
-	}
-	if (format.column_separator_background_color_.has_value()) {
-	  apply_background_color(stream, format.column_separator_background_color_.value());
-	}	
+        reset_style(stream);
+      } else {
+        if (format.column_separator_color_.has_value()) {
+          apply_color(stream, format.column_separator_color_.value());
+        }
+        if (format.column_separator_background_color_.has_value()) {
+          apply_background_color(stream, format.column_separator_background_color_.value());
+        }
         stream << format.column_separator_;
-	reset_style(stream);
+        reset_style(stream);
       }
 
       apply_element_style(stream, format);
@@ -269,7 +275,7 @@ private:
     }
     if (format.border_right_background_color_.has_value()) {
       apply_background_color(stream, format.border_right_background_color_.value());
-    }    
+    }
     stream << format.border_right_;
     reset_style(stream);
   }
@@ -289,24 +295,23 @@ private:
       auto cell_content = row_contents[i];
 
       if (i == 0) {
-	if (format.border_left_color_.has_value()) {
-	  apply_color(stream, format.border_left_color_.value());
-	}
-	if (format.border_left_background_color_.has_value()) {
-	  apply_background_color(stream, format.border_left_background_color_.value());
-	}	
+        if (format.border_left_color_.has_value()) {
+          apply_color(stream, format.border_left_color_.value());
+        }
+        if (format.border_left_background_color_.has_value()) {
+          apply_background_color(stream, format.border_left_background_color_.value());
+        }
         stream << format.border_left_;
-	reset_style(stream);
-      }
-      else {
-	if (format.column_separator_color_.has_value()) {
-	  apply_color(stream, format.column_separator_color_.value());
-	}
-	if (format.column_separator_background_color_.has_value()) {
-	  apply_background_color(stream, format.column_separator_background_color_.value());
-	}	
+        reset_style(stream);
+      } else {
+        if (format.column_separator_color_.has_value()) {
+          apply_color(stream, format.column_separator_color_.value());
+        }
+        if (format.column_separator_background_color_.has_value()) {
+          apply_background_color(stream, format.column_separator_background_color_.value());
+        }
         stream << format.column_separator_;
-	reset_style(stream);
+        reset_style(stream);
       }
 
       apply_element_style(stream, format);
@@ -337,7 +342,7 @@ private:
     }
     if (format.border_right_background_color_.has_value()) {
       apply_background_color(stream, format.border_right_background_color_.value());
-    }     
+    }
     stream << format.border_right_;
     reset_style(stream);
 
@@ -411,11 +416,11 @@ private:
 
     if (col_index == 0) {
       if (format.corner_color_.has_value()) {
-	apply_color(stream, format.corner_color_.value());
+        apply_color(stream, format.corner_color_.value());
       }
       if (format.corner_background_color_.has_value()) {
-	apply_background_color(stream, format.corner_background_color_.value());
-      }      
+        apply_background_color(stream, format.corner_background_color_.value());
+      }
       stream << format.corner_;
       reset_style(stream);
     }
@@ -423,15 +428,15 @@ private:
     if (format.border_top_ != "") {
       size_t i = 0;
       while (i < width) {
-	// Apply border_top format
-	if (format.border_top_color_.has_value()) {
-	  apply_color(stream, format.border_top_color_.value());
-	}
-	if (format.border_top_background_color_.has_value()) {
-	  apply_background_color(stream, format.border_top_background_color_.value());
-	}		
+        // Apply border_top format
+        if (format.border_top_color_.has_value()) {
+          apply_color(stream, format.border_top_color_.value());
+        }
+        if (format.border_top_background_color_.has_value()) {
+          apply_background_color(stream, format.border_top_background_color_.value());
+        }
         stream << format.border_top_;
-	reset_style(stream);
+        reset_style(stream);
         ++i;
       }
     }
@@ -441,7 +446,7 @@ private:
     }
     if (format.corner_background_color_.has_value()) {
       apply_background_color(stream, format.corner_background_color_.value());
-    }          
+    }
     stream << format.corner_;
     reset_style(stream);
     return true;
@@ -463,11 +468,11 @@ private:
 
     if (col_index == 0) {
       if (format.corner_color_.has_value()) {
-	apply_color(stream, format.corner_color_.value());
+        apply_color(stream, format.corner_color_.value());
       }
       if (format.corner_background_color_.has_value()) {
-	apply_background_color(stream, format.corner_background_color_.value());
-      }      
+        apply_background_color(stream, format.corner_background_color_.value());
+      }
       stream << format.corner_;
       reset_style(stream);
     }
@@ -475,14 +480,14 @@ private:
     if (format.border_bottom_ != "") {
       size_t i = 0;
       while (i < width) {
-	if (format.border_bottom_color_.has_value()) {
-	  apply_color(stream, format.border_bottom_color_.value());
-	}
-	if (format.border_bottom_background_color_.has_value()) {
-	  apply_background_color(stream, format.border_bottom_background_color_.value());
-	}	
+        if (format.border_bottom_color_.has_value()) {
+          apply_color(stream, format.border_bottom_color_.value());
+        }
+        if (format.border_bottom_background_color_.has_value()) {
+          apply_background_color(stream, format.border_bottom_background_color_.value());
+        }
         stream << format.border_bottom_;
-	reset_style(stream);
+        reset_style(stream);
         ++i;
       }
     }
@@ -492,7 +497,7 @@ private:
     }
     if (format.corner_background_color_.has_value()) {
       apply_background_color(stream, format.corner_background_color_.value());
-    }    
+    }
     stream << format.corner_;
     reset_style(stream);
     return true;
@@ -521,6 +526,13 @@ private:
   std::vector<Row> rows_;
   Format format_;
 };
+
+Format &Row::format() {
+  if (!format_.has_value()) {      // no row format
+    return parent_.get().format(); // Use parent table format
+  }
+  return format_.value();
+}
 
 std::ostream &operator<<(std::ostream &os, const Table &table) {
   table.print(os);

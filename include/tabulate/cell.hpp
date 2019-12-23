@@ -14,21 +14,15 @@ public:
 
   size_t size() const { return data_.size(); }
 
-  Format &format() {
-    if (!format_.has_value()) {      // no cell format
-      format_ = table_format_.get(); // Use parent table format
-    }
-    return format_.value();
-  }
+  Format &format();
 
 private:
-  explicit Cell(class Row& parent, Format &table_format) : parent_(parent), table_format_(table_format) {}
+  explicit Cell(class Row &parent) : parent_(parent) {}
 
   friend class Row;
   friend class Table;
   std::string data_;
   std::reference_wrapper<class Row> parent_;
-  std::reference_wrapper<Format> table_format_;
   std::optional<Format> format_;
 };
 
