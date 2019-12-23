@@ -235,6 +235,7 @@ private:
   friend class Row;
   friend class Column;
   friend class TableInternal;
+  friend class Printer;
 
   void set_defaults() {
     // NOTE: width and height are not set here

@@ -55,7 +55,7 @@ public:
   Format &format() { return format_; }
 
   void print(std::ostream &stream) {
-    Printer::print(*this, stream);
+    Printer::print_table(stream, *this);
   }
 
   size_t estimate_num_columns() const {
@@ -127,7 +127,7 @@ std::pair<std::vector<size_t>, std::vector<size_t>> Printer::compute_cell_dimens
   return result;
 }
 
-void Printer::print(TableInternal& table, std::ostream& stream) {
+void Printer::print_table(std::ostream& stream, TableInternal& table) {
   size_t num_rows = table.size();
   size_t num_columns = table.estimate_num_columns();
   auto dimensions = compute_cell_dimensions(table);
@@ -135,15 +135,25 @@ void Printer::print(TableInternal& table, std::ostream& stream) {
   auto column_widths = dimensions.second;
 
   for (size_t i = 0; i < num_rows; ++i) {
-    auto row_height = row_heights[i];
     for (size_t j = 0; j < num_columns; ++j) {
-      auto column_width = column_widths[j];
-      std::cout << row_height << "x" << column_width << " ";
+      print_cell(stream, table, {i, j}, {row_heights[i], column_widths[j]});
     }
     std::cout << "\n";
   }
+}
 
-  std::cout << "\n";
+void Printer::print_cell(std::ostream& stream, TableInternal& table, const std::pair<size_t, size_t>& index, const std::pair<size_t, size_t>& dimension) {
+  auto cell = table[index.first][index.second];
+  auto format = cell.format();
+  auto text = cell.get_text();
+  auto text_size = text.size();
+  auto text_with_padding_size = format.padding_left_.value() + text_size + format.padding_right_.value(); 
+  auto column_width = dimension.second;
+  // Column width is adequate - We can fit padding + cell contents
+  if (column_width >= text_with_padding_size) {
+    stream << std::string(format.padding_left_.value(), ' ') << text << std::string(format.padding_right_.value(), ' ')
+           << std::string(column_width - text_with_padding_size, ' ');
+  }
 }
 
 } // namespace tabulate
