@@ -198,8 +198,12 @@ public:
   }
 
   Format &font_style(const std::vector<FontStyle> &style) {
-    for (auto &s : style)
-      font_style_.push_back(s);
+    if (font_style_.has_value()) {
+      for (auto &s : style)
+        font_style_.value().push_back(s);
+    } else {
+      font_style_ = style;
+    }
     return *this;
   }
 
