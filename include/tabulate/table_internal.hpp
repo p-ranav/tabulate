@@ -94,7 +94,6 @@ void Printer::print(TableInternal& table, std::ostream& stream) {
     Column column = table.column(i);
     size_t configured_width = column.get_configured_width();
     size_t computed_width = column.get_computed_width();
-    // column_widths.push_back(std::max(configured_width, computed_width));
     if (configured_width != 0)
       column_widths.push_back(configured_width);
     else
@@ -105,11 +104,20 @@ void Printer::print(TableInternal& table, std::ostream& stream) {
     Row row = table[i];
     size_t configured_height = row.get_configured_height();
     size_t computed_height = row.get_computed_height(column_widths);
+
+    // NOTE: Unlike column width, row height is calculated as the max 
+    // b/w configured height and computed height
+    // which means that .width() has higher precedence than .height()
+    // when both are configured by the user
+    // TODO: Maybe this can be configured?
+    // If such a configuration is exposed, i.e., prefer height over width
+    // then the logic will be reversed, i.e.,
+    // column_widths.push_back(std::max(configured_width, computed_width)) 
+    // and
+    // row_height = configured_height if != 0 else computed_height
+    //
+
     row_heights.push_back(std::max(configured_height, computed_height));
-    // if (configured_height != 0)
-    //   row_heights.push_back(configured_height);
-    // else
-    //   row_heights.push_back(computed_height);
   }
 
   for (size_t i = 0; i < num_rows; ++i) {
