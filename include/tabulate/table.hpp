@@ -35,7 +35,14 @@ public:
   void print(std::ostream &stream) { table_->print(stream); }
 
 private:
+  friend std::ostream& operator<<(std::ostream& stream, const Table& table);
+
   std::shared_ptr<TableInternal> table_;
 };
+
+std::ostream& operator<<(std::ostream& stream, const Table& table) {
+  const_cast<Table&>(table).print(stream);
+  return stream;
+}
 
 } // namespace tabulate

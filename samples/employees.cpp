@@ -11,7 +11,7 @@ int main() {
   // Add rows
   employees.add_row({"Emp. ID", "First Name", "Last Name", "Department / Business Unit"});
   employees.add_row({"101", "Donald", "Patrick", "Finance"});
-  employees.add_row({"102", "Rachel", "Williams", "Marketing and Operational\n    Logistics Planning"});
+  employees.add_row({"102", "Rachel", "Williams", "Marketing and Operational\nLogistics Planning"});
   employees.add_row({"103", "Ian", "Jacob", department});
 
   employees.column(0).format()
@@ -33,6 +33,6 @@ int main() {
   //   .font_align(FontAlign::center);
 
   // Print the table
-  employees.print(std::cout);
+  std::cout << employees;
 
 }
