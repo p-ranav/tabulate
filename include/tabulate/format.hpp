@@ -230,6 +230,153 @@ public:
     return *this;
   }
 
+  // Merge two formats
+  // first has higher precedence
+  // e.g., first = cell-level formatting and
+  // second = row-level formatting
+  // Result has attributes of both with cell-level
+  // formatting taking precedence
+  static Format merge(Format first, Format second) {
+    Format result;
+
+    // Width and height
+    if (first.width_.has_value())
+      result.width_ = first.width_;
+    else result.width_ = second.width_;
+
+    if (first.height_.has_value())
+      result.height_ = first.height_;
+    else result.height_ = second.height_;
+
+    // Font styling
+    if (first.font_align_.has_value())
+      result.font_align_ = first.font_align_;
+    else result.font_align_ = second.font_align_;
+
+    if (first.font_style_.has_value())
+      result.font_style_ = first.font_style_;
+    else result.font_style_ = second.font_style_;
+
+    if (first.font_color_.has_value())
+      result.font_color_ = first.font_color_;
+    else result.font_color_ = second.font_color_;
+
+    if (first.font_background_color_.has_value())
+      result.font_background_color_ = first.font_background_color_;
+    else result.font_background_color_ = second.font_background_color_;
+
+    // Margin styling
+    if (first.margin_left_.has_value())
+      result.margin_left_ = first.margin_left_;
+    else result.margin_left_ = second.margin_left_;
+
+    if (first.margin_top_.has_value())
+      result.margin_top_ = first.margin_top_;
+    else result.margin_top_ = second.margin_top_;
+
+    if (first.margin_right_.has_value())
+      result.margin_right_ = first.margin_right_;
+    else result.margin_right_ = second.margin_right_;
+
+    if (first.margin_bottom_.has_value())
+      result.margin_bottom_ = first.margin_bottom_;
+    else result.margin_bottom_ = second.margin_bottom_;
+
+    // Padding
+    if (first.padding_left_.has_value())
+      result.padding_left_ = first.padding_left_;
+    else result.padding_left_ = second.padding_left_;
+
+    if (first.padding_top_.has_value())
+      result.padding_top_ = first.padding_top_;
+    else result.padding_top_ = second.padding_top_;
+
+    if (first.padding_right_.has_value())
+      result.padding_right_ = first.padding_right_;
+    else result.padding_right_ = second.padding_right_;
+
+    if (first.padding_bottom_.has_value())
+      result.padding_bottom_ = first.padding_bottom_;
+    else result.padding_bottom_ = second.padding_bottom_;
+
+    // Border 
+    if (first.border_left_.has_value())
+      result.border_left_ = first.border_left_;
+    else result.border_left_ = second.border_left_;
+
+    if (first.border_left_color_.has_value())
+      result.border_left_color_ = first.border_left_color_;
+    else result.border_left_color_ = second.border_left_color_;
+
+    if (first.border_left_background_color_.has_value())
+      result.border_left_background_color_ = first.border_left_background_color_;
+    else result.border_left_background_color_ = second.border_left_background_color_;
+
+    if (first.border_top_.has_value())
+      result.border_top_ = first.border_top_;
+    else result.border_top_ = second.border_top_;
+
+    if (first.border_top_color_.has_value())
+      result.border_top_color_ = first.border_top_color_;
+    else result.border_top_color_ = second.border_top_color_;
+
+    if (first.border_top_background_color_.has_value())
+      result.border_top_background_color_ = first.border_top_background_color_;
+    else result.border_top_background_color_ = second.border_top_background_color_;
+
+    if (first.border_bottom_.has_value())
+      result.border_bottom_ = first.border_bottom_;
+    else result.border_bottom_ = second.border_bottom_;
+
+    if (first.border_bottom_color_.has_value())
+      result.border_bottom_color_ = first.border_bottom_color_;
+    else result.border_bottom_color_ = second.border_bottom_color_;
+
+    if (first.border_bottom_background_color_.has_value())
+      result.border_bottom_background_color_ = first.border_bottom_background_color_;
+    else result.border_bottom_background_color_ = second.border_bottom_background_color_;
+
+    if (first.border_right_.has_value())
+      result.border_right_ = first.border_right_;
+    else result.border_right_ = second.border_right_;
+
+    if (first.border_right_color_.has_value())
+      result.border_right_color_ = first.border_right_color_;
+    else result.border_right_color_ = second.border_right_color_;
+
+    if (first.border_right_background_color_.has_value())
+      result.border_right_background_color_ = first.border_right_background_color_;
+    else result.border_right_background_color_ = second.border_right_background_color_;
+
+    // Corner
+    if (first.corner_.has_value())
+      result.corner_ = first.corner_;
+    else result.corner_ = second.corner_;
+
+    if (first.corner_color_.has_value())
+      result.corner_color_ = first.corner_color_;
+    else result.corner_color_ = second.corner_color_;
+
+    if (first.corner_background_color_.has_value())
+      result.corner_background_color_ = first.corner_background_color_;
+    else result.corner_background_color_ = second.corner_background_color_;
+
+    // Column separator
+    if (first.column_separator_.has_value())
+      result.column_separator_ = first.column_separator_;
+    else result.column_separator_ = second.column_separator_;
+
+    if (first.column_separator_color_.has_value())
+      result.column_separator_color_ = first.column_separator_color_;
+    else result.column_separator_color_ = second.column_separator_color_;
+
+    if (first.column_separator_background_color_.has_value())
+      result.column_separator_background_color_ = first.column_separator_background_color_;
+    else result.column_separator_background_color_ = second.column_separator_background_color_;
+
+    return result;
+  }
+
 private:
   friend class Cell;
   friend class Row;
