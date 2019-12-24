@@ -187,9 +187,11 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
   auto padding_top = format.padding_top_.value();
   auto padding_bottom = format.padding_bottom_.value();
 
-  print_colors(stream, format.border_left_color_.value(), format.border_left_background_color_.value());
+  apply_element_style(stream, format.border_left_color_.value(), format.border_left_background_color_.value());
   stream << format.border_left_.value();
-  reset_colors(stream);
+  reset_element_style(stream);
+
+  apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value());
 
   if (row_index < padding_top) {
     // Padding top
@@ -227,11 +229,13 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
     stream << std::string(column_width, ' ');
   }
 
+  reset_element_style(stream);
+
   if (index.second + 1 == num_columns) {
     // Print right border after last column
-    print_colors(stream, format.border_right_color_.value(), format.border_right_background_color_.value());
+    apply_element_style(stream, format.border_right_color_.value(), format.border_right_background_color_.value());
     stream << format.border_right_.value();
-    reset_colors(stream);
+    reset_element_style(stream);
   }
 }
 
@@ -246,21 +250,21 @@ void Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
   auto corner = format.corner_.value();
   auto border_top = format.border_top_.value();
 
-  print_colors(stream, format.corner_color_.value(), format.corner_background_color_.value());
+  apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value());
   stream << corner;
-  reset_colors(stream);
+  reset_element_style(stream);
 
   for (size_t i = 0; i < column_width; ++i) {
-    print_colors(stream, format.border_top_color_.value(), format.border_bottom_background_color_.value());
+    apply_element_style(stream, format.border_top_color_.value(), format.border_bottom_background_color_.value());
     stream << border_top;
-    reset_colors(stream);
+    reset_element_style(stream);
   }
 
   if (index.second + 1 == num_columns) {
     // Print corner after last column
-    print_colors(stream, format.corner_color_.value(), format.corner_background_color_.value());
+    apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value());
     stream << corner;
-    reset_colors(stream);
+    reset_element_style(stream);
   }
 }
 
@@ -275,21 +279,21 @@ void Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &tabl
   auto corner = format.corner_.value();
   auto border_bottom = format.border_bottom_.value();
 
-  print_colors(stream, format.corner_color_.value(), format.corner_background_color_.value());
+  apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value());
   stream << corner;
-  reset_colors(stream);
+  reset_element_style(stream);
   
   for (size_t i = 0; i < column_width; ++i) {
-    print_colors(stream, format.border_bottom_color_.value(), format.border_left_background_color_.value());
+    apply_element_style(stream, format.border_bottom_color_.value(), format.border_left_background_color_.value());
     stream << border_bottom;
-    reset_colors(stream);
+    reset_element_style(stream);
   }
 
   if (index.second + 1 == num_columns) {
     // Print corner after last column
-    print_colors(stream, format.corner_color_.value(), format.corner_background_color_.value());
+    apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value());
     stream << corner;
-    reset_colors(stream);
+    reset_element_style(stream);
   }
 }
 

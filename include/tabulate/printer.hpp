@@ -24,12 +24,12 @@ public:
                                        const std::pair<size_t, size_t> &index,
                                        const std::pair<size_t, size_t> &dimension, size_t num_columns);
 
-  static void print_colors(std::ostream &stream, Color foreground, Color background) {
-    apply_foreground_color(stream, foreground);
-    apply_background_color(stream, background);
+  static void apply_element_style(std::ostream &stream, Color foreground_color, Color background_color) {
+    apply_foreground_color(stream, foreground_color);
+    apply_background_color(stream, background_color);
   }
 
-  static void reset_colors(std::ostream &stream) { stream << termcolor::reset; }
+  static void reset_element_style(std::ostream &stream) { stream << termcolor::reset; }
 
 private:
 
