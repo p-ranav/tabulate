@@ -11,6 +11,9 @@ int main() {
   employees.add_row({"102", "Donald", "Patrick", "Marketing and Operational Logistics Planning"});
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
+  employees[0].format()
+    .font_style({FontStyle::bold});
+
   // Print the table
   employees.print(std::cout);
 }
