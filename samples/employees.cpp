@@ -8,7 +8,7 @@ int main() {
   // Add rows
   employees.add_row({"Emp. ID", "First Name", "Last Name", "Department / Business Unit"});
   employees.add_row({"101", "Donald", "Patrick", "Finance"});
-  employees.add_row({"102", "Donald", "Patrick", "Marketing and Operational Logistics Planning"});
+  employees.add_row({"102", "Donald", "Patrick", "Marketing and\nOperational Logistics Planning"});
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
   employees.column(0).format()
@@ -16,8 +16,8 @@ int main() {
     .font_color(Color::white)
     .font_align(FontAlign::right);
 
-  employees.column(3).format()
-    .width(25);
+  // employees.column(3).format()
+  //   .width(10);
 
   // employees[0].format()
   //   // .font_align(FontAlign::right)

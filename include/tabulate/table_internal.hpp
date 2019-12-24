@@ -177,14 +177,13 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
                                 const std::pair<size_t, size_t> &index,
                                 const std::pair<size_t, size_t> &dimension, size_t num_columns,
                                 size_t row_index) {
+  auto row_height = dimension.first;
+  auto column_width = dimension.second;
   auto cell = table[index.first][index.second];
   auto format = cell.format();
   auto text = cell.get_text();
-  auto text_size = text.size();
-  auto text_with_padding_size =
-      format.padding_left_.value() + text_size + format.padding_right_.value();
-  auto row_height = dimension.first;
-  auto column_width = dimension.second;
+  auto word_wrapped_text = Format::word_wrap(text, column_width);
+  auto text_height = std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n') + 1;
   auto padding_top = format.padding_top_.value();
   auto padding_bottom = format.padding_bottom_.value();
 
@@ -200,44 +199,58 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
     // Padding top
     stream << std::string(column_width, ' ');
   } else if (row_index >= padding_top &&
-             (row_index <= (padding_top + text_with_padding_size / column_width))) {
+             (row_index <= (padding_top + text_height))) {
     // Row contents
-    if (column_width >= text_with_padding_size) {
-      row_index -= padding_top;
-      if (row_index * column_width < text.size()) {
-        stream << std::string(format.padding_left_.value(), ' ');
-        switch (format.font_align_.value()) {
-        case FontAlign::left:
-          print_content_left_aligned(stream, text, text_with_padding_size, column_width);
-          break;
-        case FontAlign::center:
-          print_content_center_aligned(stream, text, text_with_padding_size, column_width);
-          break;
-        case FontAlign::right:
-          print_content_right_aligned(stream, text, text_with_padding_size, column_width);
-          break;
-        }
-        stream << std::string(format.padding_right_.value(), ' ');
 
-      } else {
-        stream << std::string(column_width, ' ');
+    // Retrieve padding left and right
+    // (column_width - padding_left - padding_right) is the amount of space
+    // available for cell text - Use this to word wrap cell contents
+    auto padding_left = format.padding_left_.value();
+    auto padding_right = format.padding_right_.value();
+
+    // Check if input text has embedded \n that are to be respected
+    auto newlines_in_input = Format::split_lines(text, "\n").size() - 1;
+    std::string word_wrapped_text;
+
+    // If there are no embedded \n characters, then apply word wrap
+    if (newlines_in_input == 0) {
+      // Apply word wrapping to input text
+      // Then display one word-wrapped line at a time within cell
+      if (column_width > (padding_left + padding_right))
+        word_wrapped_text = Format::word_wrap(text, column_width - padding_left - padding_right);
+      else {
+        // Configured column width cannot be lower than (padding_left + padding_right)
+        // This is a bad configuration
+        // E.g., the user is trying to force the column width to be 5 
+        // when padding_left and padding_right are each configured to 3
+        // (padding_left + padding_right) = 6 > column_width
       }
     } else {
-      // Multiple rows required for this cell
-      auto text_section_width =
-          column_width - format.padding_left_.value() - format.padding_right_.value();
-      row_index -= padding_top;
-      if (row_index * text_section_width < text_size) {
-        auto sub_string = text.substr(row_index * text_section_width, text_section_width);
-        stream << std::string(format.padding_left_.value(), ' ') << sub_string;
-        if (column_width >
-            sub_string.size() + format.padding_left_.value() + format.padding_right_.value())
-          stream << std::string(column_width - sub_string.size() - format.padding_left_.value() -
-                                    format.padding_right_.value(),
-                                ' ');
-        stream << std::string(format.padding_right_.value(), ' ');
-      }
+      word_wrapped_text = text; // repect the embedded '\n' characters
     }
+    
+    auto lines = Format::split_lines(word_wrapped_text, "\n");
+
+    if (row_index - padding_top < lines.size()) {
+      auto line = lines[row_index - padding_top];
+
+      // Print left padding characters
+      stream << std::string(padding_left, ' ');
+
+      // Print word-wrapped line
+      stream << line;
+
+      // Check if spaces are required before right padding. If so, print space characters
+      if (column_width > line.size() + padding_left + padding_right)
+        stream << std::string((column_width - line.size() - padding_left - padding_right), ' ');
+
+      // Print right padding characters
+      stream << std::string(format.padding_right_.value(), ' ');
+    }
+    else
+      stream << std::string(column_width, ' ');
+    
+
   } else {
     // Padding bottom
     stream << std::string(column_width, ' ');

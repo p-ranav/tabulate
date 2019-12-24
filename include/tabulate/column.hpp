@@ -69,7 +69,25 @@ private:
     auto format = cell.format();
     if (format.padding_left_.has_value())
       result += format.padding_left_.value();
-    result += cell.get_text().size();
+
+    // Check if input text has newlines
+    auto text = cell.get_text();
+    auto split_lines = Format::split_lines(text, "\n");
+
+    // If there are no newlines in input, set column_width = text.size()
+    if (split_lines.size() == 1) {
+      result += cell.get_text().size();
+    }
+    else {
+      // There are newlines in input
+      // Find widest substring in input and use this as column_width
+      size_t widest_sub_string_size{0};
+      for (auto& line : split_lines)
+        if (line.size() > widest_sub_string_size)
+          widest_sub_string_size = line.size();
+      result += widest_sub_string_size;
+    }
+
     if (format.padding_right_.has_value())
       result += format.padding_right_.value();
 

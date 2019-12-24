@@ -256,6 +256,22 @@ public:
     return wrapped.str();
   }
 
+
+  static std::vector<std::string> split_lines(const std::string& text, const std::string& delimiter) {
+    std::vector<std::string> result{};
+    std::string input = text;
+    size_t pos = 0;
+    std::string token;
+    while ((pos = input.find(delimiter)) != std::string::npos) {
+      token = input.substr(0, pos);
+      result.push_back(token);
+      input.erase(0, pos + delimiter.length());
+    }
+    if (input.size())
+      result.push_back(input);
+    return result;
+  };
+
   // Merge two formats
   // first has higher precedence
   // e.g., first = cell-level formatting and
