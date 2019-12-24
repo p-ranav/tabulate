@@ -12,11 +12,12 @@ int main() {
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
   employees.column(0).format()
-    .font_color(Color::yellow)
+    .font_style({FontStyle::bold})
+    .font_color(Color::white)
     .font_align(FontAlign::right);
 
-  // employees.column(3).format()
-  //   .width(25);
+  employees.column(3).format()
+    .width(25);
 
   // employees[0].format()
   //   // .font_align(FontAlign::right)
@@ -27,4 +28,5 @@ int main() {
 
   // Print the table
   employees.print(std::cout);
+
 }

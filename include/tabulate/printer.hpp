@@ -1,8 +1,8 @@
 #pragma once
-#include <utility>
-#include <vector>
 #include <tabulate/color.hpp>
 #include <tabulate/font_style.hpp>
+#include <utility>
+#include <vector>
 
 namespace tabulate {
 
@@ -23,21 +23,23 @@ public:
                                     const std::pair<size_t, size_t> &dimension, size_t num_columns);
   static void print_cell_border_bottom(std::ostream &stream, TableInternal &table,
                                        const std::pair<size_t, size_t> &index,
-                                       const std::pair<size_t, size_t> &dimension, size_t num_columns);
+                                       const std::pair<size_t, size_t> &dimension,
+                                       size_t num_columns);
 
-  static void apply_element_style(std::ostream &stream, Color foreground_color, Color background_color, const std::vector<FontStyle>& font_style) {
+  static void apply_element_style(std::ostream &stream, Color foreground_color,
+                                  Color background_color,
+                                  const std::vector<FontStyle> &font_style) {
     apply_foreground_color(stream, foreground_color);
     apply_background_color(stream, background_color);
-    for (auto& style: font_style)
+    for (auto &style : font_style)
       apply_font_style(stream, style);
   }
 
   static void reset_element_style(std::ostream &stream) { stream << termcolor::reset; }
 
 private:
-
-  static void print_content_left_aligned(std::ostream &stream, const std::string& cell_content,
-                                  size_t text_with_padding_size, size_t column_width) {
+  static void print_content_left_aligned(std::ostream &stream, const std::string &cell_content,
+                                         size_t text_with_padding_size, size_t column_width) {
     stream << cell_content;
     if (text_with_padding_size < column_width) {
       for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
@@ -47,7 +49,7 @@ private:
   }
 
   static void print_content_center_aligned(std::ostream &stream, std::string cell_content,
-                                    size_t text_with_padding_size, size_t column_width) {
+                                           size_t text_with_padding_size, size_t column_width) {
     auto num_spaces = column_width - text_with_padding_size;
     if (num_spaces % 2 == 0) {
       // Even spacing on either side
@@ -67,7 +69,7 @@ private:
   }
 
   static void print_content_right_aligned(std::ostream &stream, std::string cell_content,
-                                   size_t text_with_padding_size, size_t column_width) {
+                                          size_t text_with_padding_size, size_t column_width) {
     if (text_with_padding_size < column_width) {
       for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
         stream << " ";
@@ -76,7 +78,7 @@ private:
     stream << cell_content;
   }
 
-  static void apply_font_style(std::ostream& stream, FontStyle style) {
+  static void apply_font_style(std::ostream &stream, FontStyle style) {
     switch (style) {
     case FontStyle::bold:
       stream << termcolor::bold;
@@ -139,7 +141,7 @@ private:
     }
   }
 
-  static void apply_background_color(std::ostream& stream, Color background_color) {
+  static void apply_background_color(std::ostream &stream, Color background_color) {
     switch (background_color) {
     case Color::grey:
       stream << termcolor::on_grey;
@@ -170,7 +172,6 @@ private:
       break;
     }
   }
-
 };
 
 } // namespace tabulate

@@ -12,7 +12,7 @@ namespace tabulate {
 
 Format &Cell::format() {
   std::shared_ptr<Row> parent = parent_.lock();
-  if (!format_.has_value()) { // no cell format
+  if (!format_.has_value()) {   // no cell format
     format_ = parent->format(); // Use parent row format
   } else {
     // Cell has formatting
@@ -80,7 +80,7 @@ private:
 
 Format &Row::format() {
   std::shared_ptr<TableInternal> parent = parent_.lock();
-  if (!format_.has_value()) { // no row format
+  if (!format_.has_value()) {   // no row format
     format_ = parent->format(); // Use parent table format
   } else {
     // Row has formatting rules
@@ -164,7 +164,8 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
       stream << "\n";
       // Print bottom border for table
       for (size_t j = 0; j < num_columns; ++j) {
-        print_cell_border_bottom(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns);
+        print_cell_border_bottom(stream, table, {i, j}, {row_heights[i], column_widths[j]},
+                                 num_columns);
       }
     }
 
@@ -187,11 +188,13 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
   auto padding_top = format.padding_top_.value();
   auto padding_bottom = format.padding_bottom_.value();
 
-  apply_element_style(stream, format.border_left_color_.value(), format.border_left_background_color_.value(), {});
+  apply_element_style(stream, format.border_left_color_.value(),
+                      format.border_left_background_color_.value(), {});
   stream << format.border_left_.value();
   reset_element_style(stream);
 
-  apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(), format.font_style_.value());
+  apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+                      format.font_style_.value());
 
   if (row_index < padding_top) {
     // Padding top
@@ -244,7 +247,8 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
 
   if (index.second + 1 == num_columns) {
     // Print right border after last column
-    apply_element_style(stream, format.border_right_color_.value(), format.border_right_background_color_.value(), {});
+    apply_element_style(stream, format.border_right_color_.value(),
+                        format.border_right_background_color_.value(), {});
     stream << format.border_right_.value();
     reset_element_style(stream);
   }
@@ -252,7 +256,7 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
 
 void Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
                                     const std::pair<size_t, size_t> &index,
-                                    const std::pair<size_t, size_t> &dimension, 
+                                    const std::pair<size_t, size_t> &dimension,
                                     size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto format = cell.format();
@@ -261,19 +265,22 @@ void Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
   auto corner = format.corner_.value();
   auto border_top = format.border_top_.value();
 
-  apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(), {});
+  apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(),
+                      {});
   stream << corner;
   reset_element_style(stream);
 
   for (size_t i = 0; i < column_width; ++i) {
-    apply_element_style(stream, format.border_top_color_.value(), format.border_bottom_background_color_.value(), {});
+    apply_element_style(stream, format.border_top_color_.value(),
+                        format.border_bottom_background_color_.value(), {});
     stream << border_top;
     reset_element_style(stream);
   }
 
   if (index.second + 1 == num_columns) {
     // Print corner after last column
-    apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(), {});
+    apply_element_style(stream, format.corner_color_.value(),
+                        format.corner_background_color_.value(), {});
     stream << corner;
     reset_element_style(stream);
   }
@@ -281,7 +288,7 @@ void Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
 
 void Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &table,
                                        const std::pair<size_t, size_t> &index,
-                                       const std::pair<size_t, size_t> &dimension, 
+                                       const std::pair<size_t, size_t> &dimension,
                                        size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto format = cell.format();
@@ -290,19 +297,22 @@ void Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &tabl
   auto corner = format.corner_.value();
   auto border_bottom = format.border_bottom_.value();
 
-  apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(), {});
+  apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(),
+                      {});
   stream << corner;
   reset_element_style(stream);
-  
+
   for (size_t i = 0; i < column_width; ++i) {
-    apply_element_style(stream, format.border_bottom_color_.value(), format.border_left_background_color_.value(), {});
+    apply_element_style(stream, format.border_bottom_color_.value(),
+                        format.border_left_background_color_.value(), {});
     stream << border_bottom;
     reset_element_style(stream);
   }
 
   if (index.second + 1 == num_columns) {
     // Print corner after last column
-    apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(), {});
+    apply_element_style(stream, format.corner_color_.value(),
+                        format.corner_background_color_.value(), {});
     stream << corner;
     reset_element_style(stream);
   }

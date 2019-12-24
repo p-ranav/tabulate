@@ -79,15 +79,10 @@ private:
     Cell &cell = *(cells_[cell_index]);
     auto format = cell.format();
     auto text = cell.get_text();
-    auto text_size = text.size();
-    auto text_with_padding_size = format.padding_left_.value() + text_size + format.padding_right_.value();
 
     result += format.padding_top_.value();
-
-    result += text_with_padding_size / column_width;
-    if (text_with_padding_size % column_width > 0)
-      result += 1;
-
+    auto word_wrapped_text = Format::word_wrap(text, column_width);
+    result += std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n') + 1;
     result += format.padding_bottom_.value();
 
     return result;
