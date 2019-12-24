@@ -11,9 +11,13 @@
 namespace tabulate {
 
 Format &Cell::format() {
+  std::shared_ptr<Row> parent = parent_.lock();
   if (!format_.has_value()) { // no cell format
-    std::shared_ptr<Row> parent = parent_.lock();
     format_ = parent->format(); // Use parent row format
+  } else {
+    // Cell has formatting
+    // Merge cell formatting with parent row formatting
+    format_ = Format::merge(format_.value(), parent->format());
   }
   return format_.value();
 }
@@ -75,9 +79,13 @@ private:
 };
 
 Format &Row::format() {
+  std::shared_ptr<TableInternal> parent = parent_.lock();
   if (!format_.has_value()) { // no row format
-    std::shared_ptr<TableInternal> parent = parent_.lock();
     format_ = parent->format(); // Use parent table format
+  } else {
+    // Row has formatting rules
+    // Merge with parent table format
+    format_ = Format::merge(format_.value(), parent->format());
   }
   return format_.value();
 }
