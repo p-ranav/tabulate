@@ -238,11 +238,18 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       stream << std::string(padding_left, ' ');
 
       // Print word-wrapped line
-      stream << line;
-
-      // Check if spaces are required before right padding. If so, print space characters
-      if (column_width > line.size() + padding_left + padding_right)
-        stream << std::string((column_width - line.size() - padding_left - padding_right), ' ');
+      auto line_with_padding_size = line.size() + padding_left + padding_right;
+      switch (format.font_align_.value()) {
+      case FontAlign::left:
+        print_content_left_aligned(stream, line, line_with_padding_size, column_width);
+        break;
+      case FontAlign::center:
+        print_content_center_aligned(stream, line, line_with_padding_size, column_width);
+        break;
+      case FontAlign::right:
+        print_content_right_aligned(stream, line, line_with_padding_size, column_width);
+        break;
+      }
 
       // Print right padding characters
       stream << std::string(format.padding_right_.value(), ' ');

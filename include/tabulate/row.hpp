@@ -81,8 +81,21 @@ private:
     auto text = cell.get_text();
 
     result += format.padding_top_.value();
-    auto word_wrapped_text = Format::word_wrap(text, column_width);
+
+    // Check if input text has embedded newline characters
+    auto newlines_in_text = Format::split_lines(text, "\n").size() - 1;
+    std::string word_wrapped_text;
+    if (newlines_in_text == 0) {
+      // No new lines in input
+      // Apply automatic word wrapping and compute row height
+      word_wrapped_text = Format::word_wrap(text, column_width);
+    } else {
+      // There are embedded '\n' characters
+      // Respect these characters
+      word_wrapped_text = text;
+    }
     result += std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n') + 1;
+
     result += format.padding_bottom_.value();
 
     return result;
