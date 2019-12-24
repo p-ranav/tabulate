@@ -12,7 +12,11 @@ int main() {
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
   employees[0].format()
+    .font_align(FontAlign::right)
     .font_style({FontStyle::bold});
+
+  employees[1][3].format()
+    .font_align(FontAlign::center);
 
   // Print the table
   employees.print(std::cout);

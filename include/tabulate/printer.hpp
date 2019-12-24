@@ -36,6 +36,46 @@ public:
 
 private:
 
+  static void print_content_left_aligned(std::ostream &stream, const std::string& cell_content,
+                                  size_t text_with_padding_size, size_t column_width) {
+    stream << cell_content;
+    if (text_with_padding_size < column_width) {
+      for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
+        stream << " ";
+      }
+    }
+  }
+
+  static void print_content_center_aligned(std::ostream &stream, std::string cell_content,
+                                    size_t text_with_padding_size, size_t column_width) {
+    auto num_spaces = column_width - text_with_padding_size;
+    if (num_spaces % 2 == 0) {
+      // Even spacing on either side
+      for (size_t j = 0; j < num_spaces / 2; ++j)
+        stream << " ";
+      stream << cell_content;
+      for (size_t j = 0; j < num_spaces / 2; ++j)
+        stream << " ";
+    } else {
+      auto num_spaces_before = num_spaces / 2 + 1;
+      for (size_t j = 0; j < num_spaces_before; ++j)
+        stream << " ";
+      stream << cell_content;
+      for (size_t j = 0; j < num_spaces - num_spaces_before; ++j)
+        stream << " ";
+    }
+  }
+
+  static void print_content_right_aligned(std::ostream &stream, std::string cell_content,
+                                   size_t text_with_padding_size, size_t column_width) {
+    if (text_with_padding_size < column_width) {
+      for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
+        stream << " ";
+      }
+    }
+    stream << cell_content;
+  }
+
   static void apply_font_style(std::ostream& stream, FontStyle style) {
     switch (style) {
     case FontStyle::bold:
