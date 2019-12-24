@@ -33,6 +33,6 @@ int main() {
   //   .font_align(FontAlign::center);
 
   // Print the table
-  std::cout << employees;
+  std::cout << employees << std::endl;
 
 }

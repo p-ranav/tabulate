@@ -168,8 +168,8 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
                                  num_columns);
       }
     }
-
-    std::cout << "\n";
+    if (i + 1 < num_rows)
+      stream << "\n"; // Don't add newline after last row
   }
 }
 
