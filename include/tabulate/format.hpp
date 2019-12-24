@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <cstddef>
 #include <optional>
 #include <string>
@@ -253,8 +254,16 @@ public:
       result.font_align_ = first.font_align_;
     else result.font_align_ = second.font_align_;
 
-    if (first.font_style_.has_value())
-      result.font_style_ = first.font_style_;
+    if (first.font_style_.has_value()) {
+      // Merge font styles using std::set_union
+      std::vector<FontStyle> merged_font_style(first.font_style_.value().size() + second.font_style_.value().size());
+      std::set_union(first.font_style_.value().begin(), 
+        first.font_style_.value().end(),
+        second.font_style_.value().begin(),
+        second.font_style_.value().end(),
+        merged_font_style.begin());
+      result.font_style_ = merged_font_style;
+    }
     else result.font_style_ = second.font_style_;
 
     if (first.font_color_.has_value())
