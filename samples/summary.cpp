@@ -8,12 +8,7 @@ int main() {
   readme.format()
     .border_color(Color::yellow)
     .font_style({FontStyle::bold});
-  
-  // Add rows
-  Table highlights;
-
-  highlights.add_row({"Header-only Library", "Requires C++17", "MIT License"});
-  
+    
   readme.add_row({"tabulate for Modern C++"});
   readme[0].format().font_align(FontAlign::center).font_style({FontStyle::bold}).font_color(Color::yellow);
 
@@ -27,6 +22,8 @@ int main() {
   readme.add_row({"Tabulate is a header-only library for printing aligned, formatted, and colorized tables in Modern C++"});
   readme[2].format().font_style({FontStyle::italic}).font_color(Color::magenta);
 
+  Table highlights;
+  highlights.add_row({"Header-only Library", "Requires C++17", "MIT License"});
   readme.add_row({highlights});
   readme[3].format().font_align(FontAlign::center).hide_border_top();
   readme.add_row({"Easily format and align content within cells"});
@@ -93,5 +90,5 @@ int main() {
     .font_color(Color::cyan);
 
   // Print the table
-  std::cout << readme << std::endl;
+  std::cout << "\n\n" << readme << "\n\n";
 }
