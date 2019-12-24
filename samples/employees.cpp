@@ -12,6 +12,8 @@ int main() {
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
   employees.format()
+    .corner_color(Color::blue)
+    .border_color(Color::yellow)
     .padding_top(1)
     .padding_bottom(1);
 
@@ -19,6 +21,7 @@ int main() {
     .width(16);
 
   employees[0][3].format()
+    .border_color(Color::red)
     .width(20);
 
   // employees[1].format()

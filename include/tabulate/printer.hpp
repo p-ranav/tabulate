@@ -24,8 +24,17 @@ public:
                                        const std::pair<size_t, size_t> &index,
                                        const std::pair<size_t, size_t> &dimension, size_t num_columns);
 
-  static void apply_color(std::ostream &stream, Color color) {
-    switch (color) {
+  static void print_colors(std::ostream &stream, Color foreground, Color background) {
+    apply_foreground_color(stream, foreground);
+    apply_background_color(stream, background);
+  }
+
+  static void reset_colors(std::ostream &stream) { stream << termcolor::reset; }
+
+private:
+
+  static void apply_foreground_color(std::ostream &stream, Color foreground_color) {
+    switch (foreground_color) {
     case Color::grey:
       stream << termcolor::grey;
       break;
