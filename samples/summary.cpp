@@ -6,6 +6,7 @@ int main() {
   Table readme;
 
   readme.format()
+    .border_color(Color::yellow)
     .font_style({FontStyle::bold});
   
   // Add rows
@@ -15,8 +16,13 @@ int main() {
   
   readme.add_row({"tabulate for Modern C++"});
   readme[0].format().font_align(FontAlign::center).font_style({FontStyle::bold}).font_color(Color::yellow);
+
   readme.add_row({"https://github.com/p-ranav/tabulate"});
-  readme[1].format().font_align(FontAlign::center).font_style({FontStyle::bold, FontStyle::italic}).font_color(Color::white).hide_border_top();
+  readme[1].format()
+    .font_align(FontAlign::center)
+    .font_style({FontStyle::underline, FontStyle::italic})
+    .font_color(Color::white)
+    .hide_border_top();
 
   readme.add_row({"Tabulate is a header-only library for printing aligned, formatted, and colorized tables in Modern C++"});
   readme[2].format().font_style({FontStyle::italic}).font_color(Color::magenta);
@@ -26,22 +32,22 @@ int main() {
   readme.add_row({"Easily configure and align content within cells"});
   readme[4].format().font_align(FontAlign::center);
 
-  Table features;
-  features.add_row({"Horizontal Alignment", "Left aligned", "Center aligned", "Right aligned"});
-  features[0][0].format().font_color(Color::green);
-  features.column(1).format().width(25);
-  features.column(2).format().width(25).font_align(FontAlign::center);
-  features.column(3).format().width(25).font_align(FontAlign::right);
+  Table format;
+  format.add_row({"Horizontal Alignment", "Left aligned", "Center aligned", "Right aligned"});
+  format[0][0].format().font_color(Color::green);
+  format.column(1).format().width(25);
+  format.column(2).format().width(25).font_align(FontAlign::center);
+  format.column(3).format().width(25).font_align(FontAlign::right);
 
-  features.add_row({"Automatic Word-Wrapping", "Long sentences automatically word-wrap based on the width of the column", 
+  format.add_row({"Automatic Word-Wrapping", "Long sentences automatically word-wrap based on the width of the column", 
     "Word-wrapping also plays nicely with alignment rules. For instance, this cell is center aligned.",
-    "You can also enforce \ncustom word-wrapping \nby embedding '\\n' \ncharacters in your text"});
-  features[1][2].format().font_align(FontAlign::center);
-  features[1][3].format().font_align(FontAlign::right);
+    "You can also enforce \ncustom word-wrapping \nby embedding '\\n' \ncharacters in your cell\n content."});
+  format[1][2].format().font_align(FontAlign::center);
+  format[1][3].format().font_align(FontAlign::right);
 
-  features.column(0).format().width(23);
+  format.column(0).format().width(23);
 
-  readme.add_row({features});
+  readme.add_row({format});
 
   readme[4].format()
     .font_color(Color::cyan)
@@ -53,8 +59,16 @@ int main() {
     .hide_border_top()
     .padding_top(0);
 
+  readme.add_row({"Colorize your tables\nWhat's red and smells like blue paint? ... Red paint!"});
+  readme[6].format()
+    .font_align(FontAlign::center)
+    .border_color(Color::red)
+    .corner_color(Color::red)
+    .padding_bottom(1)
+    .background_color(Color::red);
+
   readme.add_row({Table().add_row(
-    {"You can embed", 
+    {"You can \nalso embed...", 
       Table().add_row(
         {"tables", 
           Table().add_row(
@@ -63,7 +77,7 @@ int main() {
                 Table().add_row({"within tables.. and so on."})
               })})})})});
 
-  readme[6].format()
+  readme[7].format()
     .border_left(":")
     .border_right(":")
     .hide_border_top()
