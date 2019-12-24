@@ -301,7 +301,7 @@ bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
   auto corner = format.corner_.value();
   auto border_top = format.border_top_.value();
 
-  if (corner == "" && border_top == "")
+  if ((corner == "" && border_top == "") || !format.show_border_top_.value())
     return false;
 
   apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(),
@@ -337,7 +337,7 @@ bool Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &tabl
   auto corner = format.corner_.value();
   auto border_bottom = format.border_bottom_.value();
 
-  if (corner == "" && border_bottom == "")
+  if ((corner == "" && border_bottom == "") || !format.show_border_bottom_.value())
     return false;
 
   apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(),

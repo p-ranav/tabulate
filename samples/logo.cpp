@@ -34,37 +34,36 @@ int main() {
   Table highlights;
 
   highlights.add_row({"Header-only Library", "Requires C++17", "MIT License"});
+  highlights.add_row({""});
   
-  readme.add_row({"tabulate", "for Modern C++"});
-  readme[0].format().font_align(FontAlign::center);
+  readme.add_row({"tabulate for Modern C++"});
+  readme[0].format().font_align(FontAlign::center).font_style({FontStyle::bold, FontStyle::underline}).font_color(Color::yellow);
+
+  readme.add_row({"Tabulate is a header-only library for printing aligned and formatted tables"});
+  readme[1].format().font_style({FontStyle::italic});
 
   readme.add_row({highlights});
-  readme[1].format().font_align(FontAlign::center);
-  readme.add_row({"Features"});
+  readme[2].format().font_align(FontAlign::center).hide_border_top();
+  readme.add_row({"Configure / Format / Align"});
+  readme[3].format().font_align(FontAlign::center);
 
   Table features;
   features.add_row({"Horizontal Alignment", "Left aligned", "Center aligned", "Right aligned"});
+  features[0][0].format().font_color(Color::green);
   features.column(1).format().width(25);
   features.column(2).format().width(25).font_align(FontAlign::center);
   features.column(3).format().width(25).font_align(FontAlign::right);
   readme.add_row({features});
 
-  readme[2].format()
+  readme[3].format()
     .font_color(Color::cyan)
     .font_style({FontStyle::underline, FontStyle::bold})
     .padding_top(0)
     .padding_bottom(0);
 
-  readme[3].format()
-    .corner("")
-    .padding_top(0)
-    .border_top("");
-
-  // readme[1].format()
-  //   .font_color(Color::white)
-  //   .font_background_color(Color::grey)
-  //   .border_left_background_color(Color::grey)
-  //   .border_right_background_color(Color::grey);
+  readme[4].format()
+    .hide_border_top()
+    .padding_top(0);
 
   // Print the table
   std::cout << readme << std::endl;

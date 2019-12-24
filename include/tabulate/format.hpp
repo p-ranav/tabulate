@@ -163,6 +163,62 @@ public:
     return *this;
   }
 
+  Format &show_border() {
+    show_border_top_ = true;
+    show_border_bottom_ = true;
+    show_border_left_ = true;
+    show_border_right_ = true;
+    return *this;
+  }
+
+  Format &hide_border() {
+    show_border_top_ = false;
+    show_border_bottom_ = false;
+    show_border_left_ = false;
+    show_border_right_ = false;
+    return *this;
+  }
+
+  Format &show_border_top() {
+    show_border_top_ = true;
+    return *this;
+  }
+
+  Format &hide_border_top() {
+    show_border_top_ = false;
+    return *this;
+  }
+
+  Format &show_border_bottom() {
+    show_border_bottom_ = true;
+    return *this;
+  }
+
+  Format &hide_border_bottom() {
+    show_border_bottom_ = false;
+    return *this;
+  }
+
+  Format &show_border_left() {
+    show_border_left_ = true;
+    return *this;
+  }
+
+  Format &hide_border_left() {
+    show_border_left_ = false;
+    return *this;
+  }
+
+  Format &show_border_right() {
+    show_border_right_ = true;
+    return *this;
+  }
+
+  Format &hide_border_right() {
+    show_border_right_ = false;
+    return *this;
+  }
+
   Format &corner(const std::string &value) {
     corner_ = value;
     return *this;
@@ -435,6 +491,26 @@ public:
     else
       result.border_right_background_color_ = second.border_right_background_color_;
 
+    if (first.show_border_top_.has_value())
+      result.show_border_top_ = first.show_border_top_;
+    else
+      result.show_border_top_ = second.show_border_top_;
+
+    if (first.show_border_bottom_.has_value())
+      result.show_border_bottom_ = first.show_border_bottom_;
+    else
+      result.show_border_bottom_ = second.show_border_bottom_;
+
+    if (first.show_border_left_.has_value())
+      result.show_border_left_ = first.show_border_left_;
+    else
+      result.show_border_left_ = second.show_border_left_;
+
+    if (first.show_border_right_.has_value())
+      result.show_border_right_ = first.show_border_right_;
+    else
+      result.show_border_right_ = second.show_border_right_;
+
     // Corner
     if (first.corner_.has_value())
       result.corner_ = first.corner_;
@@ -487,6 +563,7 @@ private:
     padding_top_ = padding_bottom_ = 0;
     border_top_ = border_bottom_ = "-";
     border_left_ = border_right_ = "|";
+    show_border_left_ = show_border_right_ = show_border_top_ = show_border_bottom_ = true;
     border_top_color_ = border_top_background_color_ = border_bottom_color_ =
         border_bottom_background_color_ = border_left_color_ = border_left_background_color_ =
             border_right_color_ = border_right_background_color_ = Color::none;
@@ -582,18 +659,22 @@ private:
   std::optional<size_t> padding_bottom_{};
 
   // Element border
+  std::optional<bool> show_border_top_{};
   std::optional<std::string> border_top_{};
   std::optional<Color> border_top_color_{};
   std::optional<Color> border_top_background_color_{};
 
+  std::optional<bool> show_border_bottom_{};
   std::optional<std::string> border_bottom_{};
   std::optional<Color> border_bottom_color_{};
   std::optional<Color> border_bottom_background_color_{};
 
+  std::optional<bool> show_border_left_{};
   std::optional<std::string> border_left_{};
   std::optional<Color> border_left_color_{};
   std::optional<Color> border_left_background_color_{};
 
+  std::optional<bool> show_border_right_{};
   std::optional<std::string> border_right_{};
   std::optional<Color> border_right_color_{};
   std::optional<Color> border_right_background_color_{};
