@@ -150,7 +150,7 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
     }
     stream << "\n";
 
-    // Print padding top
+    // Print row contents with word wrapping
     for (size_t k = 0; k < row_heights[i]; ++k) {
       for (size_t j = 0; j < num_columns; ++j) {
         print_row_in_cell(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns,
@@ -194,6 +194,7 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
     stream << std::string(column_width, ' ');
   } else if (row_index >= padding_top &&
              (row_index <= (padding_top + text_with_padding_size / column_width))) {
+    // Row contents
     if (column_width >= text_with_padding_size) {
       row_index -= padding_top;
       if (row_index * column_width < text.size()) {
