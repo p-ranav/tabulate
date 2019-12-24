@@ -150,7 +150,7 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
       border_top_printed &= print_cell_border_top(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns);
     }
     if (border_top_printed)
-      stream << termcolor::nocolorize << "\n";
+      stream << termcolor::reset << "\n";
 
     // Print row contents with word wrapping
     for (size_t k = 0; k < row_heights[i]; ++k) {
@@ -159,7 +159,7 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
                           k);
       }
       if (k + 1 < row_heights[i])
-        stream << termcolor::nocolorize << "\n";
+        stream << termcolor::reset << "\n";
     }
 
     if (i + 1 == num_rows) {
@@ -179,7 +179,7 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
       }
 
       if (bottom_border_needed)
-        stream << termcolor::nocolorize << "\n";
+        stream << termcolor::reset << "\n";
       // Print bottom border for table
       for (size_t j = 0; j < num_columns; ++j) {
         print_cell_border_bottom(stream, table, {i, j}, {row_heights[i], column_widths[j]},
@@ -187,7 +187,7 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
       }
     }
     if (i + 1 < num_rows)
-      stream << termcolor::nocolorize << "\n"; // Don't add newline after last row
+      stream << termcolor::reset << "\n"; // Don't add newline after last row
   }
 }
 
@@ -219,7 +219,7 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
     // Padding top
     stream << std::string(column_width, ' ');
   } else if (row_index >= padding_top && (row_index <= (padding_top + text_height))) {
-    // Row contents
+    // // Row contents
 
     // Retrieve padding left and right
     // (column_width - padding_left - padding_right) is the amount of space
@@ -272,7 +272,7 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       }
 
       // Print right padding characters
-      stream << std::string(format.padding_right_.value(), ' ');
+      stream << std::string(padding_right, ' ');
     } else
       stream << std::string(column_width, ' ');
 
