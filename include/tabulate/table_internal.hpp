@@ -202,9 +202,6 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
     if (column_width >= text_with_padding_size) {
       row_index -= padding_top;
       if (row_index * column_width < text.size()) {
-        // stream << std::string(format.padding_left_.value(), ' ') << text
-        //         << std::string(format.padding_right_.value(), ' ')
-        //         << std::string(column_width - text_with_padding_size, ' ');
         stream << std::string(format.padding_left_.value(), ' ');
         switch (format.font_align_.value()) {
         case FontAlign::left:

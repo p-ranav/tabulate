@@ -78,11 +78,17 @@ private:
     size_t result{0};
     Cell &cell = *(cells_[cell_index]);
     auto format = cell.format();
-    if (format.padding_top_.has_value())
-      result += format.padding_top_.value();
-    result += 1 + cell.get_text().size() / column_width; // At least one row
-    if (format.padding_bottom_.has_value())
-      result += format.padding_bottom_.value();
+    auto text = cell.get_text();
+    auto text_size = text.size();
+    auto text_with_padding_size = format.padding_left_.value() + text_size + format.padding_right_.value();
+
+    result += format.padding_top_.value();
+
+    result += text_with_padding_size / column_width;
+    if (text_with_padding_size % column_width > 0)
+      result += 1;
+
+    result += format.padding_bottom_.value();
 
     return result;
   }
