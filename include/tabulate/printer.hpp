@@ -35,7 +35,8 @@ public:
       apply_font_style(stream, style);
   }
 
-  static void reset_element_style(std::ostream &stream) { stream << termcolor::reset; }
+  static void reset_element_style(std::ostream &stream) { 
+    stream << termcolor::reset << termcolor::nocolorize; }
 
 private:
   static void print_content_left_aligned(std::ostream &stream, const std::string &cell_content,
@@ -160,7 +161,7 @@ private:
       stream << termcolor::red;
       break;
     case Color::green:
-      stream << termcolor::green;
+      stream << termcolor::colorize << termcolor::green;
       break;
     case Color::yellow:
       stream << termcolor::yellow;

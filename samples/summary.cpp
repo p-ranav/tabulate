@@ -84,7 +84,5 @@ int main() {
     .font_color(Color::cyan);
 
   // Print the table
-  std::cout << termcolor::colorize;
   std::cout << readme << std::endl;
-  std::cout << termcolor::nocolorize;
 }
