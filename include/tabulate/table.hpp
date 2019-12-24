@@ -1,4 +1,5 @@
 #include <tabulate/table_internal.hpp>
+#include <variant>
 
 namespace tabulate {
 
@@ -6,7 +7,22 @@ class Table {
 public:
   Table() { table_ = TableInternal::create(); }
 
-  void add_row(const std::vector<std::string> &cells) { table_->add_row(cells); }
+  void add_row(const std::vector<std::variant<std::string, Table>> &cells) {
+    std::vector<std::string> cell_strings;
+
+    for (auto& cell : cells) {
+      if (std::holds_alternative<std::string>(cell)) {
+        cell_strings.push_back(std::get<std::string>(cell));
+      } else {
+        auto table = std::get<Table>(cell);
+        std::stringstream stream;
+        table.print(stream);
+        cell_strings.push_back(stream.str());
+      }
+    }
+
+    table_->add_row(cell_strings);
+  }
 
   Row &operator[](size_t index) { return row(index); }
 
