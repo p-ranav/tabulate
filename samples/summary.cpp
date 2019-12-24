@@ -59,7 +59,7 @@ int main() {
     .hide_border_top()
     .padding_top(0);
 
-  readme.add_row({"Colorize your tables\nWhat's red and smells like blue paint? ... Red paint!"});
+  readme.add_row({"Colorize cells, rows, or even entire tables\nWhat's red and smells like blue paint? ... Red paint!"});
   readme[6].format()
     .font_align(FontAlign::center)
     .border_color(Color::red)
@@ -67,15 +67,24 @@ int main() {
     .padding_bottom(1)
     .background_color(Color::red);
 
-  readme.add_row({Table().add_row(
-    {"You can \nalso embed...", 
-      Table().add_row(
-        {"tables", 
-          Table().add_row(
-            {"within tables",
-              Table().add_row({"within tables",
-                Table().add_row({"within tables.. and so on."})
-              })})})})});
+  Table embedded_table;
+  embedded_table.add_row(
+      {"You can \nalso embed...", 
+        Table().add_row(
+          {"tables", 
+            Table().add_row(
+              {"within tables",
+                Table().add_row({"within tables",
+                  Table().add_row({"within tables.. and so on."})
+                })})})});
+  embedded_table.format()
+    .border_left("%")
+    .border_right("%");
+
+  embedded_table.column(1).format()
+    .border_left("\\");
+
+  readme.add_row({embedded_table});
 
   readme[7].format()
     .border_left(":")
