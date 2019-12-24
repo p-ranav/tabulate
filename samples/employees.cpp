@@ -12,6 +12,7 @@ int main() {
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
   employees.column(0).format()
+    .font_color(Color::yellow)
     .font_align(FontAlign::right);
 
   // employees.column(3).format()
