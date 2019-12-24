@@ -198,8 +198,7 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
   if (row_index < padding_top) {
     // Padding top
     stream << std::string(column_width, ' ');
-  } else if (row_index >= padding_top &&
-             (row_index <= (padding_top + text_height))) {
+  } else if (row_index >= padding_top && (row_index <= (padding_top + text_height))) {
     // Row contents
 
     // Retrieve padding left and right
@@ -221,14 +220,14 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       else {
         // Configured column width cannot be lower than (padding_left + padding_right)
         // This is a bad configuration
-        // E.g., the user is trying to force the column width to be 5 
+        // E.g., the user is trying to force the column width to be 5
         // when padding_left and padding_right are each configured to 3
         // (padding_left + padding_right) = 6 > column_width
       }
     } else {
       word_wrapped_text = text; // repect the embedded '\n' characters
     }
-    
+
     auto lines = Format::split_lines(word_wrapped_text, "\n");
 
     if (row_index - padding_top < lines.size()) {
@@ -253,10 +252,8 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
 
       // Print right padding characters
       stream << std::string(format.padding_right_.value(), ' ');
-    }
-    else
+    } else
       stream << std::string(column_width, ' ');
-    
 
   } else {
     // Padding bottom

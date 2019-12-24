@@ -235,29 +235,42 @@ public:
   // Apply word wrap
   // Given an input string and a line length, this will insert \n
   // in strategic places in input string and apply word wrapping
-  static std::string word_wrap(const std::string &text, size_t line_length) {
-    std::istringstream words(text);
-    std::ostringstream wrapped;
-    std::string word;
+  static std::string word_wrap(std::string str, size_t width) {
+    std::vector<std::string> words = explode_string(str, {" ", "-", "\t"});
+    size_t current_line_length = 0;
+    std::string result;
 
-    if (words >> word) {
-      wrapped << word;
-      size_t space_left = line_length - word.length();
-      while (words >> word) {
-        if (space_left < word.length() + 1) {
-          wrapped << '\n' << word;
-          space_left = line_length - word.length();
-        } else {
-          wrapped << ' ' << word;
-          space_left -= word.length() + 1;
+    for (size_t i = 0; i < words.size(); ++i) {
+      std::string word = words[i];
+      // If adding the new word to the current line would be too long,
+      // then put it on a new line (and split it up if it's too long).
+      if (current_line_length + word.size() > width) {
+        // Only move down to a new line if we have text on the current line.
+        // Avoids situation where wrapped whitespace causes emptylines in text.
+        if (current_line_length > 0) {
+          result += '\n';
+          current_line_length = 0;
         }
+
+        // If the current word is too long to fit on a line even on it's own then
+        // split the word up.
+        while (word.size() > width) {
+          result += word.substr(0, width - 1) + "-";
+          word = word.substr(width - 1);
+          result += '\n';
+        }
+
+        // Remove leading whitespace from the word so the new line starts flush to the left.
+        word = trim_left(word);
       }
+      result += word;
+      current_line_length += word.size();
     }
-    return wrapped.str();
+    return result;
   }
 
-
-  static std::vector<std::string> split_lines(const std::string& text, const std::string& delimiter) {
+  static std::vector<std::string> split_lines(const std::string &text,
+                                              const std::string &delimiter) {
     std::vector<std::string> result{};
     std::string input = text;
     size_t pos = 0;
@@ -481,6 +494,57 @@ private:
     corner_color_ = corner_background_color_ = Color::none;
     column_separator_ = "|";
     column_separator_color_ = column_separator_background_color_ = Color::none;
+  }
+
+  // Helper methods for word wrapping:
+
+  // trim white spaces from the left end of an input string
+  static std::string trim_left(const std::string &input_string) {
+    std::string result = input_string;
+    result.erase(result.begin(), std::find_if(result.begin(), result.end(),
+                                              [](int ch) { return !std::isspace(ch); }));
+    return result;
+  }
+
+  static size_t index_of_any(const std::string &input, size_t start_index,
+                             const std::vector<std::string> &split_characters) {
+    std::vector<size_t> indices{};
+    for (auto &c : split_characters) {
+      auto index = input.find(c, start_index);
+      if (index != std::string::npos)
+        indices.push_back(index);
+    }
+    if (indices.size() > 0)
+      return *std::min_element(indices.begin(), indices.end());
+    else
+      return std::string::npos;
+  }
+
+  static std::vector<std::string> explode_string(const std::string &input,
+                                                 const std::vector<std::string> &split_characters) {
+    std::vector<std::string> result{};
+    size_t start_index{0};
+    while (true) {
+      auto index = index_of_any(input, start_index, split_characters);
+
+      if (index == std::string::npos) {
+        result.push_back(input.substr(start_index));
+        return result;
+      }
+
+      std::string word = input.substr(start_index, index - start_index);
+      char next_character = input.substr(index, 1)[0];
+      // Unlike whitespace, dashes and the like should stick to the word occurring before it.
+      if (isspace(next_character)) {
+        result.push_back(word);
+        result.push_back(std::string(1, next_character));
+      } else {
+        result.push_back(word + next_character);
+      }
+      start_index = index + 1;
+    }
+
+    return result;
   }
 
   // Element width and height
