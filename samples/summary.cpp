@@ -29,7 +29,7 @@ int main() {
 
   readme.add_row({highlights});
   readme[3].format().font_align(FontAlign::center).hide_border_top();
-  readme.add_row({"Easily configure and align content within cells"});
+  readme.add_row({"Easily format and align content within cells"});
   readme[4].format().font_align(FontAlign::center);
 
   Table format;
