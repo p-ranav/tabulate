@@ -80,10 +80,17 @@ private:
     auto format = cell.format();
     auto text = cell.get_text();
 
+    auto padding_left = format.padding_left_.value();
+    auto padding_right = format.padding_right_.value();
+
     result += format.padding_top_.value();
 
+    if (column_width > (padding_left + padding_right)) {
+      column_width -= (padding_left + padding_right);
+    }
+
     // Check if input text has embedded newline characters
-    auto newlines_in_text = Format::split_lines(text, "\n").size() - 1;
+    auto newlines_in_text = std::count(text.begin(), text.end(), '\n');
     std::string word_wrapped_text;
     if (newlines_in_text == 0) {
       // No new lines in input
@@ -94,8 +101,14 @@ private:
       // Respect these characters
       word_wrapped_text = text;
     }
-    result += std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n') + 1;
 
+    auto newlines_in_wrapped_text = std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n');
+    auto estimated_row_height = newlines_in_wrapped_text;
+    if (word_wrapped_text[word_wrapped_text.size() - 1] != '\n') // text doesn't end with a newline
+      estimated_row_height += 1;
+
+    result += estimated_row_height;
+    
     result += format.padding_bottom_.value();
 
     return result;

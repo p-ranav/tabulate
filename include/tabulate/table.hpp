@@ -7,7 +7,7 @@ class Table {
 public:
   Table() { table_ = TableInternal::create(); }
 
-  void add_row(const std::vector<std::variant<std::string, Table>> &cells) {
+  Table& add_row(const std::vector<std::variant<std::string, Table>> &cells) {
 
     if (rows_ == 0) {
       // This is the first row added
@@ -38,6 +38,7 @@ public:
 
     table_->add_row(cell_strings);
     rows_ += 1;
+    return *this;
   }
 
   Row &operator[](size_t index) { return row(index); }
