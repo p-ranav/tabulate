@@ -24,7 +24,7 @@ int main() {
     .font_color(Color::green)
     .font_style({FontStyle::bold});
 
-  std::cout << header << std::endl;
+  std::cout << header;
 
   Table tagline;
   tagline.format()
@@ -33,9 +33,10 @@ int main() {
     .column_separator("")
     .color(Color::red)
     .font_style({FontStyle::bold});
-  tagline.add_row({"tabulate", " is a library for printing aligned and formatted tabes"});
+  tagline.add_row({"tabulate", "is a library for printing aligned and formatted tables"});
   tagline[0][0].format()
     .padding(0)
+    .padding_right(1)
     .font_style({FontStyle::italic, FontStyle::underline});
   tagline[0][1].format()
     .padding_left(0);

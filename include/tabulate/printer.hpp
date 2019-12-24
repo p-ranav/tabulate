@@ -39,8 +39,19 @@ public:
 
 private:
   static void print_content_left_aligned(std::ostream &stream, const std::string &cell_content,
+                                         const Format& format,
                                          size_t text_with_padding_size, size_t column_width) {
+
+    // Apply font style
+    apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+                    format.font_style_.value());
     stream << cell_content;
+    // Only apply font_style to the font
+    // Not the padding. So calling apply_element_style with font_style = {}
+    reset_element_style(stream);
+    apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+                    {});
+
     if (text_with_padding_size < column_width) {
       for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
         stream << " ";
@@ -49,33 +60,64 @@ private:
   }
 
   static void print_content_center_aligned(std::ostream &stream, std::string cell_content,
+                                           const Format& format,
                                            size_t text_with_padding_size, size_t column_width) {
     auto num_spaces = column_width - text_with_padding_size;
     if (num_spaces % 2 == 0) {
       // Even spacing on either side
       for (size_t j = 0; j < num_spaces / 2; ++j)
         stream << " ";
+
+      // Apply font style
+      apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+                      format.font_style_.value());
       stream << cell_content;
+      // Only apply font_style to the font
+      // Not the padding. So calling apply_element_style with font_style = {}
+      reset_element_style(stream);
+      apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+                      {});
+
       for (size_t j = 0; j < num_spaces / 2; ++j)
         stream << " ";
     } else {
       auto num_spaces_before = num_spaces / 2 + 1;
       for (size_t j = 0; j < num_spaces_before; ++j)
         stream << " ";
-      stream << cell_content;
+
+        // Apply font style
+        apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+                        format.font_style_.value());
+        stream << cell_content;
+        // Only apply font_style to the font
+        // Not the padding. So calling apply_element_style with font_style = {}
+        reset_element_style(stream);
+        apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+                        {});
+
       for (size_t j = 0; j < num_spaces - num_spaces_before; ++j)
         stream << " ";
     }
   }
 
   static void print_content_right_aligned(std::ostream &stream, std::string cell_content,
+                                          const Format& format,
                                           size_t text_with_padding_size, size_t column_width) {
     if (text_with_padding_size < column_width) {
       for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
         stream << " ";
       }
     }
+    
+    // Apply font style
+    apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+                    format.font_style_.value());
     stream << cell_content;
+    // Only apply font_style to the font
+    // Not the padding. So calling apply_element_style with font_style = {}
+    reset_element_style(stream);
+    apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+                    {});
   }
 
   static void apply_font_style(std::ostream &stream, FontStyle style) {

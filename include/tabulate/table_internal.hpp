@@ -193,7 +193,7 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
   reset_element_style(stream);
 
   apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
-                      format.font_style_.value());
+                      {});
 
   if (row_index < padding_top) {
     // Padding top
@@ -241,13 +241,13 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       auto line_with_padding_size = line.size() + padding_left + padding_right;
       switch (format.font_align_.value()) {
       case FontAlign::left:
-        print_content_left_aligned(stream, line, line_with_padding_size, column_width);
+        print_content_left_aligned(stream, line, format, line_with_padding_size, column_width);
         break;
       case FontAlign::center:
-        print_content_center_aligned(stream, line, line_with_padding_size, column_width);
+        print_content_center_aligned(stream, line, format, line_with_padding_size, column_width);
         break;
       case FontAlign::right:
-        print_content_right_aligned(stream, line, line_with_padding_size, column_width);
+        print_content_right_aligned(stream, line, format, line_with_padding_size, column_width);
         break;
       }
 
