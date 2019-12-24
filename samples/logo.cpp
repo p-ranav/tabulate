@@ -23,7 +23,7 @@ int main() {
 
   readme.add_row({highlights});
   readme[3].format().font_align(FontAlign::center).hide_border_top();
-  readme.add_row({"Configure / Format / Align"});
+  readme.add_row({"Easily configure and align content within cells"});
   readme[4].format().font_align(FontAlign::center);
 
   Table features;
@@ -39,6 +39,8 @@ int main() {
   features[1][2].format().font_align(FontAlign::center);
   features[1][3].format().font_align(FontAlign::right);
 
+  features.column(0).format().width(23);
+
   readme.add_row({features});
 
   readme[4].format()
@@ -50,6 +52,22 @@ int main() {
   readme[5].format()
     .hide_border_top()
     .padding_top(0);
+
+  readme.add_row({Table().add_row(
+    {"You can embed", 
+      Table().add_row(
+        {"tables", 
+          Table().add_row(
+            {"within tables",
+              Table().add_row({"within tables",
+                Table().add_row({"within tables.. and so on."})
+              })})})})});
+
+  readme[6].format()
+    .border_left(":")
+    .border_right(":")
+    .hide_border_top()
+    .font_color(Color::cyan);
 
   // Print the table
   std::cout << termcolor::colorize;

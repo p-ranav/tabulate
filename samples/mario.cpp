@@ -11,7 +11,7 @@ int main() {
         .padding(0);
     auto rows = 16;
     for (size_t i = 0; i < rows; ++i) {
-      std::vector<std::string> row;
+      std::vector<std::variant<std::string, Table>> row;
       auto cols = 30;
       for (size_t j = 0; j < cols; ++j) {
         row.push_back("█");
