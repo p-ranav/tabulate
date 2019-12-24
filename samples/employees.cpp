@@ -11,35 +11,6 @@ int main() {
   employees.add_row({"102", "Donald", "Patrick", "Marketing and Operational Logistics Planning"});
   employees.add_row({"103", "Ian", "Jacob", "Engineering"});
 
-  employees.format()
-    .font_color(Color::cyan)
-    .font_background_color(Color::white)
-    .corner_color(Color::blue)
-    .border_color(Color::yellow)
-    .padding_top(1)
-    .padding_bottom(1);
-
-  employees.column(3).format()
-    .width(16);
-
-  employees[0][3].format()
-    .font_color(Color::none)
-    .border_color(Color::red)
-    .width(20);
-
-  // employees[1].format()
-  //   .width(15);
-
-  // employees[1][2].format()
-  //   .width(20);
-
-  // // Print the table
-  // employees.print(std::cout);
-
-  // // Set width of column 1 to 13
-  // employees.column(1).format()
-  //   .width(13);
-
   // Print the table
   employees.print(std::cout);
 }
