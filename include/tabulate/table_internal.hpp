@@ -145,10 +145,12 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
   for (size_t i = 0; i < num_rows; ++i) {
 
     // Print top border
+    bool border_top_printed{true};
     for (size_t j = 0; j < num_columns; ++j) {
-      print_cell_border_top(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns);
+      border_top_printed &= print_cell_border_top(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns);
     }
-    stream << "\n";
+    if (border_top_printed)
+      stream << "\n";
 
     // Print row contents with word wrapping
     for (size_t k = 0; k < row_heights[i]; ++k) {
@@ -161,7 +163,23 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
     }
 
     if (i + 1 == num_rows) {
-      stream << "\n";
+
+      // Check if there is bottom border to print:
+      auto bottom_border_needed{true};
+      for (size_t j = 0; j < num_columns; ++j) {
+        auto cell = table[i][j];
+        auto format = cell.format();
+        auto column_width = column_widths[j];
+        auto corner = format.corner_.value();
+        auto border_bottom = format.border_bottom_.value();
+        if (corner == "" && border_bottom == "") {
+          bottom_border_needed = false;
+          break;
+        }
+      }
+
+      if (bottom_border_needed)
+        stream << "\n";
       // Print bottom border for table
       for (size_t j = 0; j < num_columns; ++j) {
         print_cell_border_bottom(stream, table, {i, j}, {row_heights[i], column_widths[j]},
@@ -272,7 +290,7 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
   }
 }
 
-void Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
+bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
                                     const std::pair<size_t, size_t> &index,
                                     const std::pair<size_t, size_t> &dimension,
                                     size_t num_columns) {
@@ -282,6 +300,9 @@ void Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
 
   auto corner = format.corner_.value();
   auto border_top = format.border_top_.value();
+
+  if (corner == "" && border_top == "")
+    return false;
 
   apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(),
                       {});
@@ -302,9 +323,10 @@ void Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
     stream << corner;
     reset_element_style(stream);
   }
+  return true;
 }
 
-void Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &table,
+bool Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &table,
                                        const std::pair<size_t, size_t> &index,
                                        const std::pair<size_t, size_t> &dimension,
                                        size_t num_columns) {
@@ -314,6 +336,9 @@ void Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &tabl
 
   auto corner = format.corner_.value();
   auto border_bottom = format.border_bottom_.value();
+
+  if (corner == "" && border_bottom == "")
+    return false;
 
   apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(),
                       {});
@@ -334,6 +359,7 @@ void Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &tabl
     stream << corner;
     reset_element_style(stream);
   }
+  return true;
 }
 
 } // namespace tabulate

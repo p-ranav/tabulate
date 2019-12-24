@@ -8,20 +8,36 @@ public:
   Table() { table_ = TableInternal::create(); }
 
   void add_row(const std::vector<std::variant<std::string, Table>> &cells) {
-    std::vector<std::string> cell_strings;
 
-    for (auto& cell : cells) {
+    if (rows_ == 0) {
+      // This is the first row added
+      // cells.size() is the number of columns
+      cols_ = cells.size();
+    }
+
+    std::vector<std::string> cell_strings;
+    if (cells.size() < cols_) {
+      cell_strings.resize(cols_);
+      std::fill(cell_strings.begin(), cell_strings.end(), "");
+    } else {
+      cell_strings.resize(cells.size());
+      std::fill(cell_strings.begin(), cell_strings.end(), "");
+    }
+
+    for (size_t i = 0; i < cells.size(); ++i) {
+      auto cell = cells[i];
       if (std::holds_alternative<std::string>(cell)) {
-        cell_strings.push_back(std::get<std::string>(cell));
+        cell_strings[i] = std::get<std::string>(cell);
       } else {
         auto table = std::get<Table>(cell);
         std::stringstream stream;
         table.print(stream);
-        cell_strings.push_back(stream.str());
+        cell_strings[i] = stream.str();
       }
     }
 
     table_->add_row(cell_strings);
+    rows_ += 1;
   }
 
   Row &operator[](size_t index) { return row(index); }
@@ -36,7 +52,8 @@ public:
 
 private:
   friend std::ostream& operator<<(std::ostream& stream, const Table& table);
-
+  size_t rows_{0};
+  size_t cols_{0};
   std::shared_ptr<TableInternal> table_;
 };
 
