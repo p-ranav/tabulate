@@ -506,6 +506,18 @@ private:
     return result;
   }
 
+  // trim white spaces from right end of an input string
+  static std::string trim_right(const std::string &input_string) {
+    std::string result = input_string;
+    result.erase(
+        std::find_if(result.rbegin(), result.rend(), [](int ch) { return !std::isspace(ch); }).base(),
+        result.end());
+    return result;
+  }
+
+  // trim white spaces from either end of an input string
+  static std::string trim(const std::string &input_string) { return trim_left(trim_right(input_string)); }
+
   static size_t index_of_any(const std::string &input, size_t start_index,
                              const std::vector<std::string> &split_characters) {
     std::vector<size_t> indices{};
