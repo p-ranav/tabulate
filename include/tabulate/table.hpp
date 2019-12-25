@@ -51,6 +51,12 @@ public:
 
   void print(std::ostream &stream) { table_->print(stream); }
 
+  std::string str() {
+    std::stringstream stream;
+    print(stream);
+    return stream.str();    
+  }
+
 private:
   friend std::ostream& operator<<(std::ostream& stream, const Table& table);
   size_t rows_{0};
