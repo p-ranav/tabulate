@@ -89,8 +89,14 @@ int main() {
   readme.add_row({embedded_table});
 
   readme[9].format()
+    .hide_border_top()
     .border_color(Color::white)
     .font_color(Color::yellow);
+
+  readme.add_row({"ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ ᚦ ᚧ ᚨ ᚩ ᚪ ᚫ ᚬ ᚭ ᚮ ᚯ ᚰ ᚱ ᚲ ᚳ ᚴ ᚵ ᚶ ᚷ ᚸ ᚹ ᚺ ᚻ ᚼ ᚽ ᚾ ᚿ ᛀ ᛁ ᛂ ᛃ ᛄ ᛅ ᛆ ᛇ ᛈ ᛉ ᛊ ᛋ ᛌ ᛍ ᛎ ᛏ ᛐ ᛑ ᛒ ᛓ"});
+  readme[10].format()
+    .font_background_color(Color::red)
+    .hide_border_top();
 
   // Print the table
   std::cout << "\n\n";
@@ -211,13 +217,13 @@ int main() {
     .font_background_color(Color::red);
 
   legend[1][3].format()
+    .font_style({FontStyle::italic})
     .font_color(Color::yellow);
 
   chart.column(17).format().width(50);
 
-  chart[3][17].set_text("This is an invisible grid.");
-  chart[4][17].set_text("As you can see, cells, rows, and columns");
-  chart[5][17].set_text("can be formatted easily.");
+  chart[4][17].set_text("Cells, rows, and columns");
+  chart[5][17].set_text("can be independently formatted.");
   chart[7][17].set_text("This cell is green and italic");
   chart[7][17].format()
     .color(Color::green)
