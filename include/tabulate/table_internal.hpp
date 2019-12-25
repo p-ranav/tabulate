@@ -214,7 +214,6 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
 
   apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
                       {});
-
   if (row_index < padding_top) {
     // Padding top
     stream << std::string(column_width, ' ');
@@ -257,7 +256,7 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       stream << std::string(padding_left, ' ');
 
       // Print word-wrapped line
-      auto line_with_padding_size = line.size() + padding_left + padding_right;
+      auto line_with_padding_size = get_sequence_length(line) + padding_left + padding_right;
       switch (format.font_align_.value()) {
       case FontAlign::left:
         print_content_left_aligned(stream, line, format, line_with_padding_size, column_width);

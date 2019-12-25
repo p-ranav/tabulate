@@ -14,8 +14,7 @@ int main() {
     .corner("·")
     .border_color(Color::yellow)
     .font_style({FontStyle::bold});
-    
-  readme.add_row({"tabulate for Modern C++"});
+  readme.add_row({"🔥 tabulate for Modern C++ 🔥"});
   readme[0].format().font_align(FontAlign::center).font_style({FontStyle::bold}).font_color(Color::yellow);
 
   readme.add_row({"https://github.com/p-ranav/tabulate"});

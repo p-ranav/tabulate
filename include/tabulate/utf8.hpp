@@ -18,8 +18,6 @@ static const char TrailingBytesForUTF8[256] = {
     2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5 };
 
 size_t get_sequence_length(std::string text) {
-  if (text.size() == 1) return text.size();
-
   auto sequence_length = [](char * s) {
     return TrailingBytesForUTF8[(unsigned int)(unsigned char)s[0]] + 1;
   };
@@ -32,4 +30,4 @@ size_t get_sequence_length(std::string text) {
   return result;
 }
 
-}
+} 
