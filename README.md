@@ -1,3 +1,3 @@
 <p align="center">
-  <img width="70%" src="img/demo.png"/>  
+  <img height="70" src="img/logo.png"/>  
 </p>
