@@ -6,6 +6,12 @@ int main() {
   Table readme;
 
   readme.format()
+    .border_top("─")
+    .border_bottom("─")
+    .border_left("│")
+    .border_right("│")
+    .column_separator("│")
+    .corner("·")
     .border_color(Color::yellow)
     .font_style({FontStyle::bold});
     
