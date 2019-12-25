@@ -3,7 +3,9 @@
 </p>
 
 <p align="center">
-  <img src="img/demo.png"/>  
+  <img width="80%" src="img/demo.png"/>  
+</p>
+<p align="center">
   Source from the above image can be found
   <a href="https://github.com/p-ranav/tabulate/blob/master/samples/summary.cpp">
     here
