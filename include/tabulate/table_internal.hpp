@@ -256,6 +256,7 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       stream << std::string(padding_left, ' ');
 
       // Print word-wrapped line
+      line = Format::trim(line);
       auto line_with_padding_size = get_sequence_length(line) + padding_left + padding_right;
       switch (format.font_align_.value()) {
       case FontAlign::left:
