@@ -103,6 +103,8 @@ int main() {
 
   Table chart;
   chart.format()
+    .font_style({FontStyle::bold})
+    .font_color(Color::white)
     .padding_left(0)
     .padding_right(0)
     .column_separator("")
@@ -110,11 +112,7 @@ int main() {
 
   for (size_t i = 0; i < 9; ++i) {
     std::vector<std::variant<std::string, Table>> row;
-    if (i == 0) {
-      row.push_back(" ");
-    } else {
-      row.push_back(std::to_string(90 - i * 10));
-    }
+    row.push_back(std::to_string(90 - i * 10));
     for (size_t j = 0; j <= 50; ++j) {
       row.push_back(" ");
     }
@@ -189,6 +187,8 @@ int main() {
 
   Table legend;
   legend.format()
+    .font_style({FontStyle::bold})
+    .font_color(Color::white)    
     .border_top("─")
     .border_bottom("─")
     .border_left("│")
@@ -196,7 +196,22 @@ int main() {
     .column_separator("│")
     .corner("·");
   legend.add_row({"Batch 1", "10", "40", "50", "20", "10", "50"});
-  legend.add_row({"Batch 2", "30", "60", "70", "50", "40", "30"});
+  legend.add_row({"Batch 2", "30", "60", "(70)", "50", "40", "30"});
+
+  legend[0].format().font_align(FontAlign::center);
+  legend[1].format().font_align(FontAlign::center);
+
+  legend.column(0).format()
+    .font_align(FontAlign::right)
+    .font_color(Color::green)
+    .font_background_color(Color::grey);
+
+  legend.column(2).format()
+    .font_color(Color::white)
+    .font_background_color(Color::red);
+
+  legend[1][3].format()
+    .font_color(Color::yellow);
 
   chart.column(17).format().width(50);
 
@@ -213,7 +228,7 @@ int main() {
     .color(Color::yellow)
     .font_align(FontAlign::right);
 
-  chart[9][17].set_text("This one's one fire 🔥🔥🔥");
+  chart[9][17].set_text("This one's on 🔥🔥🔥");
 
   std::cout << chart;
   std::cout << legend << "\n\n";
