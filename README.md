@@ -4,10 +4,10 @@
 
 <p align="center">
   <img width="80%" src="img/demo.png"/>  
-</p>
-<p align="center">
-  Source from the above image can be found
-  <a href="https://github.com/p-ranav/tabulate/blob/master/samples/summary.cpp">
-    here
-  </a>
+  <p align="center">
+   Source from the above image can be found
+    <a href="https://github.com/p-ranav/tabulate/blob/master/samples/summary.cpp">
+      here
+    </a>
+  </p>
 </p>
