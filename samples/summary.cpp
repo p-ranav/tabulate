@@ -67,7 +67,8 @@ int main() {
     .font_align(FontAlign::center)
     .border_color(Color::red)
     .corner_color(Color::red)
-    .padding_bottom(1)
+    .hide_border_top()
+    .padding_bottom(0)
     .background_color(Color::red);
 
   Table embedded_table;
