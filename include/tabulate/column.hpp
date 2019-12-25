@@ -76,14 +76,14 @@ private:
 
     // If there are no newlines in input, set column_width = text.size()
     if (split_lines.size() == 1) {
-      result += cell.get_text().size();
+      result += cell.size();
     } else {
       // There are newlines in input
       // Find widest substring in input and use this as column_width
       size_t widest_sub_string_size{0};
       for (auto &line : split_lines)
-        if (line.size() > widest_sub_string_size)
-          widest_sub_string_size = line.size();
+        if (get_sequence_length(line) > widest_sub_string_size)
+          widest_sub_string_size = get_sequence_length(line);
       result += widest_sub_string_size;
     }
 

@@ -5,6 +5,7 @@
 #include <string>
 #include <tabulate/format.hpp>
 #include <vector>
+#include <tabulate/utf8.hpp>
 
 namespace tabulate {
 
@@ -16,7 +17,7 @@ public:
 
   const std::string &get_text() { return data_; }
 
-  size_t size() const { return data_.size(); }
+  size_t size() const { return get_sequence_length(data_); }
 
   Format &format();
 

@@ -7,6 +7,7 @@
 #include <tabulate/color.hpp>
 #include <tabulate/font_align.hpp>
 #include <tabulate/font_style.hpp>
+#include <tabulate/utf8.hpp>
 #include <vector>
 
 namespace tabulate {
@@ -300,7 +301,7 @@ public:
       std::string word = words[i];
       // If adding the new word to the current line would be too long,
       // then put it on a new line (and split it up if it's too long).
-      if (current_line_length + word.size() > width) {
+      if (current_line_length + get_sequence_length(word) > width) {
         // Only move down to a new line if we have text on the current line.
         // Avoids situation where wrapped whitespace causes emptylines in text.
         if (current_line_length > 0) {
@@ -310,7 +311,7 @@ public:
 
         // If the current word is too long to fit on a line even on it's own then
         // split the word up.
-        while (word.size() > width) {
+        while (get_sequence_length(word) > width) {
           result += word.substr(0, width - 1) + "-";
           word = word.substr(width - 1);
           result += '\n';
@@ -320,7 +321,7 @@ public:
         word = trim_left(word);
       }
       result += word;
-      current_line_length += word.size();
+      current_line_length += get_sequence_length(word);
     }
     return result;
   }
@@ -336,7 +337,7 @@ public:
       result.push_back(token);
       input.erase(0, pos + delimiter.length());
     }
-    if (input.size())
+    if (get_sequence_length(input))
       result.push_back(input);
     return result;
   };
@@ -582,18 +583,6 @@ private:
                                               [](int ch) { return !std::isspace(ch); }));
     return result;
   }
-
-  // trim white spaces from right end of an input string
-  static std::string trim_right(const std::string &input_string) {
-    std::string result = input_string;
-    result.erase(
-        std::find_if(result.rbegin(), result.rend(), [](int ch) { return !std::isspace(ch); }).base(),
-        result.end());
-    return result;
-  }
-
-  // trim white spaces from either end of an input string
-  static std::string trim(const std::string &input_string) { return trim_left(trim_right(input_string)); }
 
   static size_t index_of_any(const std::string &input, size_t start_index,
                              const std::vector<std::string> &split_characters) {
