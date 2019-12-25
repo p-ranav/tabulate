@@ -81,18 +81,10 @@ int main() {
                 Table().add_row({"within tables",
                   Table().add_row({"within tables.. and so on."})
                 })})})});
-  embedded_table.format()
-    .border_left("%")
-    .border_right("%");
-
-  embedded_table.column(1).format()
-    .border_left("\\");
 
   readme.add_row({embedded_table});
 
   readme[7].format()
-    .border_left(":")
-    .border_right(":")
     .hide_border_top()
     .font_color(Color::cyan);
 
