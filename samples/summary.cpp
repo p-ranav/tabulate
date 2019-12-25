@@ -89,5 +89,10 @@ int main() {
     .font_color(Color::cyan);
 
   // Print the table
-  std::cout << "\n\n" << readme << "\n\n";
+  std::cout << "\n\n";
+  std::cout << termcolor::bold << termcolor::red << " pranav";
+  std::cout << termcolor::bold << termcolor::yellow << " ~/dev/tabulate" << termcolor::reset;
+  std::cout << termcolor::bold << termcolor::green << " git@master" << std::endl;
+  std::cout << termcolor::bold << termcolor::white << " $ ./samples/summary\n"; 
+  std::cout << readme << "\n\n";
 }
