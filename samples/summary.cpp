@@ -49,7 +49,7 @@ int main() {
 
   format.add_row({"Automatic Word-Wrapping", "Long sentences automatically word-wrap based on the width of the column", 
     "Word-wrapping also plays nicely with alignment rules. For instance, this cell is center aligned.",
-    "You can also enforce \ncustom word-wrapping \nby embedding '\\n' \ncharacters in your cell\n content."});
+    "Enforce \ncustom word-wrapping \nby embedding '\\n' \ncharacters in your cell\n content."});
   format[1][2].format().font_align(FontAlign::center);
   format[1][3].format().font_align(FontAlign::right);
 
@@ -82,9 +82,13 @@ int main() {
                   Table().add_row({"within tables.. and so on."})
                 })})})});
 
+  readme.add_row({"Nested Representations"});
+  readme[8].format()
+    .font_align(FontAlign::center);
+
   readme.add_row({embedded_table});
 
-  readme[8].format()
+  readme[9].format()
     .border_color(Color::white)
     .font_color(Color::yellow);
 
@@ -126,6 +130,7 @@ int main() {
     }
   }
   chart.add_row(row);
+  chart.add_row({});
 
   chart.column(0).format()
     .padding_left(1)
@@ -180,7 +185,7 @@ int main() {
   chart.column(16).format().padding_left(1).width(20);
 
   chart[4][15].format().background_color(Color::yellow);
-  chart[4][16].set_text("Batch 1");
+  chart[4][16].set_text("Batch 2");
 
   Table legend;
   legend.format()
@@ -195,9 +200,9 @@ int main() {
 
   chart.column(17).format().width(50);
 
-  chart[3][17].set_text("This is an invisible grid, pretending to be");
-  chart[4][17].set_text("an important chart. As you can see,");
-  chart[5][17].set_text("individual cells in the table can be formatted.");
+  chart[3][17].set_text("This is an invisible grid.");
+  chart[4][17].set_text("As you can see, cells, rows, and columns");
+  chart[5][17].set_text("can be formatted easily.");
   chart[7][17].set_text("This cell is green and italic");
   chart[7][17].format()
     .color(Color::green)
@@ -206,8 +211,9 @@ int main() {
   chart[8][17].set_text("This one's yellow and right-aligned");
   chart[8][17].format()
     .color(Color::yellow)
-    .font_align(FontAlign::right)
-    .font_style({FontStyle::underline});
+    .font_align(FontAlign::right);
+
+  chart[9][17].set_text("This one's one fire 🔥🔥🔥");
 
   std::cout << chart;
   std::cout << legend << "\n\n";
