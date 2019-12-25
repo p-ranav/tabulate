@@ -71,19 +71,6 @@ int main() {
   readme.add_row({empty_row});
   readme[7].format().hide_border_left().hide_border_right();
 
-  // readme.add_row({"Color table borders, corners, column separators, cells, rows, and columns"});
-  // readme[8].format()
-  //   .font_align(FontAlign::center)
-  //   .border_color(Color::blue)
-  //   .corner_color(Color::blue)
-  //   // .hide_border_top()
-  //   .padding_bottom(1)
-  //   .font_color(Color::white)
-  //   .background_color(Color::blue);
-
-  // readme.add_row({empty_row});
-  // readme[8].format().hide_border_top().hide_border_left().hide_border_right();
-
   Table embedded_table;
   embedded_table.add_row(
       {"You can \neven embed...", 
@@ -99,7 +86,7 @@ int main() {
 
   readme[8].format()
     .border_color(Color::white)
-    .font_color(Color::magenta);
+    .font_color(Color::yellow);
 
   // Print the table
   std::cout << "\n\n";
@@ -207,7 +194,6 @@ int main() {
   legend.add_row({"Batch 2", "30", "60", "70", "50", "40", "30"});
 
   chart.column(17).format().width(50);
-  chart[1][17].set_text("OK. I'm not gonna lie. This took a while...");
 
   chart[3][17].set_text("This is an invisible grid, pretending to be");
   chart[4][17].set_text("an important chart. As you can see,");
