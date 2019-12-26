@@ -70,7 +70,7 @@ Use `Table.column(index)` will return a `Column` object. Columns store `referenc
 ```
 
 <p align="center">
-  <img src="img/universal_constants.jpg"/>  
+  <img src="img/universal_constants.png"/>  
 </p>
 
 ## Inheritance Model to Table Formatting
