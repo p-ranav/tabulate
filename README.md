@@ -18,7 +18,7 @@
 
 ### Adding rows
 
-To build a table, create a `Table` object and use `Table.add_rows` to add rows to your table. `tabulate` will use the length of the first row as the number of columns in the table.
+Create a `Table` object and call `Table.add_rows` to add rows to your table. `tabulate` will use the length of the first row as the number of columns in the table.
 
 ```cpp
 #include <tabulate/table.hpp>
