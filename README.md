@@ -18,6 +18,7 @@
 * [Formatting Tables](#formatting-tables)
   - [Inheritance Model](#inheritance-model)
   - [Font Alignment](#font-alignment)
+  - [Font Styles](#font-styles)
   - [Cell Colors](#cell-colors)
 * [Contributing](#contributing)
 * [License](#license)
@@ -167,6 +168,14 @@ int main() {
 <p align="center">
   <img src="img/movies.png"/>  
 </p>
+
+## Font Styles
+
+`tabulate` supports 8 font styles: bold, dark, italic, underline, blink, reverse, concealed, crossed. Depending on the terminal (or terminal settings), some of these might not work. 
+
+
+
+NOTE: Font styles are applied to the entire cell. Unlike HTML, you cannot currently apply styles to specific words in a cell.
 
 ## Cell Colors
 
