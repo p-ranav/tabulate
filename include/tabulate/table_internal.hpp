@@ -314,7 +314,7 @@ bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
 
   for (size_t i = 0; i < column_width; ++i) {
     apply_element_style(stream, format.border_top_color_.value(),
-                        format.border_bottom_background_color_.value(), {});
+                        format.border_top_background_color_.value(), {});
     stream << border_top;
     reset_element_style(stream);
   }

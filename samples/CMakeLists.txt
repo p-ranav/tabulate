@@ -1,3 +1,6 @@
+add_executable(colors colors.cpp)
+target_link_libraries(colors PRIVATE tabulate::tabulate)
+
 add_executable(employees employees.cpp)
 target_link_libraries(employees PRIVATE tabulate::tabulate)
 
