@@ -225,13 +225,7 @@ NOTE: Font styles are applied to the entire cell. Unlike HTML, you cannot curren
 
 There are a number of methods in the `Format` object to color cells - foreground and background - for font, borders, corners, and column separators. Thanks to [termcolor](https://github.com/ikalnytskyi/termcolor), `tabulate` supports 8 colors: `grey`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, and `white`. The look of these colors vary depending on your terminal.
 
-Here's mario colored using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
-
-<p align="center">
-  <img width="400" src="img/mario.png"/>  
-</p>
-
-For font, border, and corners, you can call `.format().<element>_color(value)` and `.format().<element>_background_color(value)`. Here's an example:
+For font, border, and corners, you can call `.format().<element>_color(value)` to set the foreground color and `.format().<element>_background_color(value)` to set the background color. Here's an example:
 
 ```cpp
 Table colored_table;
@@ -255,6 +249,12 @@ colored_table.format()
   .color(Color::white)
   .background_color(red);
 ```
+
+Here's mario colored using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
+
+<p align="center">
+  <img width="400" src="img/mario.png"/>  
+</p>
 
 ## Building Samples
 
