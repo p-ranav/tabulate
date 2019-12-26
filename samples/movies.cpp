@@ -8,6 +8,10 @@ int main() {
   movies.add_row({"tt3263904", "Sully", "Clint Eastwood", "$60,000,000", "9 September 2016"});
   movies.add_row({"tt1535109", "Captain Phillips", "Paul Greengrass", "$55,000,000", " 11 October 2013"});
 
+  // center align 'Director' column
+  movies.column(2).format()
+    .font_align(FontAlign::center);
+
   // right align 'Estimated Budget' column
   movies.column(3).format()
     .font_align(FontAlign::right);
