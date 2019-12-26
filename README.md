@@ -15,7 +15,7 @@
 # Table of Contents
 
 * [Quick Start](#quick-start)
-* Formatting Tables
+* [Formatting Tables](#formatting-tables)
   - [Inheritance Model in Table Formatting](#inheritance-model-in-table-formatting)
   - [Font Alignment](#font-alignment)
 * [Contributing](#contributing)
@@ -112,7 +112,9 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
   <img src="img/universal_constants.png"/>  
 </p>
 
-# Inheritance Model in Table Formatting
+# Formatting Tables
+
+## Inheritance Model in Table Formatting
 
 Formatting in `tabulate` follows this simple inheritance model. When rendering each cell:
 1. Apply cell formatting if specified
@@ -122,7 +124,7 @@ Formatting in `tabulate` follows this simple inheritance model. When rendering e
 
 This enables overriding the formatting for a particular cell even though row or table formatting is specified, e.g., when an entire row is colored `yellow` but you want a specific cell to be colored `red`.
 
-# Font Alignment
+## Font Alignment
 
 `tabulate` supports three font alignment settings: `left`, `center`, and `right`. By default, all table content is left-aligned. To align cells, use `.format().font_align(alignment)`. 
 
