@@ -173,6 +173,8 @@ int main() {
 
 `tabulate` supports 8 font styles: `bold`, `dark`, `italic`, `underline`, `blink`, `reverse`, `concealed`, `crossed`. Depending on the terminal (or terminal settings), some of these might not work. 
 
+To apply a font style, simply call `.format().font_style({...})`. The `font_style` method takes a vector of font styles. This allows to apply multiple font styles to a cell, e.g., ***bold and italic***.
+
 ```cpp
 #include <tabulate/table.hpp>
 using namespace tabulate;
