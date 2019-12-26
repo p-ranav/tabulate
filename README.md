@@ -99,9 +99,7 @@ Print the table using the stream `operator<<` like so:
 
 ## Inheritance Model in Table Formatting
 
-Formatting in `tabulate` follows a simple inheritance model:
-
-When rendering each cell:
+Formatting in `tabulate` follows this simple inheritance model. When rendering each cell:
 * Apply cell formatting if specified
 * If no cell formatting is specified, apply its parent row formatting
 * If no row formatting is specified, apply its parent table formatting
