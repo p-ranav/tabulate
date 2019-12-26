@@ -106,3 +106,5 @@ When rendering each cell:
 * If no cell formatting is specified, apply its parent row formatting
 * If no row formatting is specified, apply its parent table formatting
 * If no table formatting is specified, apply the default table formatting
+
+This enables overriding the formatting for a particular cell even though row or table formatting rules are specified.
