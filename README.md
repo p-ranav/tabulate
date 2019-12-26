@@ -14,9 +14,11 @@
 
 ## Quick Start
 
-`tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. To build a table, create a `Table` object and use `Table.add_rows` to add rows to your table. 
+`tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. 
 
-For simplicity, `tabulate` will use the length of the first row as the number of columns in the table.
+### Adding rows
+
+To build a table, create a `Table` object and use `Table.add_rows` to add rows to your table. `tabulate` will use the length of the first row as the number of columns in the table.
 
 ```cpp
 #include <tabulate/table.hpp>
@@ -36,6 +38,8 @@ int main() {
   universal_constants.add_row({"Speed of light in vacuum", "299 792 458 m·s⁻¹"});
 ```
 
+### Formatting the table
+
 You can format this table using `Table.format()` which returns a `Format` object. Using a fluent interface, format properties of the table, e.g., borders, font styles, colors etc.
 
 ```cpp
@@ -48,6 +52,8 @@ You can format this table using `Table.format()` which returns a `Format` object
     .corner(" ");
 ```
 
+### Accessing and formatting rows
+
 You can access rows in the table using `Table[row_index]`. This will return a `Row` object on which you can similarly call `Row.format()` to format its properties. Now, let's format the header of the table. The following code changes the font background of the header row to `red`, aligns the cell contents to `center` and applied a padding to the top and bottom of the row.
 
 ```cpp
@@ -59,15 +65,33 @@ You can access rows in the table using `Table[row_index]`. This will return a `R
     .font_background_color(Color::red);
 ```
 
+### Accessing and formatting columns
+
 Use `Table.column(index)` will return a `Column` object. Columns store `reference_wrapper`s to cells in the table. You can use `Column.format()` to format all the cells in that column.
 
 ```cpp
   universal_constants.column(1).format()
-    .font_color(Color::cyan);
+    .font_color(Color::yellow);
+```
 
-  std::cout << universal_constants << std::endl;
+### Accessing and formatting cells
+
+You can access cells by indexing twice from a table using: From a row using `Table[row_index][col_index]` or from a column using `Table.column(col_index)[cell_index]`. Just like rows, columns, and tables, you can use `Cell.format()` to format individual cells
+
+```cpp
+  universal_constants[0][1].format()
+    .font_background_color(Color::blue)
+    .font_color(Color::white);
 }
 ```
+
+### Printing the table
+
+Print the table using the stream `operator<<` like so:
+
+```cpp
+  std::cout << universal_constants << std::endl;
+``` 
 
 <p align="center">
   <img src="img/universal_constants.png"/>  
