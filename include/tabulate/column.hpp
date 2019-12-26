@@ -27,11 +27,15 @@ public:
 
   class CellIterator {
   public:
-    CellIterator(std::vector<std::reference_wrapper<Cell>>::iterator ptr): ptr(ptr){}
+    CellIterator(std::vector<std::reference_wrapper<Cell>>::iterator ptr) : ptr(ptr) {}
 
-    CellIterator operator++() { ++ptr; return *this; }
-    bool operator!=(const CellIterator & other) const { return ptr != other.ptr; }
-    Cell& operator*() { return *ptr; }
+    CellIterator operator++() {
+      ++ptr;
+      return *this;
+    }
+    bool operator!=(const CellIterator &other) const { return ptr != other.ptr; }
+    Cell &operator*() { return *ptr; }
+
   private:
     std::vector<std::reference_wrapper<Cell>>::iterator ptr;
   };

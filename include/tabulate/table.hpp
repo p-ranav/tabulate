@@ -7,7 +7,7 @@ class Table {
 public:
   Table() { table_ = TableInternal::create(); }
 
-  Table& add_row(const std::vector<std::variant<std::string, Table>> &cells) {
+  Table &add_row(const std::vector<std::variant<std::string, Table>> &cells) {
 
     if (rows_ == 0) {
       // This is the first row added
@@ -54,16 +54,20 @@ public:
   std::string str() {
     std::stringstream stream;
     print(stream);
-    return stream.str();    
+    return stream.str();
   }
 
   class RowIterator {
   public:
-    RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr): ptr(ptr){}
+    RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr) : ptr(ptr) {}
 
-    RowIterator operator++() { ++ptr; return *this; }
-    bool operator!=(const RowIterator & other) const { return ptr != other.ptr; }
-    Row& operator*() { return **ptr; }
+    RowIterator operator++() {
+      ++ptr;
+      return *this;
+    }
+    bool operator!=(const RowIterator &other) const { return ptr != other.ptr; }
+    Row &operator*() { return **ptr; }
+
   private:
     std::vector<std::shared_ptr<Row>>::iterator ptr;
   };
@@ -72,14 +76,14 @@ public:
   auto end() { return RowIterator(table_->rows_.end()); }
 
 private:
-  friend std::ostream& operator<<(std::ostream& stream, const Table& table);
+  friend std::ostream &operator<<(std::ostream &stream, const Table &table);
   size_t rows_{0};
   size_t cols_{0};
   std::shared_ptr<TableInternal> table_;
 };
 
-std::ostream& operator<<(std::ostream& stream, const Table& table) {
-  const_cast<Table&>(table).print(stream);
+std::ostream &operator<<(std::ostream &stream, const Table &table) {
+  const_cast<Table &>(table).print(stream);
   return stream;
 }
 

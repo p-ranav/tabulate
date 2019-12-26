@@ -149,7 +149,8 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
     // Print top border
     bool border_top_printed{true};
     for (size_t j = 0; j < num_columns; ++j) {
-      border_top_printed &= print_cell_border_top(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns);
+      border_top_printed &= print_cell_border_top(stream, table, {i, j},
+                                                  {row_heights[i], column_widths[j]}, num_columns);
     }
     if (border_top_printed)
       stream << termcolor::reset << "\n";

@@ -4,8 +4,8 @@
 #include <optional>
 #include <string>
 #include <tabulate/format.hpp>
-#include <vector>
 #include <tabulate/utf8.hpp>
+#include <vector>
 
 namespace tabulate {
 

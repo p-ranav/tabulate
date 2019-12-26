@@ -26,11 +26,15 @@ public:
 
   class CellIterator {
   public:
-    CellIterator(std::vector<std::shared_ptr<Cell>>::iterator ptr): ptr(ptr){}
+    CellIterator(std::vector<std::shared_ptr<Cell>>::iterator ptr) : ptr(ptr) {}
 
-    CellIterator operator++() { ++ptr; return *this; }
-    bool operator!=(const CellIterator & other) const { return ptr != other.ptr; }
-    Cell& operator*() { return **ptr; }
+    CellIterator operator++() {
+      ++ptr;
+      return *this;
+    }
+    bool operator!=(const CellIterator &other) const { return ptr != other.ptr; }
+    Cell &operator*() { return **ptr; }
+
   private:
     std::vector<std::shared_ptr<Cell>>::iterator ptr;
   };
@@ -116,13 +120,14 @@ private:
       word_wrapped_text = text;
     }
 
-    auto newlines_in_wrapped_text = std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n');
+    auto newlines_in_wrapped_text =
+        std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n');
     auto estimated_row_height = newlines_in_wrapped_text;
     if (word_wrapped_text[word_wrapped_text.size() - 1] != '\n') // text doesn't end with a newline
       estimated_row_height += 1;
 
     result += estimated_row_height;
-    
+
     result += format.padding_bottom_.value();
 
     return result;
