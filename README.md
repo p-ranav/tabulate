@@ -119,7 +119,7 @@ This enables overriding the formatting for a particular cell even though row or 
 
 ## Word Wrapping
 
-`tabulate` supports automatic word-wrapping when printing cells. This word-wrapping can be further constrained by the width of the cell. 
+`tabulate` supports automatic word-wrapping when printing cells. 
 
 Although word-wrapping is automatic, there is a simple override. Automatic word-wrapping is used only if the cell contents do not have any embedded newline `\n` characters. So, you can embed newline characters in the cell contents and enfore the word-wrapping manually. 
 
