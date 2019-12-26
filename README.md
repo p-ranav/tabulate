@@ -312,7 +312,7 @@ int main() {
       .font_align(FontAlign::center);
   }
 
-  // Iterator over cells in the second column
+  // Iterator over cells in the first column
   for (auto& cell : table.column(0)) {
     if (cell.get_text() != "Company") {
       cell.format()
