@@ -170,7 +170,7 @@ int main() {
 
 ## Cell Colors
 
-There are a number of methods in the `Format` object to color cells - foreground and background for font, borders, corners, and column separators. Thanks to [termcolor](https://github.com/ikalnytskyi/termcolor), `tabulate` supports 8 colors: grey, red, green, yellow, blue, magenta, cyan, white.
+There are a number of methods in the `Format` object to color cells - foreground and background - for font, borders, corners, and column separators. Thanks to [termcolor](https://github.com/ikalnytskyi/termcolor), `tabulate` supports 8 colors: grey, red, green, yellow, blue, magenta, cyan, white.
 
 Here's mario colored using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
 
