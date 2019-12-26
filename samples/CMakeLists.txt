@@ -1,3 +1,6 @@
+add_executable(class_diagram class_diagram.cpp)
+target_link_libraries(class_diagram PRIVATE tabulate::tabulate)
+
 add_executable(colors colors.cpp)
 target_link_libraries(colors PRIVATE tabulate::tabulate)
 
