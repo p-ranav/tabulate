@@ -170,10 +170,10 @@ int main() {
 
 ## Coloring Cells
 
-There are a number of methods in the `Format` object to color font color, background color, borders, corners, and column separators. Here's mario drawn using `tabulate`:
+There are a number of methods in the `Format` object to color font color, background color, borders, corners, and column separators. Here's mario drawn using `tabulate` with a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
 
 <p align="center">
-  <img src="img/mario.png"/>  
+  <img width="500" src="img/mario.png"/>  
 </p>
 
 ## Contributing
