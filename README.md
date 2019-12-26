@@ -215,6 +215,10 @@ There are a number of methods in the `Format` object to color cells - foreground
 
 For font, border, and corners, you can call `.format().<element>_color(value)` to set the foreground color and `.format().<element>_background_color(value)` to set the background color. Here's an example:
 
+<p align="center">
+  <img src="img/colors.png"/>  
+</p>
+
 ```cpp
 #include <tabulate/table.hpp>
 using namespace tabulate;
@@ -269,10 +273,6 @@ int main() {
   std::cout << colors << std::endl;
 }
 ```
-
-<p align="center">
-  <img width="400" src="img/colors.png"/>  
-</p>
 
 Here's mario colored using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
 
