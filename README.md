@@ -178,22 +178,29 @@ Here's mario colored using `tabulate` on a `16x30` grid. You can check out the s
   <img width="400" src="img/mario.png"/>  
 </p>
 
-Here's a snippet of the mario code to illustrate coloring:
+For font, border, and corners, you can call `.format().<element>_color(value)` and `.format().<element>_background_color(value)`. Here's an example:
 
 ```cpp
-    // [...]
-    
-    // Row 15
-    for (size_t i = 1; i < 12; ++i) {
-      mario[15][i].format()
-        .color(Color::green)
-        .font_style({FontStyle::dark});
-    }
-    for (size_t i = 18; i < 29; ++i) {
-      mario[15][i].format()
-        .color(Color::green)
-        .font_style({FontStyle::dark});
-    }
+Table colored_table;
+
+colored_table.format()
+  .font_color(Color::green)
+  .font_background_color(Color::white)
+  .border_left_color(Color::red)
+  .border_top_color(Color::white)
+  .corner_color(Color::yellow)
+  // and so on
+  ;
+```
+
+You could set the color for all elements (font, border, corners, column separator) in one shot using `.format().color(value)`. Similarly, you can set the background color for all elements in one shot using `.format().background_color(value)`. Example:
+
+```cpp
+Table colored_table;
+
+colored_table.format()
+  .color(Color::white)
+  .background_color(red);
 ```
 
 ## Contributing
