@@ -66,8 +66,12 @@ Use `Table.column(index)` will return a `Column` object. Columns store `referenc
     .font_color(Color::cyan);
 
   std::cout << universal_constants << std::endl;
-}	
+}
 ```
+
+<p align="center">
+  <img src="img/universal_constants.jpg"/>  
+</p>
 
 ## Inheritance Model to Table Formatting
 
