@@ -106,9 +106,9 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
 ## Inheritance Model in Table Formatting
 
 Formatting in `tabulate` follows this simple inheritance model. When rendering each cell:
-* Apply cell formatting if specified
-* If no cell formatting is specified, apply its parent row formatting
-* If no row formatting is specified, apply its parent table formatting
-* If no table formatting is specified, apply the default table formatting
+1. Apply cell formatting if specified
+2. If no cell formatting is specified, apply its parent row formatting
+3. If no row formatting is specified, apply its parent table formatting
+4. If no table formatting is specified, apply the default table formatting
 
 This enables overriding the formatting for a particular cell even though row or table formatting is specified, e.g., when an entire row is colored `yellow` but you want a specific cell to be colored `red`.
