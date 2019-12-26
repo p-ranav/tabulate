@@ -3,7 +3,7 @@ using namespace tabulate;
 
 int main() {
   Table styled_table;
-  styled_table.add_row({"Bold", "Italic", "Bold & Italic", "Concealed"});
+  styled_table.add_row({"Bold", "Italic", "Bold & Italic", "Blinking"});
   styled_table.add_row({"Underline", "Crossed", "Dark", "Bold, Italic & Underlined"});
 
   styled_table[0][0].format()
@@ -16,7 +16,7 @@ int main() {
     .font_style({FontStyle::bold, FontStyle::italic});
 
   styled_table[0][3].format()
-    .font_style({FontStyle::concealed});
+    .font_style({FontStyle::blink});
 
   styled_table[1][0].format()
     .font_style({FontStyle::underline});
