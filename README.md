@@ -97,6 +97,8 @@ Print the table using the stream `operator<<` like so:
   std::cout << universal_constants << std::endl;
 ``` 
 
+You could also use `Table.print(stream)` to print the table, e.g., `universal_constants.print(std::cout)`. 
+
 <p align="center">
   <img src="img/universal_constants.png"/>  
 </p>
