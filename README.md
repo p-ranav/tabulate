@@ -170,11 +170,31 @@ int main() {
 
 ## Coloring Cells
 
-There are a number of methods in the `Format` object to color cells - foreground and background for font, borders, corners, and column separators. Here's mario drawn using `tabulate` with a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
+There are a number of methods in the `Format` object to color cells - foreground and background for font, borders, corners, and column separators. 
+
+Here's mario colored using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
 
 <p align="center">
   <img width="400" src="img/mario.png"/>  
 </p>
+
+Here's a snippet of the mario code to illustrate coloring:
+
+```cpp
+    // [...]
+    
+    // Row 15
+    for (size_t i = 1; i < 12; ++i) {
+      mario[15][i].format()
+        .color(Color::green)
+        .font_style({FontStyle::dark});
+    }
+    for (size_t i = 18; i < 29; ++i) {
+      mario[15][i].format()
+        .color(Color::green)
+        .font_style({FontStyle::dark});
+    }
+```
 
 ## Contributing
 Contributions are welcome, have a look at the [CONTRIBUTING.md](CONTRIBUTING.md) document for more information.
