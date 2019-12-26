@@ -283,7 +283,7 @@ Here's Mario, constructed using `tabulate` on a `16x30` grid. You can check out 
 
 ## Range-based Iteration
 
-`tabulate` supports range-based iteration on tables, rows, and columns. 
+Hand-picking and formatting cells using `operator[]` gets tedious very quickly. To ease this, `tabulate` supports range-based iteration on tables, rows, and columns. Quickly iterate over rows and columns to format cells.
 
 ```cpp
 #include <tabulate/table.hpp>
