@@ -15,7 +15,7 @@
 # Table of Contents
 
 * [Quick Start](#quick-start)
-* [Formatting Tables](#formatting-tables)
+* [Formatting Options](#formatting-options)
   - [Inheritance Model](#inheritance-model)
   - [Word Wrapping](#word-wrapping)
   - [Font Alignment](#font-alignment)
@@ -106,7 +106,7 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
   <img src="img/universal_constants.png"/>  
 </p>
 
-# Formatting Tables
+# Formatting Options
 
 ## Inheritance Model
 
