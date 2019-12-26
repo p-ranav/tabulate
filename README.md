@@ -54,7 +54,7 @@ You can format this table using `Table.format()` which returns a `Format` object
 
 ### Formatting rows
 
-You can access rows in the table using `Table[row_index]`. This will return a `Row` object on which you can similarly call `Row.format()` to format its properties. 
+You can access rows in the table using `Table[row_index]`. This will return a `Row` object on which you can similarly call `Row.format()` to format properties of all the cells in that row.
 
 Now, let's format the header of the table. The following code changes the font background of the header row to `red`, aligns the cell contents to `center` and applied a padding to the top and bottom of the row.
 
@@ -69,7 +69,7 @@ Now, let's format the header of the table. The following code changes the font b
 
 ### Formatting columns
 
-Calling `Table.column(index)` will return a `Column` object. Columns store `reference_wrapper`s to cells in the table. You can use `Column.format()` to format all the cells in that column.
+Calling `Table.column(index)` will return a `Column` object. Similar to rows, you can use `Column.format()` to format all the cells in that column.
 
 ```cpp
   universal_constants.column(1).format()
