@@ -171,15 +171,17 @@ int main() {
 
 ## Font Styles
 
-`tabulate` supports 8 font styles: bold, dark, italic, underline, blink, reverse, concealed, crossed. Depending on the terminal (or terminal settings), some of these might not work. 
+`tabulate` supports 8 font styles: `bold`, `dark`, `italic`, `underline`, `blink`, `reverse`, `concealed`, `crossed`. Depending on the terminal (or terminal settings), some of these might not work. 
 
-
+<p align="center">
+  <img width="400" src="img/font_styles.png"/>  
+</p>
 
 NOTE: Font styles are applied to the entire cell. Unlike HTML, you cannot currently apply styles to specific words in a cell.
 
 ## Cell Colors
 
-There are a number of methods in the `Format` object to color cells - foreground and background - for font, borders, corners, and column separators. Thanks to [termcolor](https://github.com/ikalnytskyi/termcolor), `tabulate` supports 8 colors: grey, red, green, yellow, blue, magenta, cyan, and white. The look of these colors vary depending on your terminal.
+There are a number of methods in the `Format` object to color cells - foreground and background - for font, borders, corners, and column separators. Thanks to [termcolor](https://github.com/ikalnytskyi/termcolor), `tabulate` supports 8 colors: `grey`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, and `white`. The look of these colors vary depending on your terminal.
 
 Here's mario colored using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
 
