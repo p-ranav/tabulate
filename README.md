@@ -16,7 +16,7 @@
 
 * [Quick Start](#quick-start)
 * [Formatting Options](#formatting-options)
-  - [Inheritance Model](#inheritance-model)
+  - [Style Inheritance Model](#style-inheritance-model)
   - [Word Wrapping](#word-wrapping)
   - [Font Alignment](#font-alignment)
   - [Font Styles](#font-styles)
@@ -108,9 +108,9 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
 
 # Formatting Options
 
-## Inheritance Model
+## Style Inheritance Model
 
-Formatting in `tabulate` follows this simple inheritance model. When rendering each cell:
+Formatting in `tabulate` follows a simple style inheritance model. When rendering each cell:
 1. Apply cell formatting if specified
 2. If no cell formatting is specified, apply its parent row formatting
 3. If no row formatting is specified, apply its parent table formatting
