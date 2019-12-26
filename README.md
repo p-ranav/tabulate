@@ -14,7 +14,9 @@
 
 ## Quick Start
 
-`tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. To build a table, create a `Table` object and use `Table.add_rows` to add rows to your table. For simplicity, `tabulate` will use the length of the first row as the number of columns in the table.
+`tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. To build a table, create a `Table` object and use `Table.add_rows` to add rows to your table. 
+
+For simplicity, `tabulate` will use the length of the first row as the number of columns in the table.
 
 ```cpp
 #include <tabulate/table.hpp>
