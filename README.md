@@ -193,7 +193,7 @@ colored_table.format()
   ;
 ```
 
-You could set the color for all elements (font, border, corners, column separator) in one shot using `.format().color(value)`. Similarly, you can set the background color for all elements in one shot using `.format().background_color(value)`. Example:
+You can also set the color for all elements (font, border, corners, column separator) in one shot using `.format().color(value)`. Similarly, you can set the background color for all elements in one shot using `.format().background_color(value)`. Example:
 
 ```cpp
 Table colored_table;
