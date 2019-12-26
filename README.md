@@ -71,6 +71,8 @@ Now, let's format the header of the table. The following code changes the font b
 
 Calling `Table.column(index)` will return a `Column` object. Similar to rows, you can use `Column.format()` to format all the cells in that column.
 
+Now, let's change the font color of the second column to yellow:
+
 ```cpp
   universal_constants.column(1).format()
     .font_color(Color::yellow);
