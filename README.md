@@ -93,8 +93,6 @@ You can access cells by indexing twice from a table using: From a row using `Tab
 }
 ```
 
-## Printing the table
-
 Print the table using the stream `operator<<` like so:
 
 ```cpp
