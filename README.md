@@ -18,6 +18,7 @@
 * [Formatting Tables](#formatting-tables)
   - [Inheritance Model in Table Formatting](#inheritance-model-in-table-formatting)
   - [Font Alignment](#font-alignment)
+  - [Coloring Cells](#coloring-cells)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -165,6 +166,14 @@ int main() {
 
 <p align="center">
   <img src="img/movies.png"/>  
+</p>
+
+## Coloring Cells
+
+There are a number of methods in the `Format` object to color font color, background color, borders, corners, and column separators. Here's mario drawn using `tabulate`:
+
+<p align="center">
+  <img src="img/mario.png"/>  
 </p>
 
 ## Contributing
