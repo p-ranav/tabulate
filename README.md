@@ -67,7 +67,7 @@ You can access rows in the table using `Table[row_index]`. This will return a `R
 
 ### Accessing and formatting columns
 
-Use `Table.column(index)` will return a `Column` object. Columns store `reference_wrapper`s to cells in the table. You can use `Column.format()` to format all the cells in that column.
+Calling `Table.column(index)` will return a `Column` object. Columns store `reference_wrapper`s to cells in the table. You can use `Column.format()` to format all the cells in that column.
 
 ```cpp
   universal_constants.column(1).format()
