@@ -1,0 +1,7 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if (NOT TARGET tabulate::tabulate)
+  include(${CMAKE_CURRENT_LIST_DIR}/tabulateTargets.cmake)
+endif ()
