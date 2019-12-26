@@ -12,11 +12,11 @@
   </p>
 </p>
 
-## Quick Start
+# Quick Start
 
 `tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. 
 
-### Adding rows
+## Adding rows
 
 Create a `Table` object and call `Table.add_rows` to add rows to your table. `tabulate` will use the length of the first row as the number of columns in the table.
 
@@ -38,7 +38,7 @@ int main() {
   universal_constants.add_row({"Speed of light in vacuum", "299 792 458 m·s⁻¹"});
 ```
 
-### Formatting the table
+## Formatting the table
 
 You can format this table using `Table.format()` which returns a `Format` object. Using a fluent interface, format properties of the table, e.g., borders, font styles, colors etc.
 
@@ -52,7 +52,7 @@ You can format this table using `Table.format()` which returns a `Format` object
     .corner(" ");
 ```
 
-### Formatting rows
+## Formatting rows
 
 You can access rows in the table using `Table[row_index]`. This will return a `Row` object on which you can similarly call `Row.format()` to format properties of all the cells in that row.
 
@@ -67,7 +67,7 @@ Now, let's format the header of the table. The following code changes the font b
     .font_background_color(Color::red);
 ```
 
-### Formatting columns
+## Formatting columns
 
 Calling `Table.column(index)` will return a `Column` object. Similar to rows, you can use `Column.format()` to format all the cells in that column.
 
@@ -78,7 +78,7 @@ Now, let's change the font color of the second column to yellow:
     .font_color(Color::yellow);
 ```
 
-### Formatting cells
+## Formatting cells
 
 You can access cells by indexing twice from a table using: From a row using `Table[row_index][col_index]` or from a column using `Table.column(col_index)[cell_index]`. Just like rows, columns, and tables, you can use `Cell.format()` to format individual cells
 
@@ -89,7 +89,7 @@ You can access cells by indexing twice from a table using: From a row using `Tab
 }
 ```
 
-### Printing the table
+## Printing the table
 
 Print the table using the stream `operator<<` like so:
 
@@ -103,7 +103,7 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
   <img src="img/universal_constants.png"/>  
 </p>
 
-## Inheritance Model in Table Formatting
+# Inheritance Model in Table Formatting
 
 Formatting in `tabulate` follows this simple inheritance model. When rendering each cell:
 1. Apply cell formatting if specified
@@ -112,3 +112,42 @@ Formatting in `tabulate` follows this simple inheritance model. When rendering e
 4. If no table formatting is specified, apply the default table formatting
 
 This enables overriding the formatting for a particular cell even though row or table formatting is specified, e.g., when an entire row is colored `yellow` but you want a specific cell to be colored `red`.
+
+# Font Alignment
+
+`tabulate` supports three font alignmen settings: left, center, and right. By default, all table content is left aligned.
+
+```cpp
+#include <tabulate/table.hpp>
+using namespace tabulate;
+
+int main() {
+  Table movies;
+  movies.add_row({"S/N", "Movie Name", "Director", "Estimated Budget", "Release Date"});
+  movies.add_row({"tt1979376", "Toy Story 4", "Josh Cooley", "$200,000,000", "21 June 2019"});
+  movies.add_row({"tt3263904", "Sully", "Clint Eastwood", "$60,000,000", "9 September 2016"});
+  movies.add_row({"tt1535109", "Captain Phillips", "Paul Greengrass", "$55,000,000", " 11 October 2013"});
+
+  // right align 'Estimated Budget' column
+  movies.column(3).format()
+    .font_align(FontAlign::right);
+
+  // right align 'Release Date' column
+  movies.column(4).format()
+    .font_align(FontAlign::right);
+
+  // center-align and color header cells
+  for (size_t i = 0; i < 5; ++i) {
+    movies[0][i].format()
+      .font_color(Color::yellow)
+      .font_align(FontAlign::center)
+      .font_style({FontStyle::bold});
+  }
+
+  std::cout << movies << std::endl;
+}
+```
+
+<p align="center">
+  <img src="img/movies.png"/>  
+</p>
