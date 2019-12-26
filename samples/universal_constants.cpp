@@ -35,7 +35,11 @@ int main() {
   // Table.column(index) is used to access a particular column
   // You can use this to access and format a specific column
   universal_constants.column(1).format()
-    .font_color(Color::cyan);
+    .font_color(Color::yellow);
 
+  universal_constants[0][1].format()
+    .font_background_color(Color::blue)
+    .font_color(Color::white);
+    
   std::cout << universal_constants << std::endl;
 }	
