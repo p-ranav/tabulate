@@ -216,27 +216,63 @@ There are a number of methods in the `Format` object to color cells - foreground
 For font, border, and corners, you can call `.format().<element>_color(value)` to set the foreground color and `.format().<element>_background_color(value)` to set the background color. Here's an example:
 
 ```cpp
-Table colored_table;
+#include <tabulate/table.hpp>
+using namespace tabulate;
 
-colored_table.format()
+int main() {
+  Table colors;
+
+  colors.add_row({"Font Color is Red", "Font Color is Blue", "Font Color is Green"});
+  colors.add_row({"Everything is Red", "Everything is Blue", "Everything is Green"});
+  colors.add_row({"Font Background is Red", "Font Background is Blue", "Font Background is Green"});
+
+  colors[0][0].format()
+  .font_color(Color::red)
+  .font_style({FontStyle::bold});
+  colors[0][1].format()
+  .font_color(Color::blue)
+  .font_style({FontStyle::bold});
+  colors[0][2].format()
   .font_color(Color::green)
-  .font_background_color(Color::white)
+  .font_style({FontStyle::bold});
+
+  colors[1][0].format()
   .border_left_color(Color::red)
-  .border_top_color(Color::white)
-  .corner_color(Color::yellow)
-  // and so on
-  ;
+  .border_left_background_color(Color::red)
+  .font_background_color(Color::red)
+  .font_color(Color::red);
+
+  colors[1][1].format()
+  .border_left_color(Color::blue)
+  .border_left_background_color(Color::blue)
+  .font_background_color(Color::blue)
+  .font_color(Color::blue);
+
+  colors[1][2].format()
+  .border_left_color(Color::green)
+  .border_left_background_color(Color::green)
+  .font_background_color(Color::green)
+  .font_color(Color::green)
+  .border_right_color(Color::green)
+  .border_right_background_color(Color::green);
+
+  colors[2][0].format()
+  .font_background_color(Color::red)
+  .font_style({FontStyle::bold});
+  colors[2][1].format()
+  .font_background_color(Color::blue)
+  .font_style({FontStyle::bold});
+  colors[2][2].format()
+  .font_background_color(Color::green)
+  .font_style({FontStyle::bold});
+
+  std::cout << colors << std::endl;
+}
 ```
 
-You can also set the color for all elements (font, border, corners, column separator) in one shot using `.format().color(value)`. Similarly, you can set the background color for all elements in one shot using `.format().background_color(value)`. Example:
-
-```cpp
-Table colored_table;
-
-colored_table.format()
-  .color(Color::white)
-  .background_color(red);
-```
+<p align="center">
+  <img width="400" src="img/colors.png"/>  
+</p>
 
 Here's mario colored using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
 
