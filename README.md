@@ -20,6 +20,7 @@
   - [Font Alignment](#font-alignment)
   - [Font Styles](#font-styles)
   - [Cell Colors](#cell-colors)
+* [Building Samples](#building-samples)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -253,6 +254,17 @@ Table colored_table;
 colored_table.format()
   .color(Color::white)
   .background_color(red);
+```
+
+## Building Samples
+
+There are a number of samples in the `samples/` directory. You can build these like so:
+
+```bash
+$ mkdir build
+$ cd build
+$ cmake -DSAMPLES=ON ..
+$ make
 ```
 
 ## Contributing
