@@ -57,6 +57,20 @@ public:
     return stream.str();    
   }
 
+  class RowIterator {
+  public:
+    RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr): ptr(ptr){}
+
+    RowIterator operator++() { ++ptr; return *this; }
+    bool operator!=(const RowIterator & other) const { return ptr != other.ptr; }
+    Row& operator*() { return **ptr; }
+  private:
+    std::vector<std::shared_ptr<Row>>::iterator ptr;
+  };
+
+  auto begin() { return RowIterator(table_->rows_.begin()); }
+  auto end() { return RowIterator(table_->rows_.end()); }
+
 private:
   friend std::ostream& operator<<(std::ostream& stream, const Table& table);
   size_t rows_{0};

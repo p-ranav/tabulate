@@ -70,6 +70,8 @@ public:
   }
 
 private:
+  friend class Table;
+
   TableInternal() {}
   TableInternal &operator=(const TableInternal &);
   TableInternal(const TableInternal &);

@@ -25,6 +25,20 @@ public:
 
   ColumnFormat format() { return ColumnFormat(*this); }
 
+  class CellIterator {
+  public:
+    CellIterator(std::vector<std::reference_wrapper<Cell>>::iterator ptr): ptr(ptr){}
+
+    CellIterator operator++() { ++ptr; return *this; }
+    bool operator!=(const CellIterator & other) const { return ptr != other.ptr; }
+    Cell& operator*() { return *ptr; }
+  private:
+    std::vector<std::reference_wrapper<Cell>>::iterator ptr;
+  };
+
+  auto begin() { return CellIterator(cells_.begin()); }
+  auto end() { return CellIterator(cells_.end()); }
+
 private:
   friend class ColumnFormat;
   friend class Printer;
