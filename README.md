@@ -105,4 +105,4 @@ Formatting in `tabulate` follows this simple inheritance model. When rendering e
 * If no row formatting is specified, apply its parent table formatting
 * If no table formatting is specified, apply the default table formatting
 
-This enables overriding the formatting for a particular cell even though row or table formatting rules are specified.
+This enables overriding the formatting for a particular cell even though row or table formatting is specified, e.g., when an entire row is colored `yellow` but you want a specific cell to be colored `red`.
