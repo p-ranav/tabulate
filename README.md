@@ -22,6 +22,7 @@
   - [Font Styles](#font-styles)
   - [Cell Colors](#cell-colors)
   - [Range-based Iteration](#range-based-iteration)
+  - [Nested Tables](#nested-tables)
 * [Building Samples](#building-samples)
 * [Contributing](#contributing)
 * [License](#license)
@@ -378,6 +379,79 @@ int main() {
 
 <p align="center">
   <img src="img/iterators.png"/>  
+</p>
+
+## Nested Tables
+
+`Table.add_row(...)` takes a `vector<variant<string, Table>>`. So, you can pass either a string or another table. Under the hood, the table is first converted to string (using std::stringstream) and then used as the cell contents.
+
+Here's an example program that prints a UML class diagram using `tabulate`. Note the use of font alignment, style, and width settings to generate a diagram that looks centered and great.
+
+```cpp
+#include <tabulate/table.hpp>
+using namespace tabulate;
+
+int main() {
+    Table class_diagram;
+    class_diagram.format()
+      .font_style({FontStyle::bold})
+      .font_align(FontAlign::center)
+      .width(60);
+
+    Table animal;
+    animal.add_row({"Animal"});
+
+    Table animal_properties;
+    animal_properties.format().width(20);
+    animal_properties.add_row({"+age: Int"});
+    animal_properties.add_row({"+gender: String"});
+    animal_properties[1].format().hide_border_top();
+
+    Table animal_methods;
+    animal_methods.format().width(20);
+    animal_methods.add_row({"+isMammal()"});
+    animal_methods.add_row({"+mate()"});
+    animal_methods[1].format().hide_border_top();
+
+    animal.add_row({animal_properties});
+    animal.add_row({animal_methods});
+    animal[2].format().hide_border_top();
+
+    class_diagram.add_row({animal});
+
+    class_diagram.add_row({"▲"});
+    class_diagram[1].format().hide_border_top();
+    class_diagram.add_row({"|"});
+    class_diagram[2].format().hide_border_top();
+    class_diagram.add_row({"|"});
+    class_diagram[3].format().hide_border_top();
+
+    Table duck;
+    duck.add_row({"Duck"});
+
+    Table duck_properties;
+    duck_properties.format().width(40);
+    duck_properties.add_row({"+beakColor: String = \"yellow\""});
+
+    Table duck_methods;
+    duck_methods.format().width(40);
+    duck_methods.add_row({"+swim()"});
+    duck_methods.add_row({"+quack()"});
+    duck_methods[1].format().hide_border_top();
+
+    duck.add_row({duck_properties});
+    duck.add_row({duck_methods});
+    duck[2].format().hide_border_top();
+
+    class_diagram.add_row({duck});
+    class_diagram[4].format().hide_border_top();
+
+    std::cout << class_diagram << std::endl;
+}
+```
+
+<p align="center">
+  <img height="600" src="img/class_diagram.png"/>  
 </p>
 
 ## Building Samples
