@@ -174,7 +174,7 @@ int main() {
 `tabulate` supports 8 font styles: `bold`, `dark`, `italic`, `underline`, `blink`, `reverse`, `concealed`, `crossed`. Depending on the terminal (or terminal settings), some of these might not work. 
 
 <p align="center">
-  <img width="400" src="img/font_styles.png"/>  
+  <img src="img/font_styles.png"/>  
 </p>
 
 NOTE: Font styles are applied to the entire cell. Unlike HTML, you cannot currently apply styles to specific words in a cell.
