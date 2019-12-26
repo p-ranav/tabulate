@@ -97,12 +97,12 @@ Print the table using the stream `operator<<` like so:
   <img src="img/universal_constants.png"/>  
 </p>
 
-## Inheritance Model to Table Formatting
+### Table Formatting Rules
 
 Formatting in `tabulate` follows a simple inheritance model:
 
-* `Table`, `Row` and `Cell` objects each have their own `Format` object.
-* `Cell` format has highest precedence and `Table` format has lowest precedence.
-* If cell-level formatting is provided, then for those cells, cell-level formatting is used.
-* If cell-level formatting is not provided, its parent row-level formatting is used.
-* If no row-level formatting is provided, its parent table-level formatting is used.
+When rendering each cell:
+* Apply cell formatting if specified
+* If no cell formatting is specified, apply its parent row formatting
+* If no row formatting is specified, apply its parent table formatting
+* If no table formatting is specified, apply the default table formatting
