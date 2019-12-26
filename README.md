@@ -124,8 +124,8 @@ This enables overriding the formatting for a particular cell even though row or 
 Although word-wrapping is automatic, there is a simple override. Automatic word-wrapping is used only if the cell contents do not have any embedded newline `\n` characters. So, you can embed newline characters in the cell contents and enfore the word-wrapping manually. 
 
 * The following table has 1 row and 2 columns. 
-* The first column has automatic word-wrapping. 
-* The second column uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enfore the cell style.
+* The first cell has automatic word-wrapping. 
+* The second cell uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enfore the cell style.
 
 ```cpp
 #include <tabulate/table.hpp>
