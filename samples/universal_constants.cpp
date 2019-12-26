@@ -40,6 +40,6 @@ int main() {
   universal_constants[0][1].format()
     .font_background_color(Color::blue)
     .font_color(Color::white);
-    
+
   std::cout << universal_constants << std::endl;
 }	

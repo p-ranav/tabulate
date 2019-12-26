@@ -22,16 +22,6 @@ int main() {
   employees.column(3).format()
     .font_align(FontAlign::center);
 
-  // employees.column(3).format()
-  //   .width(13);
-
-  // employees[0].format()
-  //   // .font_align(FontAlign::right)
-  //   .font_style({FontStyle::bold});
-
-  // employees[1][3].format()
-  //   .font_align(FontAlign::center);
-
   // Print the table
   std::cout << employees << std::endl;
 
