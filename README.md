@@ -52,7 +52,7 @@ You can format this table using `Table.format()` which returns a `Format` object
     .corner(" ");
 ```
 
-### Accessing and formatting rows
+### Formatting rows
 
 You can access rows in the table using `Table[row_index]`. This will return a `Row` object on which you can similarly call `Row.format()` to format its properties. Now, let's format the header of the table. The following code changes the font background of the header row to `red`, aligns the cell contents to `center` and applied a padding to the top and bottom of the row.
 
@@ -65,7 +65,7 @@ You can access rows in the table using `Table[row_index]`. This will return a `R
     .font_background_color(Color::red);
 ```
 
-### Accessing and formatting columns
+### Formatting columns
 
 Calling `Table.column(index)` will return a `Column` object. Columns store `reference_wrapper`s to cells in the table. You can use `Column.format()` to format all the cells in that column.
 
@@ -74,7 +74,7 @@ Calling `Table.column(index)` will return a `Column` object. Columns store `refe
     .font_color(Color::yellow);
 ```
 
-### Accessing and formatting cells
+### Formatting cells
 
 You can access cells by indexing twice from a table using: From a row using `Table[row_index][col_index]` or from a column using `Table.column(col_index)[cell_index]`. Just like rows, columns, and tables, you can use `Cell.format()` to format individual cells
 
@@ -97,7 +97,7 @@ Print the table using the stream `operator<<` like so:
   <img src="img/universal_constants.png"/>  
 </p>
 
-### Table Formatting Rules
+## Inheritance Model in Table Formatting
 
 Formatting in `tabulate` follows a simple inheritance model:
 
