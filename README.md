@@ -12,6 +12,14 @@
   </p>
 </p>
 
+# Table of Contents
+
+* [Quick Start](#quick-start)
+* [Inheritance Model in Table Formatting](#inheritance-model-in-table-formatting)
+* [Font Alignment](#font-alignment)
+* [Contributing](#contributing)
+* [License](#license)
+
 # Quick Start
 
 `tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. 
@@ -155,3 +163,9 @@ int main() {
 <p align="center">
   <img src="img/movies.png"/>  
 </p>
+
+## Contributing
+Contributions are welcome, have a look at the [CONTRIBUTING.md](CONTRIBUTING.md) document for more information.
+
+## License
+The project is available under the [MIT](https://opensource.org/licenses/MIT) license.
