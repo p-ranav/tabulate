@@ -17,6 +17,7 @@
 * [Quick Start](#quick-start)
 * [Formatting Tables](#formatting-tables)
   - [Inheritance Model](#inheritance-model)
+  - [Word Wrapping](#word-wrapping)
   - [Font Alignment](#font-alignment)
   - [Font Styles](#font-styles)
   - [Cell Colors](#cell-colors)
@@ -115,6 +116,34 @@ Formatting in `tabulate` follows this simple inheritance model. When rendering e
 4. If no table formatting is specified, apply the default table formatting
 
 This enables overriding the formatting for a particular cell even though row or table formatting is specified, e.g., when an entire row is colored `yellow` but you want a specific cell to be colored `red`.
+
+## Word Wrapping
+
+`tabulate` supports automatic word-wrapping when printing cells. This word-wrapping can be further constrained by the width of the cell. 
+
+Although word-wrapping is automatic, there is a simple override. Automatic word-wrapping is used only if the cell contents do not have any embedded newline `\n` characters. So, you can embed newline characters in the cell contents and enfore the word-wrapping manually. 
+
+```cpp
+#include <tabulate/table.hpp>
+using namespace tabulate;
+
+int main() {
+  Table table;
+
+  table.add_row({
+      "This paragraph contains a veryveryveryveryveryverylong word. The long word will break and word wrap to the next line.",
+      "This paragraph \nhas embedded '\\n' \ncharacters and\n will break\n exactly where\n you want it\n to\n break."});
+
+  table[0][0].format().width(20);
+  table[0][1].format().width(50);
+
+  std::cout << table << std::endl;
+}
+```
+
+<p align="center">
+  <img src="img/word_wrapping.png"/>  
+</p>
 
 ## Font Alignment
 
