@@ -115,7 +115,7 @@ This enables overriding the formatting for a particular cell even though row or 
 
 # Font Alignment
 
-`tabulate` supports three font alignmen settings: left, center, and right. By default, all table content is left aligned. To align cells, use `.format().font_align(alignment)`. 
+`tabulate` supports three font alignment settings: `left`, `center`, and `right`. By default, all table content is left-aligned. To align cells, use `.format().font_align(alignment)`. 
 
 ```cpp
 #include <tabulate/table.hpp>
