@@ -16,7 +16,7 @@
 
 * [Quick Start](#quick-start)
 * [Formatting Tables](#formatting-tables)
-  - [Inheritance Model in Table Formatting](#inheritance-model-in-table-formatting)
+  - [Inheritance Model](#inheritance-model)
   - [Font Alignment](#font-alignment)
   - [Cell Colors](#cell-colors)
 * [Contributing](#contributing)
@@ -115,7 +115,7 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
 
 # Formatting Tables
 
-## Inheritance Model in Table Formatting
+## Inheritance Model
 
 Formatting in `tabulate` follows this simple inheritance model. When rendering each cell:
 1. Apply cell formatting if specified
