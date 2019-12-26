@@ -260,7 +260,7 @@ int main() {
     .font_align(FontAlign::right);
 
   chart[9][17].set_text("This one's on 🔥🔥🔥");
-
+  
   std::cout << chart;
   std::cout << legend << "\n\n";
 
