@@ -28,9 +28,7 @@
 
 `tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. 
 
-## Adding rows
-
-Create a `Table` object and call `Table.add_rows` to add rows to your table. `tabulate` will use the length of the first row as the number of columns in the table.
+Create a `Table` object and call `Table.add_rows` to add rows to your table.
 
 ```cpp
 #include <tabulate/table.hpp>
