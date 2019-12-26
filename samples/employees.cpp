@@ -14,15 +14,14 @@ int main() {
   employees.add_row({"102", "Rachel", "Williams", "Marketing and Operational\nLogistics Planning"});
   employees.add_row({"103", "Ian", "Jacob", department});
 
-  employees.column(0).format()
-    .font_style({FontStyle::bold})
-    .font_color(Color::white)
-    .font_align(FontAlign::right);
+  employees.column(0)
+      .format()
+      .font_style({FontStyle::bold})
+      .font_color(Color::white)
+      .font_align(FontAlign::right);
 
-  employees.column(3).format()
-    .font_align(FontAlign::center);
+  employees.column(3).format().font_align(FontAlign::center);
 
   // Print the table
   std::cout << employees << std::endl;
-
 }

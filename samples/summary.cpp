@@ -2,39 +2,45 @@
 using namespace tabulate;
 
 int main() {
-  
+
   Table readme;
 
   readme.format()
-    .border_top("─")
-    .border_bottom("─")
-    .border_left("│")
-    .border_right("│")
-    .column_separator("│")
-    .corner("·")
-    .border_color(Color::yellow)
-    .font_style({FontStyle::bold});
+      .border_top("─")
+      .border_bottom("─")
+      .border_left("│")
+      .border_right("│")
+      .column_separator("│")
+      .corner("·")
+      .border_color(Color::yellow)
+      .font_style({FontStyle::bold});
   readme.add_row({"tabulate for Modern C++"});
-  readme[0].format().font_align(FontAlign::center).font_style({FontStyle::bold}).font_color(Color::yellow);
+  readme[0]
+      .format()
+      .font_align(FontAlign::center)
+      .font_style({FontStyle::bold})
+      .font_color(Color::yellow);
 
   readme.add_row({"https://github.com/p-ranav/tabulate"});
-  readme[1].format()
-    .font_align(FontAlign::center)
-    .font_style({FontStyle::underline, FontStyle::italic})
-    .font_color(Color::white)
-    .hide_border_top();
+  readme[1]
+      .format()
+      .font_align(FontAlign::center)
+      .font_style({FontStyle::underline, FontStyle::italic})
+      .font_color(Color::white)
+      .hide_border_top();
 
-  readme.add_row({"Tabulate is a header-only library for printing aligned, formatted, and colorized tables in Modern C++"});
+  readme.add_row({"Tabulate is a header-only library for printing aligned, formatted, and "
+                  "colorized tables in Modern C++"});
   readme[2].format().font_style({FontStyle::italic}).font_color(Color::magenta);
 
   Table highlights;
   highlights.format()
-    .border_top("─")
-    .border_bottom("─")
-    .border_left("│")
-    .border_right("│")
-    .column_separator("│")
-    .corner("·");
+      .border_top("─")
+      .border_bottom("─")
+      .border_left("│")
+      .border_right("│")
+      .column_separator("│")
+      .corner("·");
   highlights.add_row({"Header-only Library", "Requires C++17", "MIT License"});
   readme.add_row({highlights});
   readme[3].format().font_align(FontAlign::center).hide_border_top();
@@ -49,12 +55,12 @@ int main() {
 
   Table format;
   format.format()
-    .border_top("─")
-    .border_bottom("─")
-    .border_left("│")
-    .border_right("│")
-    .column_separator("│")
-    .corner("·");
+      .border_top("─")
+      .border_bottom("─")
+      .border_left("│")
+      .border_right("│")
+      .column_separator("│")
+      .corner("·");
   format.add_row({"Horizontal Alignment", "Left aligned", "Center aligned", "Right aligned"});
   format[0].format().font_align(FontAlign::center);
   format[0][0].format().font_color(Color::green).column_separator(":");
@@ -63,9 +69,12 @@ int main() {
   format.column(2).format().width(25).font_align(FontAlign::center);
   format.column(3).format().width(25).font_align(FontAlign::right);
 
-  format.add_row({"Word-Wrapping algorithm taking shamelessly from StackOverflow", "Long sentences automatically word-wrap based on the width of the column", 
-    "Word-wrapping also plays nicely with alignment rules. For instance, this cell is center aligned.",
-    "Enforce \ncustom word-wrapping \nby embedding '\\n' \ncharacters in your cell\n content."});
+  format.add_row(
+      {"Word-Wrapping algorithm taking shamelessly from StackOverflow",
+       "Long sentences automatically word-wrap based on the width of the column",
+       "Word-wrapping also plays nicely with alignment rules. For instance, this cell is center "
+       "aligned.",
+       "Enforce \ncustom word-wrapping \nby embedding '\\n' \ncharacters in your cell\n content."});
   format[1][0].format().font_align(FontAlign::center);
   format[1][2].format().font_align(FontAlign::center);
   format[1][3].format().font_align(FontAlign::right);
@@ -75,71 +84,63 @@ int main() {
 
   readme.add_row({format});
 
-  readme[5].format()
-    .border_color(Color::green)
-    .font_color(Color::cyan)
-    .font_style({FontStyle::underline, FontStyle::bold})
-    .padding_top(0)
-    .padding_bottom(0);
+  readme[5]
+      .format()
+      .border_color(Color::green)
+      .font_color(Color::cyan)
+      .font_style({FontStyle::underline, FontStyle::bold})
+      .padding_top(0)
+      .padding_bottom(0);
 
-  readme[6].format()
-    .hide_border_top()
-    .padding_top(0);
+  readme[6].format().hide_border_top().padding_top(0);
 
   readme.add_row({empty_row});
   readme[7].format().hide_border_left().hide_border_right();
 
   Table embedded_table;
   embedded_table.format()
-    .border_top("─")
-    .border_bottom("─")
-    .border_left("│")
-    .border_right("│")
-    .column_separator("│")
-    .corner("·");
+      .border_top("─")
+      .border_bottom("─")
+      .border_left("│")
+      .border_right("│")
+      .column_separator("│")
+      .corner("·");
   embedded_table.add_row(
-      {"You can even\n embed tables...", 
-        Table().add_row(
-          {"within tables", 
+      {"You can even\n embed tables...",
+       Table().add_row(
+           {"within tables",
             Table().add_row(
-              {"within tables",
-                Table().add_row({"within tables",
-                  Table().add_row({"within tables.. "})
-                })})})});
+                {"within tables",
+                 Table().add_row({"within tables", Table().add_row({"within tables.. "})})})})});
 
   readme.add_row({"Nested Representations"});
-  readme[8].format()
-    .font_align(FontAlign::center);
+  readme[8].format().font_align(FontAlign::center);
 
   readme.add_row({embedded_table});
 
-  readme[9].format()
-    .hide_border_top()
-    .border_color(Color::white)
-    .font_color(Color::yellow);
+  readme[9].format().hide_border_top().border_color(Color::white).font_color(Color::yellow);
 
-  readme.add_row({"ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ ᚦ ᚧ ᚨ ᚩ ᚪ ᚫ ᚬ ᚭ ᚮ ᚯ ᚰ ᚱ ᚲ ᚳ ᚴ ᚵ ᚶ ᚷ ᚸ ᚹ ᚺ ᚻ ᚼ ᚽ ᚾ ᚿ ᛀ ᛁ ᛂ ᛃ ᛄ ᛅ ᛆ ᛇ ᛈ ᛉ ᛊ ᛋ ᛌ ᛍ ᛎ ᛏ ᛐ ᛑ ᛒ ᛓ"});
-  readme[10].format()
-    .font_background_color(Color::red)
-    .hide_border_top();
+  readme.add_row({"ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ ᚦ ᚧ ᚨ ᚩ ᚪ ᚫ ᚬ ᚭ ᚮ ᚯ ᚰ ᚱ ᚲ ᚳ ᚴ ᚵ ᚶ ᚷ ᚸ ᚹ ᚺ ᚻ ᚼ ᚽ ᚾ ᚿ ᛀ ᛁ ᛂ ᛃ ᛄ ᛅ ᛆ ᛇ "
+                  "ᛈ ᛉ ᛊ ᛋ ᛌ ᛍ ᛎ ᛏ ᛐ ᛑ ᛒ ᛓ"});
+  readme[10].format().font_background_color(Color::red).hide_border_top();
 
   // Print the table
   std::cout << "\n\n";
   std::cout << termcolor::bold << termcolor::red << " pranav";
   std::cout << termcolor::bold << termcolor::yellow << " ~/dev/tabulate" << termcolor::reset;
   std::cout << termcolor::bold << termcolor::green << " git@master" << std::endl;
-  std::cout << termcolor::bold << termcolor::white << " $ ./samples/summary\n\n"; 
+  std::cout << termcolor::bold << termcolor::white << " $ ./samples/summary\n\n";
 
   std::cout << readme << "\n\n";
 
   Table chart;
   chart.format()
-    .font_style({FontStyle::bold})
-    .font_color(Color::white)
-    .padding_left(0)
-    .padding_right(0)
-    .column_separator("")
-    .hide_border();
+      .font_style({FontStyle::bold})
+      .font_color(Color::white)
+      .padding_left(0)
+      .padding_right(0)
+      .column_separator("")
+      .hide_border();
 
   for (size_t i = 0; i < 9; ++i) {
     std::vector<std::variant<std::string, Table>> row;
@@ -153,7 +154,7 @@ int main() {
   std::vector<std::variant<std::string, Table>> row;
   for (int i = 0; i <= 12; ++i) {
     if ((i + 1) % 4 == 0) {
-        row.push_back(std::to_string(i + 1));
+      row.push_back(std::to_string(i + 1));
     } else {
       row.push_back(" ");
     }
@@ -161,20 +162,13 @@ int main() {
   chart.add_row(row);
   chart.add_row({});
 
-  chart.column(0).format()
-    .padding_left(1)
-    .padding_right(1)
-    .border_left(" ");
+  chart.column(0).format().padding_left(1).padding_right(1).border_left(" ");
 
   for (size_t i = 1; i <= 50; ++i) {
-    chart.column(i).format()
-      .width(2);
+    chart.column(i).format().width(2);
   }
 
-  chart.column(2).format()
-    .border_color(Color::white)
-    .border_left("|")
-    .border_top("-");
+  chart.column(2).format().border_color(Color::white).border_left("|").border_top("-");
   chart.column(2)[8].format().background_color(Color::red);
   chart.column(2)[7].format().background_color(Color::red);
 
@@ -218,50 +212,42 @@ int main() {
 
   Table legend;
   legend.format()
-    .font_style({FontStyle::bold})
-    .font_color(Color::white)    
-    .border_top("─")
-    .border_bottom("─")
-    .border_left("│")
-    .border_right("│")
-    .column_separator("│")
-    .corner("·");
+      .font_style({FontStyle::bold})
+      .font_color(Color::white)
+      .border_top("─")
+      .border_bottom("─")
+      .border_left("│")
+      .border_right("│")
+      .column_separator("│")
+      .corner("·");
   legend.add_row({"Batch 1", "10", "40", "50", "20", "10", "50"});
   legend.add_row({"Batch 2", "30", "60", "(70)", "50", "40", "30"});
 
   legend[0].format().font_align(FontAlign::center);
   legend[1].format().font_align(FontAlign::center);
 
-  legend.column(0).format()
-    .font_align(FontAlign::right)
-    .font_color(Color::green)
-    .font_background_color(Color::grey);
+  legend.column(0)
+      .format()
+      .font_align(FontAlign::right)
+      .font_color(Color::green)
+      .font_background_color(Color::grey);
 
-  legend.column(2).format()
-    .font_color(Color::white)
-    .font_background_color(Color::red);
+  legend.column(2).format().font_color(Color::white).font_background_color(Color::red);
 
-  legend[1][3].format()
-    .font_style({FontStyle::italic})
-    .font_color(Color::yellow);
+  legend[1][3].format().font_style({FontStyle::italic}).font_color(Color::yellow);
 
   chart.column(17).format().width(50);
 
   chart[4][17].set_text("Cells, rows, and columns");
   chart[5][17].set_text("can be independently formatted.");
   chart[7][17].set_text("This cell is green and italic");
-  chart[7][17].format()
-    .color(Color::green)
-    .font_style({FontStyle::italic});
+  chart[7][17].format().color(Color::green).font_style({FontStyle::italic});
 
   chart[8][17].set_text("This one's yellow and right-aligned");
-  chart[8][17].format()
-    .color(Color::yellow)
-    .font_align(FontAlign::right);
+  chart[8][17].format().color(Color::yellow).font_align(FontAlign::right);
 
   chart[9][17].set_text("This one's on 🔥🔥🔥");
-  
+
   std::cout << chart;
   std::cout << legend << "\n\n";
-
 }
