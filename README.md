@@ -15,8 +15,9 @@
 # Table of Contents
 
 * [Quick Start](#quick-start)
-* [Inheritance Model in Table Formatting](#inheritance-model-in-table-formatting)
-* [Font Alignment](#font-alignment)
+* Formatting Tables
+  - [Inheritance Model in Table Formatting](#inheritance-model-in-table-formatting)
+  - [Font Alignment](#font-alignment)
 * [Contributing](#contributing)
 * [License](#license)
 
