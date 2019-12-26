@@ -21,3 +21,6 @@ target_link_libraries(summary PRIVATE tabulate::tabulate)
 
 add_executable(universal_constants universal_constants.cpp)
 target_link_libraries(universal_constants PRIVATE tabulate::tabulate)
+
+add_executable(word_wrapping word_wrapping.cpp)
+target_link_libraries(word_wrapping PRIVATE tabulate::tabulate)
