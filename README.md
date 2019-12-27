@@ -496,9 +496,7 @@ int main() {
 
 ## Building Samples
 
-There are a number of samples in the `samples/` directory, e.g., [Mario](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp) which is constructed on a `16x30` table. 
-
-You can build these samples by running the following commands.
+There are a number of samples in the `samples/` directory, e.g., [Mario](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp). You can build these samples by running the following commands.
 
 ```bash
 $ mkdir build
