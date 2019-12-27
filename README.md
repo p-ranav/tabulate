@@ -23,6 +23,7 @@
   - [Cell Colors](#cell-colors)
   - [Range-based Iteration](#range-based-iteration)
   - [Nested Tables](#nested-tables)
+  - [UTF-8 Support](#utf-8-support)
 * [Building Samples](#building-samples)
 * [Contributing](#contributing)
 * [License](#license)
@@ -452,6 +453,43 @@ int main() {
 
 <p align="center">
   <img height="600" src="img/class_diagram.png"/>  
+</p>
+
+## UTF-8 Support
+
+UTF-8 support in `tabulate` is not there but not perfect. There are some open issues when attempting to print East-Asian characters with ambigious width and I haven't found neat ways of dealing with these issues yet.
+
+```cpp
+#include <tabulate/table.hpp>
+using namespace tabulate;
+
+int main() {
+  Table unicode;
+  unicode.format().corner("♥").font_style({FontStyle::bold});
+
+  unicode.add_row({"English", "I love you"});
+  unicode.add_row({"French", "Je t’aime"});
+  unicode.add_row({"Spanish", "Te amo"});
+  unicode.add_row({"German", "Ich liebe Dich"});
+  unicode.add_row({"Mandarin Chinese", "我爱你 (Wo ai ni)"});
+  unicode.add_row({"Japanese", "愛してる (Aishiteru)"});
+  unicode.add_row({"Korean", "사랑해 (Saranghae)"});
+  unicode.add_row({"Arabic", "ٲنَا بحِبَّك (Ana bahebak)"});
+  unicode.add_row({"Hindi", "मैं तुमसे प्यार करता हुँ (Main tumse pyar kartha hoon)"});
+  unicode.add_row({"Greek", "Σ΄αγαπώ (Se agapo)"});
+  unicode.add_row({"Italian", "Ti amo"});
+  unicode.add_row({"Russian", "Я тебя люблю (Ya tebya liubliu)"});
+  unicode.add_row({"Hebrew", "אני אוהב אותך (Ani ohev otakh)"});
+  unicode.add_row({"Cheyenne", "Nemehotatse"});
+  unicode.add_row({"Tagalog", "Mahal kita"});
+  unicode.add_row({"Inuktitut", "ᓇᒡᓕᒋᕙᒋᑦ (Nagligivaget)"});
+
+  std::cout << unicode << std::endl;
+}
+```
+
+<p align="center">
+  <img height="600" src="img/unicode.png"/>  
 </p>
 
 ## Building Samples
