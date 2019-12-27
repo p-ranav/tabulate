@@ -24,11 +24,5 @@ int main() {
     unicode.add_row({"Tagalog", "Mahal kita"});
     unicode.add_row({"Inuktitut", "ᓇᒡᓕᒋᕙᒋᑦ (Nagligivaget)"});
 
-    std::string foo = "我爱你 (Wo ai ni)";
-    std::cout << tabulate::get_sequence_length(foo) << std::endl;
-
-    foo = " ٲنَا بحِبَّك (Ana bahebak)";
-    std::cout << tabulate::get_sequence_length(foo) << std::endl;
-
     std::cout << unicode << std::endl;
 }
