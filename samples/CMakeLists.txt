@@ -25,6 +25,9 @@ target_link_libraries(padding PRIVATE tabulate::tabulate)
 add_executable(summary summary.cpp)
 target_link_libraries(summary PRIVATE tabulate::tabulate)
 
+add_executable(unicode unicode.cpp)
+target_link_libraries(unicode PRIVATE tabulate::tabulate)
+
 add_executable(universal_constants universal_constants.cpp)
 target_link_libraries(universal_constants PRIVATE tabulate::tabulate)
 
