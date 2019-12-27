@@ -312,12 +312,6 @@ int main() {
 }
 ```
 
-Here's Mario, constructed using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
-
-<p align="center">
-  <img width="400" src="img/mario.png"/>  
-</p>
-
 ## Range-based Iteration
 
 Hand-picking and formatting cells using `operator[]` gets tedious very quickly. To ease this, `tabulate` supports range-based iteration on tables, rows, and columns. Quickly iterate over rows and columns to format cells.
@@ -472,6 +466,12 @@ $ cd build
 $ cmake -DSAMPLES=ON ..
 $ make
 ```
+
+Here's Mario, constructed using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
+
+<p align="center">
+  <img width="400" src="img/mario.png"/>  
+</p>
 
 ## Contributing
 Contributions are welcome, have a look at the [CONTRIBUTING.md](CONTRIBUTING.md) document for more information.
