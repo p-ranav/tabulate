@@ -13,7 +13,7 @@ namespace tabulate {
 
 class Column {
 public:
-  explicit Column(std::shared_ptr<class TableInternal> parent) { parent_ = parent; }
+  explicit Column(std::shared_ptr<class TableInternal> parent) : parent_(parent) { }
 
   void add_cell(Cell &cell) { cells_.push_back(cell); }
 
@@ -27,7 +27,7 @@ public:
 
   class CellIterator {
   public:
-    CellIterator(std::vector<std::reference_wrapper<Cell>>::iterator ptr) : ptr(ptr) {}
+    explicit CellIterator(std::vector<std::reference_wrapper<Cell>>::iterator ptr) : ptr(ptr) {}
 
     CellIterator operator++() {
       ++ptr;

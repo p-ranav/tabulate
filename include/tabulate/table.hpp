@@ -5,7 +5,7 @@ namespace tabulate {
 
 class Table {
 public:
-  Table() { table_ = TableInternal::create(); }
+  Table() : table_(TableInternal::create()) { }
 
   Table &add_row(const std::vector<std::variant<std::string, Table>> &cells) {
 
@@ -59,7 +59,7 @@ public:
 
   class RowIterator {
   public:
-    RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr) : ptr(ptr) {}
+    explicit RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr) : ptr(ptr) {}
 
     RowIterator operator++() {
       ++ptr;

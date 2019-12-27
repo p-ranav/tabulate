@@ -59,7 +59,7 @@ private:
     }
   }
 
-  static void print_content_center_aligned(std::ostream &stream, std::string cell_content,
+  static void print_content_center_aligned(std::ostream &stream, const std::string& cell_content,
                                            const Format &format, size_t text_with_padding_size,
                                            size_t column_width) {
     auto num_spaces = column_width - text_with_padding_size;
@@ -100,7 +100,7 @@ private:
     }
   }
 
-  static void print_content_right_aligned(std::ostream &stream, std::string cell_content,
+  static void print_content_right_aligned(std::ostream &stream, const std::string& cell_content,
                                           const Format &format, size_t text_with_padding_size,
                                           size_t column_width) {
     if (text_with_padding_size < column_width) {

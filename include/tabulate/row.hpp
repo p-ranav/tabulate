@@ -10,7 +10,7 @@ namespace tabulate {
 
 class Row {
 public:
-  explicit Row(std::shared_ptr<class TableInternal> parent) { parent_ = parent; }
+  explicit Row(std::shared_ptr<class TableInternal> parent) : parent_(parent) { }
 
   void add_cell(std::shared_ptr<Cell> cell) { cells_.push_back(cell); }
 
@@ -26,7 +26,7 @@ public:
 
   class CellIterator {
   public:
-    CellIterator(std::vector<std::shared_ptr<Cell>>::iterator ptr) : ptr(ptr) {}
+    explicit CellIterator(std::vector<std::shared_ptr<Cell>>::iterator ptr) : ptr(ptr) {}
 
     CellIterator operator++() {
       ++ptr;

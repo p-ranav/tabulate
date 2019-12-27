@@ -264,7 +264,7 @@ public:
   // Apply word wrap
   // Given an input string and a line length, this will insert \n
   // in strategic places in input string and apply word wrapping
-  static std::string word_wrap(std::string str, size_t width) {
+  static std::string word_wrap(const std::string& str, size_t width) {
     std::vector<std::string> words = explode_string(str, {" ", "-", "\t"});
     size_t current_line_length = 0;
     std::string result;

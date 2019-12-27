@@ -24,19 +24,19 @@
 
 # Table of Contents
 
-* [Quick Start](#quick-start)
-* [Formatting Options](#formatting-options)
-  - [Style Inheritance Model](#style-inheritance-model)
-  - [Word Wrapping](#word-wrapping)
-  - [Font Alignment](#font-alignment)
-  - [Font Styles](#font-styles)
-  - [Cell Colors](#cell-colors)
-  - [Range-based Iteration](#range-based-iteration)
-  - [Nested Tables](#nested-tables)
-  - [UTF-8 Support](#utf-8-support)
-* [Building Samples](#building-samples)
-* [Contributing](#contributing)
-* [License](#license)
+*   [Quick Start](#quick-start)
+*   [Formatting Options](#formatting-options)
+    -   [Style Inheritance Model](#style-inheritance-model)
+    -   [Word Wrapping](#word-wrapping)
+    -   [Font Alignment](#font-alignment)
+    -   [Font Styles](#font-styles)
+    -   [Cell Colors](#cell-colors)
+    -   [Range-based Iteration](#range-based-iteration)
+    -   [Nested Tables](#nested-tables)
+    -   [UTF-8 Support](#utf-8-support)
+*   [Building Samples](#building-samples)
+*   [Contributing](#contributing)
+*   [License](#license)
 
 # Quick Start
 
@@ -122,10 +122,10 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
 ## Style Inheritance Model
 
 Formatting in `tabulate` follows a simple style inheritance model. When rendering each cell:
-1. Apply cell formatting if specified
-2. If no cell formatting is specified, apply its parent row formatting
-3. If no row formatting is specified, apply its parent table formatting
-4. If no table formatting is specified, apply the default table formatting
+1.    Apply cell formatting if specified
+2.    If no cell formatting is specified, apply its parent row formatting
+3.    If no row formatting is specified, apply its parent table formatting
+4.    If no table formatting is specified, apply the default table formatting
 
 This enables overriding the formatting for a particular cell even though row or table formatting is specified, e.g., when an entire row is colored `yellow` but you want a specific cell to be colored `red`.
 
@@ -153,10 +153,10 @@ int main() {
 }
 ```
 
-* The above table has 1 row and 2 columns. 
-* The first cell has automatic word-wrapping. 
-* The second cell uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enfore the cell style.
-* NOTE: Whether word-wrapping is automatic or not, `tabulate` performs a trim operation on each line of each cell to remove whitespace characters from either side of line.
+*    The above table has 1 row and 2 columns. 
+*    The first cell has automatic word-wrapping. 
+*    The second cell uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enfore the cell style.
+*    NOTE: Whether word-wrapping is automatic or not, `tabulate` performs a trim operation on each line of each cell to remove whitespace characters from either side of line.
 
 <p align="center">
   <img src="img/word_wrapping.png"/>  
@@ -509,11 +509,11 @@ int main() {
 There are a number of samples in the `samples/` directory, e.g., [Mario](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp). You can build these samples by running the following commands.
 
 ```bash
-$ mkdir build
-$ cd build
-$ cmake -DSAMPLES=ON ..
-$ make
-$ ./samples/mario
+mkdir build
+cd build
+cmake -DSAMPLES=ON ..
+make
+./samples/mario
 ```
 
 <p align="center">

@@ -4,7 +4,7 @@ namespace tabulate {
 
 class ColumnFormat : public Format {
 public:
-  ColumnFormat(class Column &column) : column_(column) {}
+  explicit ColumnFormat(class Column &column) : column_(column) {}
 
   ColumnFormat &width(size_t value);
   ColumnFormat &height(size_t value);
