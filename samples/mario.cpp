@@ -3,7 +3,13 @@ using namespace tabulate;
 
 int main() {
   Table mario;
-  mario.format().font_style({FontStyle::bold}).color(Color::white).border("").corner("").column_separator("").padding(0);
+  mario.format()
+      .font_style({FontStyle::bold})
+      .color(Color::white)
+      .border("")
+      .corner("")
+      .column_separator("")
+      .padding(0);
   auto rows = 16;
   for (size_t i = 0; i < rows; ++i) {
     std::vector<std::variant<std::string, Table>> row;
