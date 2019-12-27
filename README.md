@@ -25,7 +25,6 @@
 ## Table of Contents
 
 *   [Quick Start](#quick-start)
-
 *   [Formatting Options](#formatting-options)
     *   [Style Inheritance Model](#style-inheritance-model)
     *   [Word Wrapping](#word-wrapping)
@@ -35,11 +34,8 @@
     *   [Range-based Iteration](#range-based-iteration)
     *   [Nested Tables](#nested-tables)
     *   [UTF-8 Support](#utf-8-support)
-    
 *   [Building Samples](#building-samples)
-
 *   [Contributing](#contributing)
-
 *   [License](#license)
 
 ## Quick Start
