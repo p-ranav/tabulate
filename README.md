@@ -15,7 +15,6 @@
 # Table of Contents
 
 * [Quick Start](#quick-start)
-* [Table Data Structure](#table-data-structure)
 * [Formatting Options](#formatting-options)
   - [Style Inheritance Model](#style-inheritance-model)
   - [Word Wrapping](#word-wrapping)
@@ -25,6 +24,7 @@
   - [Range-based Iteration](#range-based-iteration)
   - [Nested Tables](#nested-tables)
 * [Building Samples](#building-samples)
+* [Notes About the Table Data Structure](#notes-about-the-table-data-structure)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -106,10 +106,6 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
 <p align="center">
   <img src="img/universal_constants.png"/>  
 </p>
-
-# Table Data Structure
-
-Each `tabulate::Table` contains a vector of rows with each row containing a vector of cells. As described [later in this README](#range-based-iteration), you can iterate over these rows and cell using range-based for loops. 
 
 # Formatting Options
 
@@ -478,6 +474,11 @@ $ ./samples/mario
 <p align="center">
   <img width="400" src="img/mario.png"/>  
 </p>
+
+
+# Notes about the `Table` Data Structure
+
+Each `tabulate::Table` contains a vector of rows with each row containing a vector of cells. As described [later in this README](#range-based-iteration), you can iterate over these rows and cell using range-based for loops. As seen above you can fetch a `Column` object from a table using `table.column(index)` but what this returns is a _view_ object. Column contains a vector of reference wrappers to cells. 
 
 ## Contributing
 Contributions are welcome, have a look at the [CONTRIBUTING.md](CONTRIBUTING.md) document for more information.
