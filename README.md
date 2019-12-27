@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://travis-ci.com/p-ranav/tabulate">
-    <img src="https://travis-ci.com/p-ranav/tabulate.svg?branch=master" alt="ci status"/>
+    <img src="https://travis-ci.com/p-ranav/tabulate.svg?token=haZMYySrhmkE9vsJse61&branch=master" alt="ci status"/>
   </a>
   <a href="https://github.com/p-ranav/tabulate/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="license"/>
