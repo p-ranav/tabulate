@@ -458,7 +458,7 @@ int main() {
 
 ## Building Samples
 
-There are a number of samples in the `samples/` directory, e.g., [Mario](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp) constructed using `tabulate` on a `16x30` grid. 
+There are a number of samples in the `samples/` directory, e.g., [Mario](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp) which is constructed on a `16x30` table. 
 
 You can build these samples by running the following commands.
 
