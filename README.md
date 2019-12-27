@@ -460,10 +460,6 @@ int main() {
 
 There are a number of samples in the `samples/` directory, e.g., [Mario](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp) constructed using `tabulate` on a `16x30` grid. 
 
-<p align="center">
-  <img width="400" src="img/mario.png"/>  
-</p>
-
 You can build these samples by running the following commands.
 
 ```bash
@@ -472,6 +468,10 @@ $ cd build
 $ cmake -DSAMPLES=ON ..
 $ make
 ```
+
+<p align="center">
+  <img width="400" src="img/mario.png"/>  
+</p>
 
 ## Contributing
 Contributions are welcome, have a look at the [CONTRIBUTING.md](CONTRIBUTING.md) document for more information.
