@@ -22,7 +22,7 @@
   </p>
 </p>
 
-# Table of Contents
+## Table of Contents
 
 *   [Quick Start](#quick-start)
 *   [Formatting Options](#formatting-options)
@@ -38,7 +38,7 @@
 *   [Contributing](#contributing)
 *   [License](#license)
 
-# Quick Start
+## Quick Start
 
 `tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. 
 
@@ -117,9 +117,9 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
   <img src="img/universal_constants.png"/>  
 </p>
 
-# Formatting Options
+## Formatting Options
 
-## Style Inheritance Model
+### Style Inheritance Model
 
 Formatting in `tabulate` follows a simple style inheritance model. When rendering each cell:
 1.    Apply cell formatting if specified
@@ -129,7 +129,7 @@ Formatting in `tabulate` follows a simple style inheritance model. When renderin
 
 This enables overriding the formatting for a particular cell even though row or table formatting is specified, e.g., when an entire row is colored `yellow` but you want a specific cell to be colored `red`.
 
-## Word Wrapping
+### Word Wrapping
 
 `tabulate` supports automatic word-wrapping when printing cells. 
 
@@ -164,7 +164,7 @@ int main() {
 
 NOTE: Both columns in the above table are left-aligned by default. This, however, can be easily changed.
 
-## Font Alignment
+### Font Alignment
 
 `tabulate` supports three font alignment settings: `left`, `center`, and `right`. By default, all table content is left-aligned. To align cells, use `.format().font_align(alignment)`. 
 
@@ -207,7 +207,7 @@ int main() {
   <img src="img/movies.png"/>  
 </p>
 
-## Font Styles
+### Font Styles
 
 `tabulate` supports 8 font styles: `bold`, `dark`, `italic`, `underline`, `blink`, `reverse`, `concealed`, `crossed`. Depending on the terminal (or terminal settings), some of these might not work. 
 
@@ -258,7 +258,7 @@ int main() {
 
 NOTE: Font styles are applied to the entire cell. Unlike HTML, you cannot currently apply styles to specific words in a cell.
 
-## Cell Colors
+### Cell Colors
 
 There are a number of methods in the `Format` object to color cells - foreground and background - for font, borders, corners, and column separators. Thanks to [termcolor](https://github.com/ikalnytskyi/termcolor), `tabulate` supports 8 colors: `grey`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, and `white`. The look of these colors vary depending on your terminal.
 
@@ -323,7 +323,7 @@ int main() {
   <img src="img/colors.png"/>  
 </p>
 
-## Range-based Iteration
+### Range-based Iteration
 
 Hand-picking and formatting cells using `operator[]` gets tedious very quickly. To ease this, `tabulate` supports range-based iteration on tables, rows, and columns. Quickly iterate over rows and columns to format cells.
 
@@ -386,7 +386,7 @@ int main() {
   <img src="img/iterators.png"/>  
 </p>
 
-## Nested Tables
+### Nested Tables
 
 `Table.add_row(...)` takes either a `std::string` or a `tabulate::Table`. This can be used to nest tables within tables. Here's an example program that prints a UML class diagram using `tabulate`. Note the use of font alignment, style, and width settings to generate a diagram that looks centered and great.
 
@@ -465,7 +465,7 @@ int main() {
   <img height="600" src="img/class_diagram.png"/>  
 </p>
 
-## UTF-8 Support
+### UTF-8 Support
 
 UTF-8 support in `tabulate` is there but not perfect. There are some open issues when attempting to print East-Asian characters with ambigious width and I haven't found simple ways of dealing with these issues yet.
 
