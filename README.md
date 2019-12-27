@@ -3,6 +3,16 @@
 </p>
 
 <p align="center">
+  <a href="https://travis-ci.com/p-ranav/tabulate">
+    <img src="https://travis-ci.com/p-ranav/tabulate.svg?branch=master" alt="ci status"/>
+  </a>
+  <a href="https://github.com/p-ranav/tabulate/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="license"/>
+  </a>
+  <img src="https://img.shields.io/badge/version-1.0-blue.svg?cacheSeconds=2592000" alt="version"/>
+</p>
+
+<p align="center">
   <img src="img/summary.png"/>  
   <p align="center">
    Source for the above image can be found
