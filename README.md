@@ -467,7 +467,7 @@ $ cmake -DSAMPLES=ON ..
 $ make
 ```
 
-Here's Mario, constructed using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
+Here's Mario - constructed using `tabulate` on a `16x30` grid. You can check out the source for this table [here](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp).
 
 <p align="center">
   <img width="400" src="img/mario.png"/>  
