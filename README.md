@@ -457,7 +457,7 @@ int main() {
 
 ## UTF-8 Support
 
-UTF-8 support in `tabulate` is not there but not perfect. There are some open issues when attempting to print East-Asian characters with ambigious width and I haven't found neat ways of dealing with these issues yet.
+UTF-8 support in `tabulate` is there but not perfect. There are some open issues when attempting to print East-Asian characters with ambigious width and I haven't found neat ways of dealing with these issues yet.
 
 Here's a simple example: The following table prints the phrase `I love you` in different languages. As you can see, there are 5 rows in this table where the display width of the column is incorrectly calculated, leading to misalignments.
 
