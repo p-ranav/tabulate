@@ -377,9 +377,7 @@ int main() {
 
 ## Nested Tables
 
-`Table.add_row(...)` takes a `vector<variant<string, Table>>`. So, you can pass either a string or another table. Under the hood, the table is first converted to string (using std::stringstream) and then used as the cell contents.
-
-Here's an example program that prints a UML class diagram using `tabulate`. Note the use of font alignment, style, and width settings to generate a diagram that looks centered and great.
+`Table.add_row(...)` takes either a `std::string` or a `tabulate::Table`. This can be used to nest tables within tables. Here's an example program that prints a UML class diagram using `tabulate`. Note the use of font alignment, style, and width settings to generate a diagram that looks centered and great.
 
 ```cpp
 #include <tabulate/table.hpp>
