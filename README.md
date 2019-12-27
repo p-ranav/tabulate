@@ -152,7 +152,7 @@ int main() {
   <img src="img/word_wrapping.png"/>  
 </p>
 
-NOTE: Both columns in the above table are left-aligned by default. This can, however, be easily changed.
+NOTE: Both columns in the above table are left-aligned by default. This, however, can be easily changed.
 
 ## Font Alignment
 
