@@ -157,16 +157,16 @@ int main() {
 }
 ```
 
-*    The above table has 1 row and 2 columns. 
-*    The first cell has automatic word-wrapping. 
-*    The second cell uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enfore the cell style.
-*    NOTE: Whether word-wrapping is automatic or not, `tabulate` performs a trim operation on each line of each cell to remove whitespace characters from either side of line.
+*  The above table has 1 row and 2 columns. 
+*  The first cell has automatic word-wrapping. 
+*  The second cell uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enfore the cell style.
+*  **NOTE**: Whether word-wrapping is automatic or not, `tabulate` performs a trim operation on each line of each cell to remove whitespace characters from either side of line.
 
 <p align="center">
   <img src="img/word_wrapping.png"/>  
 </p>
 
-NOTE: Both columns in the above table are left-aligned by default. This, however, can be easily changed.
+**NOTE**: Both columns in the above table are left-aligned by default. This, however, can be easily changed.
 
 ### Font Alignment
 
