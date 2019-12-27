@@ -9,13 +9,6 @@ public:
   ColumnFormat &width(size_t value);
   ColumnFormat &height(size_t value);
 
-  // Margin styling
-  ColumnFormat &margin(size_t value);
-  ColumnFormat &margin_left(size_t value);
-  ColumnFormat &margin_right(size_t value);
-  ColumnFormat &margin_top(size_t value);
-  ColumnFormat &margin_bottom(size_t value);
-
   // Padding
   ColumnFormat &padding(size_t value);
   ColumnFormat &padding_left(size_t value);

@@ -24,34 +24,6 @@ public:
     return *this;
   }
 
-  Format &margin(size_t value) {
-    margin_left_ = value;
-    margin_right_ = value;
-    margin_top_ = value;
-    margin_bottom_ = value;
-    return *this;
-  }
-
-  Format &margin_left(size_t value) {
-    margin_left_ = value;
-    return *this;
-  }
-
-  Format &margin_right(size_t value) {
-    margin_right_ = value;
-    return *this;
-  }
-
-  Format &margin_top(size_t value) {
-    margin_top_ = value;
-    return *this;
-  }
-
-  Format &margin_bottom(size_t value) {
-    margin_bottom_ = value;
-    return *this;
-  }
-
   Format &padding(size_t value) {
     padding_left_ = value;
     padding_right_ = value;
@@ -389,27 +361,6 @@ public:
     else
       result.font_background_color_ = second.font_background_color_;
 
-    // Margin styling
-    if (first.margin_left_.has_value())
-      result.margin_left_ = first.margin_left_;
-    else
-      result.margin_left_ = second.margin_left_;
-
-    if (first.margin_top_.has_value())
-      result.margin_top_ = first.margin_top_;
-    else
-      result.margin_top_ = second.margin_top_;
-
-    if (first.margin_right_.has_value())
-      result.margin_right_ = first.margin_right_;
-    else
-      result.margin_right_ = second.margin_right_;
-
-    if (first.margin_bottom_.has_value())
-      result.margin_bottom_ = first.margin_bottom_;
-    else
-      result.margin_bottom_ = second.margin_bottom_;
-
     // Padding
     if (first.padding_left_.has_value())
       result.padding_left_ = first.padding_left_;
@@ -559,7 +510,6 @@ private:
     font_align_ = FontAlign::left;
     font_style_ = std::vector<FontStyle>{};
     font_color_ = font_background_color_ = Color::none;
-    margin_left_ = margin_right_ = margin_top_ = margin_bottom_ = 0;
     padding_left_ = padding_right_ = 1;
     padding_top_ = padding_bottom_ = 0;
     border_top_ = border_bottom_ = "-";
@@ -649,12 +599,6 @@ private:
   std::optional<std::vector<FontStyle>> font_style_{};
   std::optional<Color> font_color_{};
   std::optional<Color> font_background_color_{};
-
-  // Margin styling
-  std::optional<size_t> margin_left_{};
-  std::optional<size_t> margin_top_{};
-  std::optional<size_t> margin_right_{};
-  std::optional<size_t> margin_bottom_{};
 
   // Element padding
   std::optional<size_t> padding_left_{};

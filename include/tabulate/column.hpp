@@ -127,36 +127,6 @@ ColumnFormat &ColumnFormat::height(size_t value) {
   return *this;
 }
 
-ColumnFormat &ColumnFormat::margin(size_t value) {
-  for (auto &cell : column_.get().cells_)
-    cell.get().format().margin(value);
-  return *this;
-}
-
-ColumnFormat &ColumnFormat::margin_left(size_t value) {
-  for (auto &cell : column_.get().cells_)
-    cell.get().format().margin_left(value);
-  return *this;
-}
-
-ColumnFormat &ColumnFormat::margin_right(size_t value) {
-  for (auto &cell : column_.get().cells_)
-    cell.get().format().margin_right(value);
-  return *this;
-}
-
-ColumnFormat &ColumnFormat::margin_top(size_t value) {
-  for (auto &cell : column_.get().cells_)
-    cell.get().format().margin_top(value);
-  return *this;
-}
-
-ColumnFormat &ColumnFormat::margin_bottom(size_t value) {
-  for (auto &cell : column_.get().cells_)
-    cell.get().format().margin_bottom(value);
-  return *this;
-}
-
 ColumnFormat &ColumnFormat::padding(size_t value) {
   for (auto &cell : column_.get().cells_)
     cell.get().format().padding(value);
