@@ -467,6 +467,7 @@ $ mkdir build
 $ cd build
 $ cmake -DSAMPLES=ON ..
 $ make
+$ ./samples/mario
 ```
 
 <p align="center">
