@@ -15,7 +15,7 @@
 # Table of Contents
 
 * [Quick Start](#quick-start)
-* [Table Datastructure](#table-datastructure)
+* [Table Data Structure](#table-data-structure)
 * [Formatting Options](#formatting-options)
   - [Style Inheritance Model](#style-inheritance-model)
   - [Word Wrapping](#word-wrapping)
@@ -107,7 +107,7 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
   <img src="img/universal_constants.png"/>  
 </p>
 
-# Table Datastructure
+# Table Data Structure
 
 Each `tabulate::Table` contains a vector of rows with each row containing a vector of cells. As described [later in this README](#range-based-iteration), you can iterate over these rows and cell using range-based for loops. 
 
