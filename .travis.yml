@@ -21,16 +21,6 @@ matrix:
         apt:
           packages:
             - g++-7
-    - env: CXX=g++-6 CC=gcc-6
-      addons:
-        apt:
-          packages:
-            - g++-6
-    - env: CXX=g++-5 CC=gcc-5
-      addons:
-        apt:
-          packages:
-            - g++-5
 
     - env: CXX=clang++-9 CC=clang-9
       addons:
