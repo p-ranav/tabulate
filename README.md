@@ -333,6 +333,8 @@ int main() {
 
 **NOTE**: You can use `.corner(..)`, `.corner_color(..)`, and `.corner_background_color(..)` to set a common style for all corners. Similarly, you can use `.border(..)`, `.border_color(..)` and `.border_background_color(..)` to set a common style for all borders.
 
+**NOTE**: Note the use of `.format().multi_byte_characters(true)`. Use this when you know your table has multi-byte characters. This is an opt-in because the calculation of column width when dealing with multi-byte characters is more involved and you don't want to pay the performance penalty unless you need it. Just like any other format setting, you can set this at the table-level, row-level, or on a per-cell basis. 
+
 Here's an example where each border and corner is individually styled:
 
 ```cpp
@@ -341,6 +343,8 @@ using namespace tabulate;
 
 int main() {
   Table table;
+  table.format()
+    .multi_byte_characters(true);
 
   table.add_row({"ᛏᚺᛁᛊ ᛁᛊ ᚨ ᛊᛏᛟᚱy ᛟᚠᚨ ᛒᛖᚨᚱ ᚨᚾᛞ\n"
                  "ᚨ ᚹᛟᛚᚠ, ᚹᚺᛟ ᚹᚨᚾᛞᛖᚱᛖᛞ ᛏᚺᛖ\n"
