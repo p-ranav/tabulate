@@ -192,18 +192,87 @@ public:
     return *this;
   }
 
-  Format &corner(const std::string &value) {
-    corner_ = value;
+  Format& corner(const std::string &value) {
+    corner_top_left_ = value;
+    corner_top_right_ = value;
+    corner_bottom_left_ = value;
+    corner_bottom_right_ = value;
     return *this;
   }
 
-  Format &corner_color(Color value) {
-    corner_color_ = value;
+  Format& corner_color(Color value) {
+    corner_top_left_color_ = value;
+    corner_top_right_color_ = value;
+    corner_bottom_left_color_ = value;
+    corner_bottom_right_color_ = value;
     return *this;
   }
 
-  Format &corner_background_color(Color value) {
-    corner_background_color_ = value;
+  Format& corner_background_color(Color value) {
+    corner_top_left_background_color_ = value;
+    corner_top_right_background_color_ = value;
+    corner_bottom_left_background_color_ = value;
+    corner_bottom_right_background_color_ = value;
+    return *this;
+  }
+
+  Format &corner_top_left(const std::string &value) {
+    corner_top_left_ = value;
+    return *this;
+  }
+
+  Format &corner_top_left_color(Color value) {
+    corner_top_left_color_ = value;
+    return *this;
+  }
+
+  Format &corner_top_left_background_color(Color value) {
+    corner_top_left_background_color_ = value;
+    return *this;
+  }
+
+  Format &corner_top_right(const std::string &value) {
+    corner_top_right_ = value;
+    return *this;
+  }
+
+  Format &corner_top_right_color(Color value) {
+    corner_top_right_color_ = value;
+    return *this;
+  }
+
+  Format &corner_top_right_background_color(Color value) {
+    corner_top_right_background_color_ = value;
+    return *this;
+  }
+
+  Format &corner_bottom_left(const std::string &value) {
+    corner_bottom_left_ = value;
+    return *this;
+  }
+
+  Format &corner_bottom_left_color(Color value) {
+    corner_bottom_left_color_ = value;
+    return *this;
+  }
+
+  Format &corner_bottom_left_background_color(Color value) {
+    corner_bottom_left_background_color_ = value;
+    return *this;
+  }
+
+  Format &corner_bottom_right(const std::string &value) {
+    corner_bottom_right_ = value;
+    return *this;
+  }
+
+  Format &corner_bottom_right_color(Color value) {
+    corner_bottom_right_color_ = value;
+    return *this;
+  }
+
+  Format &corner_bottom_right_background_color(Color value) {
+    corner_bottom_right_background_color_ = value;
     return *this;
   }
 
@@ -464,20 +533,65 @@ public:
       result.show_border_right_ = second.show_border_right_;
 
     // Corner
-    if (first.corner_.has_value())
-      result.corner_ = first.corner_;
+    if (first.corner_top_left_.has_value())
+      result.corner_top_left_ = first.corner_top_left_;
     else
-      result.corner_ = second.corner_;
+      result.corner_top_left_ = second.corner_top_left_;
 
-    if (first.corner_color_.has_value())
-      result.corner_color_ = first.corner_color_;
+    if (first.corner_top_left_color_.has_value())
+      result.corner_top_left_color_ = first.corner_top_left_color_;
     else
-      result.corner_color_ = second.corner_color_;
+      result.corner_top_left_color_ = second.corner_top_left_color_;
 
-    if (first.corner_background_color_.has_value())
-      result.corner_background_color_ = first.corner_background_color_;
+    if (first.corner_top_left_background_color_.has_value())
+      result.corner_top_left_background_color_ = first.corner_top_left_background_color_;
     else
-      result.corner_background_color_ = second.corner_background_color_;
+      result.corner_top_left_background_color_ = second.corner_top_left_background_color_;
+
+    if (first.corner_top_right_.has_value())
+      result.corner_top_right_ = first.corner_top_right_;
+    else
+      result.corner_top_right_ = second.corner_top_right_;
+
+    if (first.corner_top_right_color_.has_value())
+      result.corner_top_right_color_ = first.corner_top_right_color_;
+    else
+      result.corner_top_right_color_ = second.corner_top_right_color_;
+
+    if (first.corner_top_right_background_color_.has_value())
+      result.corner_top_right_background_color_ = first.corner_top_right_background_color_;
+    else
+      result.corner_top_right_background_color_ = second.corner_top_right_background_color_;
+
+    if (first.corner_bottom_left_.has_value())
+      result.corner_bottom_left_ = first.corner_bottom_left_;
+    else
+      result.corner_bottom_left_ = second.corner_bottom_left_;
+
+    if (first.corner_bottom_left_color_.has_value())
+      result.corner_bottom_left_color_ = first.corner_bottom_left_color_;
+    else
+      result.corner_bottom_left_color_ = second.corner_bottom_left_color_;
+
+    if (first.corner_bottom_left_background_color_.has_value())
+      result.corner_bottom_left_background_color_ = first.corner_bottom_left_background_color_;
+    else
+      result.corner_bottom_left_background_color_ = second.corner_bottom_left_background_color_;
+
+    if (first.corner_bottom_right_.has_value())
+      result.corner_bottom_right_ = first.corner_bottom_right_;
+    else
+      result.corner_bottom_right_ = second.corner_bottom_right_;
+
+    if (first.corner_bottom_right_color_.has_value())
+      result.corner_bottom_right_color_ = first.corner_bottom_right_color_;
+    else
+      result.corner_bottom_right_color_ = second.corner_bottom_right_color_;
+
+    if (first.corner_bottom_right_background_color_.has_value())
+      result.corner_bottom_right_background_color_ = first.corner_bottom_right_background_color_;
+    else
+      result.corner_bottom_right_background_color_ = second.corner_bottom_right_background_color_;
 
     // Column separator
     if (first.column_separator_.has_value())
@@ -518,8 +632,11 @@ private:
     border_top_color_ = border_top_background_color_ = border_bottom_color_ =
         border_bottom_background_color_ = border_left_color_ = border_left_background_color_ =
             border_right_color_ = border_right_background_color_ = Color::none;
-    corner_ = "+";
-    corner_color_ = corner_background_color_ = Color::none;
+    corner_top_left_ = corner_top_right_ = corner_bottom_left_ = corner_bottom_right_ = "+";
+    corner_top_left_color_ = corner_top_left_background_color_ = 
+      corner_top_right_color_ = corner_top_right_background_color_ = 
+      corner_bottom_left_color_ = corner_bottom_left_background_color_ = 
+      corner_bottom_right_color_ = corner_bottom_right_background_color_ = Color::none;
     column_separator_ = "|";
     column_separator_color_ = column_separator_background_color_ = Color::none;
   }
@@ -628,9 +745,21 @@ private:
   std::optional<Color> border_right_background_color_{};
 
   // Element corner
-  std::optional<std::string> corner_{};
-  std::optional<Color> corner_color_{};
-  std::optional<Color> corner_background_color_{};
+  std::optional<std::string> corner_top_left_{};
+  std::optional<Color> corner_top_left_color_{};
+  std::optional<Color> corner_top_left_background_color_{};
+
+  std::optional<std::string> corner_top_right_{};
+  std::optional<Color> corner_top_right_color_{};
+  std::optional<Color> corner_top_right_background_color_{};
+
+  std::optional<std::string> corner_bottom_left_{};
+  std::optional<Color> corner_bottom_left_color_{};
+  std::optional<Color> corner_bottom_left_background_color_{};
+
+  std::optional<std::string> corner_bottom_right_{};
+  std::optional<Color> corner_bottom_right_color_{};
+  std::optional<Color> corner_bottom_right_background_color_{};
 
   // Element column separator
   std::optional<std::string> column_separator_{};

@@ -22,6 +22,9 @@ target_link_libraries(movies PRIVATE tabulate::tabulate)
 add_executable(padding padding.cpp)
 target_link_libraries(padding PRIVATE tabulate::tabulate)
 
+add_executable(runic runic.cpp)
+target_link_libraries(runic PRIVATE tabulate::tabulate)
+
 add_executable(summary summary.cpp)
 target_link_libraries(summary PRIVATE tabulate::tabulate)
 
