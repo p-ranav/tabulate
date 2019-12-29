@@ -34,7 +34,7 @@
     *   [Font Alignment](#font-alignment)
     *   [Font Styles](#font-styles)
     *   [Cell Colors](#cell-colors)
-    *   [Borders and Corners](#border-and-corners)
+    *   [Borders and Corners](#borders-and-corners)
     *   [Range-based Iteration](#range-based-iteration)
     *   [Nested Tables](#nested-tables)
     *   [UTF-8 Support](#utf-8-support)
