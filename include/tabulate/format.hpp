@@ -418,6 +418,10 @@ public:
       // Merge font styles using std::set_union
       std::vector<FontStyle> merged_font_style(first.font_style_.value().size() +
                                                second.font_style_.value().size());
+      std::sort(first.font_style_.value().begin(),
+                first.font_style_.value().end());
+      std::sort(second.font_style_.value().begin(),
+                second.font_style_.value().end());
       std::set_union(first.font_style_.value().begin(), first.font_style_.value().end(),
                      second.font_style_.value().begin(), second.font_style_.value().end(),
                      merged_font_style.begin());

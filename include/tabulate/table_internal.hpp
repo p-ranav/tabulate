@@ -7,6 +7,12 @@
 #include <tabulate/row.hpp>
 #include <tabulate/termcolor.hpp>
 #include <vector>
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
 
 namespace tabulate {
 
