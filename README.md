@@ -260,7 +260,7 @@ int main() {
   <img src="img/font_styles.png"/>  
 </p>
 
-NOTE: Font styles are applied to the entire cell. Unlike HTML, you cannot currently apply styles to specific words in a cell.
+**NOTE**: Font styles are applied to the entire cell. Unlike HTML, you cannot currently apply styles to specific words in a cell.
 
 ### Cell Colors
 
@@ -330,6 +330,8 @@ int main() {
 ### Borders and Corners
 
 `tabulate` allows for fine control over borders and corners. For each border and corner, you can set the text, color, and background color.
+
+**NOTE**: You can use `.corner(..)`, `.corner_color(..)`, and `.corner_background_color(..)` to set a common style for all corners. Similarly, you can use `.border(..)`, `.border_color(..)` and `.border_background_color(..)` to set a common style for all borders.
 
 ```cpp
 #include <tabulate/table.hpp>
