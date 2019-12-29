@@ -12,13 +12,11 @@ int main() {
       .border_right("│")
       .column_separator("│")
       .corner("·")
-      .border_color(Color::yellow)
-      .font_style({FontStyle::bold});
+      .border_color(Color::yellow);
   readme.add_row({"tabulate for Modern C++"});
   readme[0]
       .format()
       .font_align(FontAlign::center)
-      .font_style({FontStyle::bold})
       .font_color(Color::yellow);
 
   readme.add_row({"https://github.com/p-ranav/tabulate"});
@@ -88,7 +86,7 @@ int main() {
       .format()
       .border_color(Color::green)
       .font_color(Color::cyan)
-      .font_style({FontStyle::underline, FontStyle::bold})
+      .font_style({FontStyle::underline})
       .padding_top(0)
       .padding_bottom(0);
 
@@ -125,17 +123,10 @@ int main() {
   readme[10].format().font_background_color(Color::red).hide_border_top();
 
   // Print the table
-  std::cout << "\n\n";
-  std::cout << termcolor::bold << termcolor::red << " pranav";
-  std::cout << termcolor::bold << termcolor::yellow << " ~/dev/tabulate" << termcolor::reset;
-  std::cout << termcolor::bold << termcolor::green << " git@master" << std::endl;
-  std::cout << termcolor::bold << termcolor::white << " $ ./samples/summary\n\n";
-
   std::cout << readme << "\n\n";
 
   Table chart;
   chart.format()
-      .font_style({FontStyle::bold})
       .font_color(Color::white)
       .padding_left(0)
       .padding_right(0)
@@ -212,7 +203,6 @@ int main() {
 
   Table legend;
   legend.format()
-      .font_style({FontStyle::bold})
       .font_color(Color::white)
       .border_top("─")
       .border_bottom("─")

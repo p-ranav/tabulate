@@ -304,7 +304,6 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       reset_element_style(stream);
     }
   }
-  std::locale::global(std::locale(""));
 }
 
 bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
@@ -346,7 +345,6 @@ bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
     stream << corner;
     reset_element_style(stream);
   }
-  std::locale::global(std::locale(""));
   return true;
 }
 
@@ -389,7 +387,6 @@ bool Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &tabl
     stream << corner;
     reset_element_style(stream);
   }
-  std::locale::global(std::locale(""));
   return true;
 }
 
