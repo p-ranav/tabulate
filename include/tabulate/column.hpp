@@ -329,6 +329,12 @@ ColumnFormat &ColumnFormat::background_color(Color value) {
   return *this;
 }
 
+ColumnFormat &ColumnFormat::multi_byte_characters(bool value) {
+  for (auto &cell : column_.get().cells_)
+    cell.get().format().multi_byte_characters(value);
+  return *this;
+}
+
 ColumnFormat &ColumnFormat::locale(const std::string &value) {
   for (auto &cell : column_.get().cells_)
     cell.get().format().locale(value);

@@ -52,6 +52,7 @@ public:
   ColumnFormat &background_color(Color value);
 
   // Locale
+  ColumnFormat &multi_byte_characters(bool value);
   ColumnFormat &locale(const std::string &value);
 
 private:
