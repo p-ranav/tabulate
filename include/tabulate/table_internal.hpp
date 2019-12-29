@@ -173,7 +173,7 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
         auto cell = table[i][j];
         auto format = cell.format();
         auto column_width = column_widths[j];
-        auto corner = format.corner_.value();
+        auto corner = format.corner_bottom_left_.value();
         auto border_bottom = format.border_bottom_.value();
         if (corner == "" && border_bottom == "") {
           bottom_border_needed = false;
@@ -304,14 +304,15 @@ bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
   auto format = cell.format();
   auto column_width = dimension.second;
 
-  auto corner = format.corner_.value();
+  auto corner = format.corner_top_left_.value();
+  auto corner_color = format.corner_top_left_color_.value();
+  auto corner_background_color = format.corner_top_left_background_color_.value();
   auto border_top = format.border_top_.value();
 
   if ((corner == "" && border_top == "") || !format.show_border_top_.value())
     return false;
 
-  apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(),
-                      {});
+  apply_element_style(stream, corner_color, corner_background_color, {});
   stream << corner;
   reset_element_style(stream);
 
@@ -324,8 +325,11 @@ bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
 
   if (index.second + 1 == num_columns) {
     // Print corner after last column
-    apply_element_style(stream, format.corner_color_.value(),
-                        format.corner_background_color_.value(), {});
+    corner = format.corner_top_right_.value();
+    corner_color = format.corner_top_right_color_.value();
+    corner_background_color = format.corner_top_right_background_color_.value();
+
+    apply_element_style(stream, corner_color, corner_background_color, {});
     stream << corner;
     reset_element_style(stream);
   }
@@ -340,14 +344,15 @@ bool Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &tabl
   auto format = cell.format();
   auto column_width = dimension.second;
 
-  auto corner = format.corner_.value();
+  auto corner = format.corner_bottom_left_.value();
+  auto corner_color = format.corner_bottom_left_color_.value();
+  auto corner_background_color = format.corner_bottom_left_background_color_.value();
   auto border_bottom = format.border_bottom_.value();
 
   if ((corner == "" && border_bottom == "") || !format.show_border_bottom_.value())
     return false;
 
-  apply_element_style(stream, format.corner_color_.value(), format.corner_background_color_.value(),
-                      {});
+  apply_element_style(stream, corner_color, corner_background_color, {});
   stream << corner;
   reset_element_style(stream);
 
@@ -360,8 +365,11 @@ bool Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &tabl
 
   if (index.second + 1 == num_columns) {
     // Print corner after last column
-    apply_element_style(stream, format.corner_color_.value(),
-                        format.corner_background_color_.value(), {});
+    corner = format.corner_bottom_right_.value();
+    corner_color = format.corner_bottom_right_color_.value();
+    corner_background_color = format.corner_bottom_right_background_color_.value();
+
+    apply_element_style(stream, corner_color, corner_background_color, {});
     stream << corner;
     reset_element_style(stream);
   }

@@ -34,6 +34,7 @@
     *   [Font Alignment](#font-alignment)
     *   [Font Styles](#font-styles)
     *   [Cell Colors](#cell-colors)
+    *   [Borders and Corners](#borders-and-corners)
     *   [Range-based Iteration](#range-based-iteration)
     *   [Nested Tables](#nested-tables)
     *   [UTF-8 Support](#utf-8-support)
@@ -324,6 +325,56 @@ int main() {
 
 <p align="center">
   <img src="img/colors.png"/>  
+</p>
+
+### Borders and Corners
+
+`tabulate` allows for fine control over borders and corners. For each border and corner, you can set the text, color, and background color.
+
+```cpp
+#include <tabulate/table.hpp>
+using namespace tabulate;
+
+int main() {
+  Table table;
+
+  table.add_row({"ᛏᚺᛁᛊ ᛁᛊ ᚨ ᛊᛏᛟᚱy ᛟᚠᚨ ᛒᛖᚨᚱ ᚨᚾᛞ\n"
+                 "ᚨ ᚹᛟᛚᚠ, ᚹᚺᛟ ᚹᚨᚾᛞᛖᚱᛖᛞ ᛏᚺᛖ\n"
+                 "ᚱᛖᚨᛚᛗᛊ ᚾᛁᚾᛖ ᛏᛟ ᚠᚢᛚᚠᛁᛚᛚ ᚨ ᛈᚱᛟᛗᛁᛊᛖ\n"
+                 "ᛏᛟ ᛟᚾᛖ ᛒᛖᚠᛟᚱᛖ; ᛏᚺᛖy ᚹᚨᛚᚲ ᛏᚺᛖ\n"
+                 "ᛏᚹᛁᛚᛁᚷᚺᛏ ᛈᚨᛏᚺ, ᛞᛖᛊᛏᛁᚾᛖᛞ ᛏᛟ\n"
+                 "ᛞᛁᛊcᛟᚹᛖᚱ ᛏᚺᛖ ᛏᚱᚢᛏᚺ\nᛏᚺᚨᛏ ᛁᛊ ᛏᛟ cᛟᛗᛖ."});
+
+  table.format()
+      .font_style({FontStyle::bold, FontStyle::dark})
+      .font_align(FontAlign::center)
+      .font_color(Color::red)
+      .font_background_color(Color::yellow)
+      // Corners
+      .corner_top_left("ᛰ")
+      .corner_top_right("ᛯ")
+      .corner_bottom_left("ᛮ")
+      .corner_bottom_right("ᛸ")
+      .corner_top_left_color(Color::cyan)
+      .corner_top_right_color(Color::yellow)
+      .corner_bottom_left_color(Color::green)
+      .corner_bottom_right_color(Color::red)
+      // Borders
+      .border_top("ᛜ")
+      .border_bottom("ᛜ")
+      .border_left("ᚿ")
+      .border_right("ᛆ")
+      .border_left_color(Color::yellow)
+      .border_right_color(Color::green)
+      .border_top_color(Color::cyan)
+      .border_bottom_color(Color::red);
+
+  std::cout << table << std::endl;
+}
+```
+
+<p align="center">
+  <img src="img/runic.png"/>  
 </p>
 
 ### Range-based Iteration
