@@ -28,6 +28,10 @@ Format &Cell::format() {
   return format_.value();
 }
 
+bool Cell::is_multi_byte_character_support_enabled() {
+  return format().multi_byte_characters_.value();
+}
+
 class TableInternal : public std::enable_shared_from_this<TableInternal> {
 public:
   static std::shared_ptr<TableInternal> create() {
@@ -208,10 +212,12 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
   auto column_width = dimension.second;
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
+  auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
   std::locale::global(std::locale(locale));
   auto format = cell.format();
   auto text = cell.get_text();
-  auto word_wrapped_text = Format::word_wrap(text, column_width, locale);
+  auto word_wrapped_text =
+      Format::word_wrap(text, column_width, locale, is_multi_byte_character_support_enabled);
   auto text_height = std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n') + 1;
   auto padding_top = format.padding_top_.value();
   auto padding_bottom = format.padding_bottom_.value();
@@ -238,7 +244,10 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
     auto padding_right = format.padding_right_.value();
 
     // Check if input text has embedded \n that are to be respected
-    auto newlines_in_input = Format::split_lines(text, "\n", cell.locale()).size() - 1;
+    auto newlines_in_input = Format::split_lines(text, "\n", cell.locale(),
+                                                 cell.is_multi_byte_character_support_enabled())
+                                 .size() -
+                             1;
     std::string word_wrapped_text;
 
     // If there are no embedded \n characters, then apply word wrap
@@ -247,7 +256,8 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       // Then display one word-wrapped line at a time within cell
       if (column_width > (padding_left + padding_right))
         word_wrapped_text =
-            Format::word_wrap(text, column_width - padding_left - padding_right, cell.locale());
+            Format::word_wrap(text, column_width - padding_left - padding_right, cell.locale(),
+                              cell.is_multi_byte_character_support_enabled());
       else {
         // Configured column width cannot be lower than (padding_left + padding_right)
         // This is a bad configuration
@@ -259,7 +269,8 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       word_wrapped_text = text; // repect the embedded '\n' characters
     }
 
-    auto lines = Format::split_lines(word_wrapped_text, "\n", cell.locale());
+    auto lines = Format::split_lines(word_wrapped_text, "\n", cell.locale(),
+                                     cell.is_multi_byte_character_support_enabled());
 
     if (row_index - padding_top < lines.size()) {
       auto line = lines[row_index - padding_top];
@@ -270,7 +281,8 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       // Print word-wrapped line
       line = Format::trim(line);
       auto line_with_padding_size =
-          get_sequence_length(line, cell.locale()) + padding_left + padding_right;
+          get_sequence_length(line, cell.locale(), cell.is_multi_byte_character_support_enabled()) +
+          padding_left + padding_right;
       switch (format.font_align_.value()) {
       case FontAlign::left:
         print_content_left_aligned(stream, line, format, line_with_padding_size, column_width);

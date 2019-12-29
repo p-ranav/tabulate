@@ -96,7 +96,8 @@ private:
 
     // Check if input text has newlines
     auto text = cell.get_text();
-    auto split_lines = Format::split_lines(text, "\n", cell.locale());
+    auto split_lines = Format::split_lines(text, "\n", cell.locale(),
+                                           cell.is_multi_byte_character_support_enabled());
 
     // If there are no newlines in input, set column_width = text.size()
     if (split_lines.size() == 1) {
@@ -106,8 +107,11 @@ private:
       // Find widest substring in input and use this as column_width
       size_t widest_sub_string_size{0};
       for (auto &line : split_lines)
-        if (get_sequence_length(line, cell.locale()) > widest_sub_string_size)
-          widest_sub_string_size = get_sequence_length(line, cell.locale());
+        if (get_sequence_length(line, cell.locale(),
+                                cell.is_multi_byte_character_support_enabled()) >
+            widest_sub_string_size)
+          widest_sub_string_size = get_sequence_length(
+              line, cell.locale(), cell.is_multi_byte_character_support_enabled());
       result += widest_sub_string_size;
     }
 

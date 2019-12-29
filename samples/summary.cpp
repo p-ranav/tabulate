@@ -4,20 +4,10 @@ using namespace tabulate;
 int main() {
 
   Table readme;
+  readme.format().border_color(Color::yellow);
 
-  readme.format()
-      .border_top("─")
-      .border_bottom("─")
-      .border_left("│")
-      .border_right("│")
-      .column_separator("│")
-      .corner("·")
-      .border_color(Color::yellow);
   readme.add_row({"tabulate for Modern C++"});
-  readme[0]
-      .format()
-      .font_align(FontAlign::center)
-      .font_color(Color::yellow);
+  readme[0].format().font_align(FontAlign::center).font_color(Color::yellow);
 
   readme.add_row({"https://github.com/p-ranav/tabulate"});
   readme[1]
@@ -32,13 +22,6 @@ int main() {
   readme[2].format().font_style({FontStyle::italic}).font_color(Color::magenta);
 
   Table highlights;
-  highlights.format()
-      .border_top("─")
-      .border_bottom("─")
-      .border_left("│")
-      .border_right("│")
-      .column_separator("│")
-      .corner("·");
   highlights.add_row({"Header-only Library", "Requires C++17", "MIT License"});
   readme.add_row({highlights});
   readme[3].format().font_align(FontAlign::center).hide_border_top();
@@ -52,13 +35,6 @@ int main() {
   readme[5].format().font_align(FontAlign::center);
 
   Table format;
-  format.format()
-      .border_top("─")
-      .border_bottom("─")
-      .border_left("│")
-      .border_right("│")
-      .column_separator("│")
-      .corner("·");
   format.add_row({"Horizontal Alignment", "Left aligned", "Center aligned", "Right aligned"});
   format[0].format().font_align(FontAlign::center);
   format[0][0].format().font_color(Color::green).column_separator(":");
@@ -96,13 +72,6 @@ int main() {
   readme[7].format().hide_border_left().hide_border_right();
 
   Table embedded_table;
-  embedded_table.format()
-      .border_top("─")
-      .border_bottom("─")
-      .border_left("│")
-      .border_right("│")
-      .column_separator("│")
-      .corner("·");
   embedded_table.add_row(
       {"You can even\n embed tables...",
        Table().add_row(
@@ -120,7 +89,11 @@ int main() {
 
   readme.add_row({"ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ ᚦ ᚧ ᚨ ᚩ ᚪ ᚫ ᚬ ᚭ ᚮ ᚯ ᚰ ᚱ ᚲ ᚳ ᚴ ᚵ ᚶ ᚷ ᚸ ᚹ ᚺ ᚻ ᚼ ᚽ ᚾ ᚿ ᛀ ᛁ ᛂ ᛃ ᛄ ᛅ ᛆ ᛇ "
                   "ᛈ ᛉ ᛊ ᛋ ᛌ ᛍ ᛎ ᛏ ᛐ ᛑ ᛒ ᛓ"});
-  readme[10].format().font_background_color(Color::red).hide_border_top();
+  readme[10]
+      .format()
+      .font_background_color(Color::red)
+      .hide_border_top()
+      .multi_byte_characters(true);
 
   // Print the table
   std::cout << readme << "\n\n";
@@ -155,7 +128,7 @@ int main() {
 
   chart.column(0).format().padding_left(1).padding_right(1).border_left(" ");
 
-  for (size_t i = 1; i <= 50; ++i) {
+  for (size_t i = 1; i <= 18; ++i) {
     chart.column(i).format().width(2);
   }
 
@@ -202,14 +175,6 @@ int main() {
   chart[4][16].set_text("Batch 2");
 
   Table legend;
-  legend.format()
-      .font_color(Color::white)
-      .border_top("─")
-      .border_bottom("─")
-      .border_left("│")
-      .border_right("│")
-      .column_separator("│")
-      .corner("·");
   legend.add_row({"Batch 1", "10", "40", "50", "20", "10", "50"});
   legend.add_row({"Batch 2", "30", "60", "(70)", "50", "40", "30"});
 

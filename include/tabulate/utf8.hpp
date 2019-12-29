@@ -7,8 +7,8 @@
 #include <locale>
 
 #include <cstdlib>
-#include <wchar.h>
 #include <tabulate/termcolor.hpp>
+#include <wchar.h>
 
 namespace tabulate {
 
@@ -33,11 +33,14 @@ int get_wcswidth(const std::string &string, const std::string &locale, size_t ma
 }
 #endif
 
-size_t get_sequence_length(const std::string &text, const std::string &locale) {
+size_t get_sequence_length(const std::string &text, const std::string &locale,
+                           bool is_multi_byte_character_support_enabled) {
+  if (!is_multi_byte_character_support_enabled)
+    return text.length();
+
 #if defined(_WIN32) || defined(_WIN64)
-  return (text.length() -
-          std::count_if(text.begin(), text.end(),
-                        [](char c) -> bool { return (c & 0xC0) == 0x80; }));
+  return (text.length() - std::count_if(text.begin(), text.end(),
+                                        [](char c) -> bool { return (c & 0xC0) == 0x80; }));
 #elif defined(__unix__) || defined(__unix) || defined(__APPLE__)
   auto result = get_wcswidth(text, locale, text.size());
   if (result >= 0)

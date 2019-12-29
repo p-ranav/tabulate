@@ -17,11 +17,15 @@ public:
 
   const std::string &get_text() { return data_; }
 
-  size_t size() { return get_sequence_length(data_, locale()); }
+  size_t size() {
+    return get_sequence_length(data_, locale(), is_multi_byte_character_support_enabled());
+  }
 
   std::string locale() { return format().locale_.value(); }
 
   Format &format();
+
+  bool is_multi_byte_character_support_enabled();
 
 private:
   std::string data_;

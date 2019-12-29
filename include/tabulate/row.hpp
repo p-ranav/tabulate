@@ -119,7 +119,8 @@ private:
     if (newlines_in_text == 0) {
       // No new lines in input
       // Apply automatic word wrapping and compute row height
-      word_wrapped_text = Format::word_wrap(text, column_width, cell.locale());
+      word_wrapped_text = Format::word_wrap(text, column_width, cell.locale(),
+                                            cell.is_multi_byte_character_support_enabled());
     } else {
       // There are embedded '\n' characters
       // Respect these characters

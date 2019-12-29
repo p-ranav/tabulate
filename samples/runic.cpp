@@ -3,6 +3,7 @@ using namespace tabulate;
 
 int main() {
   Table table;
+  table.format().multi_byte_characters(true);
 
   /*
     This is a story of a bear and

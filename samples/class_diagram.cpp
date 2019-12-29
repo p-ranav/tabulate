@@ -3,6 +3,7 @@ using namespace tabulate;
 
 int main() {
   Table class_diagram;
+
   // Global styling
   class_diagram.format().font_style({FontStyle::bold}).font_align(FontAlign::center).width(60);
 
@@ -34,7 +35,7 @@ int main() {
   // Add rows in the class diagram for the up-facing arrow
   // THanks to center alignment, these will align just fine
   class_diagram.add_row({"▲"});
-  class_diagram[1].format().hide_border_top();
+  class_diagram[1][0].format().hide_border_top().multi_byte_characters(true);
   class_diagram.add_row({"|"});
   class_diagram[2].format().hide_border_top();
   class_diagram.add_row({"|"});
