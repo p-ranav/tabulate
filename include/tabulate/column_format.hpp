@@ -51,6 +51,9 @@ public:
   ColumnFormat &color(Color value);
   ColumnFormat &background_color(Color value);
 
+  // Locale
+  ColumnFormat &locale(const std::string &value);
+
 private:
   std::reference_wrapper<class Column> column_;
 };

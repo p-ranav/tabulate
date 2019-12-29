@@ -330,10 +330,15 @@ public:
     return *this;
   }
 
+  Format &locale(const std::string &value) {
+    locale_ = value;
+    return *this;
+  }
+
   // Apply word wrap
   // Given an input string and a line length, this will insert \n
   // in strategic places in input string and apply word wrapping
-  static std::string word_wrap(const std::string &str, size_t width) {
+  static std::string word_wrap(const std::string &str, size_t width, const std::string &locale) {
     std::vector<std::string> words = explode_string(str, {" ", "-", "\t"});
     size_t current_line_length = 0;
     std::string result;
@@ -342,7 +347,7 @@ public:
       std::string word = words[i];
       // If adding the new word to the current line would be too long,
       // then put it on a new line (and split it up if it's too long).
-      if (current_line_length + get_sequence_length(word) > width) {
+      if (current_line_length + get_sequence_length(word, locale) > width) {
         // Only move down to a new line if we have text on the current line.
         // Avoids situation where wrapped whitespace causes emptylines in text.
         if (current_line_length > 0) {
@@ -352,7 +357,7 @@ public:
 
         // If the current word is too long to fit on a line even on it's own then
         // split the word up.
-        while (get_sequence_length(word) > width) {
+        while (get_sequence_length(word, locale) > width) {
           result += word.substr(0, width - 1) + "-";
           word = word.substr(width - 1);
           result += '\n';
@@ -362,13 +367,13 @@ public:
         word = trim_left(word);
       }
       result += word;
-      current_line_length += get_sequence_length(word);
+      current_line_length += get_sequence_length(word, locale);
     }
     return result;
   }
 
-  static std::vector<std::string> split_lines(const std::string &text,
-                                              const std::string &delimiter) {
+  static std::vector<std::string> split_lines(const std::string &text, const std::string &delimiter,
+                                              const std::string &locale) {
     std::vector<std::string> result{};
     std::string input = text;
     size_t pos = 0;
@@ -378,7 +383,7 @@ public:
       result.push_back(token);
       input.erase(0, pos + delimiter.length());
     }
-    if (get_sequence_length(input))
+    if (get_sequence_length(input, locale))
       result.push_back(input);
     return result;
   };
@@ -609,6 +614,12 @@ public:
     else
       result.column_separator_background_color_ = second.column_separator_background_color_;
 
+    // Locale
+    if (first.locale_.has_value())
+      result.locale_ = first.locale_;
+    else
+      result.locale_ = second.locale_;
+
     return result;
   }
 
@@ -639,6 +650,7 @@ private:
                 corner_bottom_right_background_color_ = Color::none;
     column_separator_ = "|";
     column_separator_color_ = column_separator_background_color_ = Color::none;
+    locale_ = "";
   }
 
   // Helper methods for word wrapping:
@@ -765,6 +777,9 @@ private:
   std::optional<std::string> column_separator_{};
   std::optional<Color> column_separator_color_{};
   std::optional<Color> column_separator_background_color_{};
+
+  // Locale
+  std::optional<std::string> locale_{};
 };
 
 }; // namespace tabulate

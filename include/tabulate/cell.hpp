@@ -17,7 +17,9 @@ public:
 
   const std::string &get_text() { return data_; }
 
-  size_t size() const { return get_sequence_length(data_); }
+  size_t size() { return get_sequence_length(data_, locale()); }
+
+  std::string locale() { return format().locale_.value(); }
 
   Format &format();
 

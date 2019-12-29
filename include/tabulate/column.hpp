@@ -90,7 +90,7 @@ private:
 
     // Check if input text has newlines
     auto text = cell.get_text();
-    auto split_lines = Format::split_lines(text, "\n");
+    auto split_lines = Format::split_lines(text, "\n", cell.locale());
 
     // If there are no newlines in input, set column_width = text.size()
     if (split_lines.size() == 1) {
@@ -100,8 +100,8 @@ private:
       // Find widest substring in input and use this as column_width
       size_t widest_sub_string_size{0};
       for (auto &line : split_lines)
-        if (get_sequence_length(line) > widest_sub_string_size)
-          widest_sub_string_size = get_sequence_length(line);
+        if (get_sequence_length(line, cell.locale()) > widest_sub_string_size)
+          widest_sub_string_size = get_sequence_length(line, cell.locale());
       result += widest_sub_string_size;
     }
 
@@ -316,6 +316,12 @@ ColumnFormat &ColumnFormat::color(Color value) {
 ColumnFormat &ColumnFormat::background_color(Color value) {
   for (auto &cell : column_.get().cells_)
     cell.get().format().background_color(value);
+  return *this;
+}
+
+ColumnFormat &ColumnFormat::locale(const std::string &value) {
+  for (auto &cell : column_.get().cells_)
+    cell.get().format().locale(value);
   return *this;
 }
 
