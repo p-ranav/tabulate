@@ -5,7 +5,7 @@ namespace tabulate {
 
 class Table {
 public:
-  Table() : table_(TableInternal::create()) { }
+  Table() : table_(TableInternal::create()) {}
 
   Table &add_row(const std::vector<std::variant<std::string, Table>> &cells) {
 

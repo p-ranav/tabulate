@@ -192,7 +192,7 @@ public:
     return *this;
   }
 
-  Format& corner(const std::string &value) {
+  Format &corner(const std::string &value) {
     corner_top_left_ = value;
     corner_top_right_ = value;
     corner_bottom_left_ = value;
@@ -200,7 +200,7 @@ public:
     return *this;
   }
 
-  Format& corner_color(Color value) {
+  Format &corner_color(Color value) {
     corner_top_left_color_ = value;
     corner_top_right_color_ = value;
     corner_bottom_left_color_ = value;
@@ -208,7 +208,7 @@ public:
     return *this;
   }
 
-  Format& corner_background_color(Color value) {
+  Format &corner_background_color(Color value) {
     corner_top_left_background_color_ = value;
     corner_top_right_background_color_ = value;
     corner_bottom_left_background_color_ = value;
@@ -333,7 +333,7 @@ public:
   // Apply word wrap
   // Given an input string and a line length, this will insert \n
   // in strategic places in input string and apply word wrapping
-  static std::string word_wrap(const std::string& str, size_t width) {
+  static std::string word_wrap(const std::string &str, size_t width) {
     std::vector<std::string> words = explode_string(str, {" ", "-", "\t"});
     size_t current_line_length = 0;
     std::string result;
@@ -633,10 +633,10 @@ private:
         border_bottom_background_color_ = border_left_color_ = border_left_background_color_ =
             border_right_color_ = border_right_background_color_ = Color::none;
     corner_top_left_ = corner_top_right_ = corner_bottom_left_ = corner_bottom_right_ = "+";
-    corner_top_left_color_ = corner_top_left_background_color_ = 
-      corner_top_right_color_ = corner_top_right_background_color_ = 
-      corner_bottom_left_color_ = corner_bottom_left_background_color_ = 
-      corner_bottom_right_color_ = corner_bottom_right_background_color_ = Color::none;
+    corner_top_left_color_ = corner_top_left_background_color_ = corner_top_right_color_ =
+        corner_top_right_background_color_ = corner_bottom_left_color_ =
+            corner_bottom_left_background_color_ = corner_bottom_right_color_ =
+                corner_bottom_right_background_color_ = Color::none;
     column_separator_ = "|";
     column_separator_color_ = column_separator_background_color_ = Color::none;
   }
