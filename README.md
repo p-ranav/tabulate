@@ -333,6 +333,8 @@ int main() {
 
 **NOTE**: You can use `.corner(..)`, `.corner_color(..)`, and `.corner_background_color(..)` to set a common style for all corners. Similarly, you can use `.border(..)`, `.border_color(..)` and `.border_background_color(..)` to set a common style for all borders.
 
+Here's an example where each border and corner is individually styled:
+
 ```cpp
 #include <tabulate/table.hpp>
 using namespace tabulate;
