@@ -527,7 +527,7 @@ int main() {
 
 `tabulate` has good UTF-8 support. In \*nix, `wcswidth` is used to compute the display width of multi-byte characters. Column alignment works well when your system supports the necessary locale, e.g., I've noticed on MacOS there is no Arabic locale and this ends up causing alignment issues when using Arabic text, e.g., `"ٲنَا بحِبَّك (Ana bahebak)"` in tables.
 
-The following table prints the phrase `I love you` in different languages. You can explicitly set the locale for a cell using `.format().locale(value)`. Note that the locale string is system-specific. So, the following code might throw `std::runtime_error locale::facet::_S_create_c_locale name not valid` on your system.
+The following table prints the phrase `I love you` in different languages. You can explicitly set the locale for a cell using `.format().locale(value)`. Note that the locale string is system-specific. So, the following code might throw `std::runtime_error locale::facet::_S_create_c_locale name not valid` on your system. If so, just comment out the lines that set the locale.
 
 ```cpp
 #include <tabulate/table.hpp>
