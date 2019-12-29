@@ -490,7 +490,8 @@ int main() {
   // Add rows in the class diagram for the up-facing arrow
   // THanks to center alignment, these will align just fine
   class_diagram.add_row({"▲"});
-  class_diagram[1][0].format().hide_border_top().multi_byte_characters(true);
+  class_diagram[1][0].format().hide_border_top().multi_byte_characters(true); // ▲ is multi-byte
+  
   class_diagram.add_row({"|"});
   class_diagram[2].format().hide_border_top();
   class_diagram.add_row({"|"});
@@ -533,6 +534,8 @@ int main() {
 `tabulate` has good UTF-8 support. In \*nix, `wcswidth` is used to compute the display width of multi-byte characters. Column alignment works well when your system supports the necessary locale, e.g., I've noticed on MacOS there is no Arabic locale and this ends up causing alignment issues when using Arabic text, e.g., `"ٲنَا بحِبَّك (Ana bahebak)"` in tables.
 
 The following table prints the phrase `I love you` in different languages. You can explicitly set the locale for a cell using `.format().locale(value)`. Note that the locale string is system-specific. So, the following code might throw `std::runtime_error locale::facet::_S_create_c_locale name not valid` on your system. If so, just comment out the lines that set the locale.
+
+Also note the use of `.format().multi_byte_characters(true)` for the second column. Remember to do this when dealing with multi-byte characters. 
 
 ```cpp
 #include <tabulate/table.hpp>
