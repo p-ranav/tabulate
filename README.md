@@ -100,7 +100,7 @@ Now, let's change the font color of the second column to yellow:
     .font_color(Color::yellow);
 ```
 
-You can access cells by indexing twice from a table using: From a row using `Table[row_index][col_index]` or from a column using `Table.column(col_index)[cell_index]`. Just like rows, columns, and tables, you can use `Cell.format()` to format individual cells
+You can access cells by indexing twice from a table: From a row using `Table[row_index][col_index]` or from a column using `Table.column(col_index)[cell_index]`. Just like rows, columns, and tables, you can use `Cell.format()` to format individual cells
 
 ```cpp
   universal_constants[0][1].format()
