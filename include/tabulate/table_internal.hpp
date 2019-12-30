@@ -16,22 +16,6 @@
 
 namespace tabulate {
 
-Format &Cell::format() {
-  std::shared_ptr<Row> parent = parent_.lock();
-  if (!format_.has_value()) {   // no cell format
-    format_ = parent->format(); // Use parent row format
-  } else {
-    // Cell has formatting
-    // Merge cell formatting with parent row formatting
-    format_ = Format::merge(format_.value(), parent->format());
-  }
-  return format_.value();
-}
-
-bool Cell::is_multi_byte_character_support_enabled() {
-  return format().multi_byte_characters_.value();
-}
-
 class TableInternal : public std::enable_shared_from_this<TableInternal> {
 public:
   static std::shared_ptr<TableInternal> create() {
@@ -89,6 +73,22 @@ private:
   std::vector<std::shared_ptr<Row>> rows_;
   Format format_;
 };
+
+Format &Cell::format() {
+  std::shared_ptr<Row> parent = parent_.lock();
+  if (!format_.has_value()) {   // no cell format
+    format_ = parent->format(); // Use parent row format
+  } else {
+    // Cell has formatting
+    // Merge cell formatting with parent row formatting
+    format_ = Format::merge(format_.value(), parent->format());
+  }
+  return format_.value();
+}
+
+bool Cell::is_multi_byte_character_support_enabled() {
+  return format().multi_byte_characters_.value();
+}
 
 Format &Row::format() {
   std::shared_ptr<TableInternal> parent = parent_.lock();
