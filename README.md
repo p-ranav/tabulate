@@ -137,7 +137,7 @@ This enables overriding the formatting for a particular cell even though row or 
 
 `tabulate` supports automatic word-wrapping when printing cells. 
 
-Although word-wrapping is automatic, there is a simple override. Automatic word-wrapping is used only if the cell contents do not have any embedded newline `\n` characters. So, you can embed newline characters in the cell contents and enfore the word-wrapping manually. 
+Although word-wrapping is automatic, there is a simple override. Automatic word-wrapping is used only if the cell contents do not have any embedded newline `\n` characters. So, you can embed newline characters in the cell contents and enforce the word-wrapping manually. 
 
 ```cpp
 #include <tabulate/table.hpp>
@@ -160,7 +160,7 @@ int main() {
 
 *  The above table has 1 row and 2 columns. 
 *  The first cell has automatic word-wrapping. 
-*  The second cell uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enfore the cell style.
+*  The second cell uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enforce the cell style.
 *  **NOTE**: Whether word-wrapping is automatic or not, `tabulate` performs a trim operation on each line of each cell to remove whitespace characters from either side of line.
 
 <p align="center">
