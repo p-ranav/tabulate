@@ -125,7 +125,7 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
 
 ### Style Inheritance Model
 
-Formatting in `tabulate` follows a simple style inheritance model. When rendering each cell:
+Formatting in `tabulate` follows a simple style-inheritance model. When rendering each cell:
 1.    Apply cell formatting if specified
 2.    If no cell formatting is specified, apply its parent row formatting
 3.    If no row formatting is specified, apply its parent table formatting
