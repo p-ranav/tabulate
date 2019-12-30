@@ -343,8 +343,6 @@ using namespace tabulate;
 
 int main() {
   Table table;
-  table.format()
-    .multi_byte_characters(true);
 
   table.add_row({"ᛏᚺᛁᛊ ᛁᛊ ᚨ ᛊᛏᛟᚱy ᛟᚠᚨ ᛒᛖᚨᚱ ᚨᚾᛞ\n"
                  "ᚨ ᚹᛟᛚᚠ, ᚹᚺᛟ ᚹᚨᚾᛞᛖᚱᛖᛞ ᛏᚺᛖ\n"
@@ -354,6 +352,8 @@ int main() {
                  "ᛞᛁᛊcᛟᚹᛖᚱ ᛏᚺᛖ ᛏᚱᚢᛏᚺ\nᛏᚺᚨᛏ ᛁᛊ ᛏᛟ cᛟᛗᛖ."});
 
   table.format()
+      .multi_byte_characters(true)
+      // Font styling
       .font_style({FontStyle::bold, FontStyle::dark})
       .font_align(FontAlign::center)
       .font_color(Color::red)
