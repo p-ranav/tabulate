@@ -531,7 +531,7 @@ int main() {
 
 ### UTF-8 Support
 
-`tabulate` has good UTF-8 support. In \*nix, `wcswidth` is used to compute the display width of multi-byte characters. Column alignment works well when your system supports the necessary locale, e.g., I've noticed on MacOS there is no Arabic locale and this ends up causing alignment issues when using Arabic text, e.g., `"ٲنَا بحِبَّك (Ana bahebak)"` in tables.
+In \*nix, `wcswidth` is used to compute the display width of multi-byte characters. Column alignment works well when your system supports the necessary locale, e.g., I've noticed on MacOS 10 there is no Arabic locale (searched with `locale -a`) and this ends up causing alignment issues when using Arabic text, e.g., `"ٲنَا بحِبَّك (Ana bahebak)"` in tables.
 
 The following table prints the phrase `I love you` in different languages. Note the use of `.format().multi_byte_characters(true)` for the second column. Remember to do this when dealing with multi-byte characters. 
 
