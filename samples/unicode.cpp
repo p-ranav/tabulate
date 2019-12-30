@@ -21,10 +21,8 @@ int main() {
   // Column 1 is using mult-byte characters
   table.column(1).format().multi_byte_characters(true);
 
-  // Set the table-level locale
-  table.column(0).format().locale("en_US.UTF-8");
-
   // Set English-US locale for first column
+  table.column(0).format().locale("en_US.UTF-8");
   table[0][1].format().locale("en_US.UTF-8");
 
   // Set locale for individual cells
