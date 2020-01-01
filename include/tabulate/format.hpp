@@ -836,4 +836,4 @@ private:
   std::optional<std::string> locale_{};
 };
 
-}; // namespace tabulate
+} // namespace tabulate

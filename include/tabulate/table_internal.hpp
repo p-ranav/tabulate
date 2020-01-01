@@ -215,7 +215,6 @@ void Printer::print_table(std::ostream &stream, TableInternal &table) {
       for (size_t j = 0; j < num_columns; ++j) {
         auto cell = table[i][j];
         auto format = cell.format();
-        auto column_width = column_widths[j];
         auto corner = format.corner_bottom_left_.value();
         auto border_bottom = format.border_bottom_.value();
         if (corner == "" && border_bottom == "") {
@@ -241,7 +240,6 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
                                 const std::pair<size_t, size_t> &index,
                                 const std::pair<size_t, size_t> &dimension, size_t num_columns,
                                 size_t row_index) {
-  auto row_height = dimension.first;
   auto column_width = dimension.second;
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
@@ -253,7 +251,6 @@ void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
       Format::word_wrap(text, column_width, locale, is_multi_byte_character_support_enabled);
   auto text_height = std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n') + 1;
   auto padding_top = format.padding_top_.value();
-  auto padding_bottom = format.padding_bottom_.value();
 
   if (format.show_border_left_.value()) {
     apply_element_style(stream, format.border_left_color_.value(),
