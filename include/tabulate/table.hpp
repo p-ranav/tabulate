@@ -32,6 +32,7 @@ SOFTWARE.
 */
 #pragma once
 #include <tabulate/table_internal.hpp>
+#include <utility>
 #include <variant>
 
 namespace tabulate {
@@ -89,6 +90,8 @@ public:
     print(stream);
     return stream.str();
   }
+
+  std::pair<size_t, size_t> shape() { return table_->shape(); }
 
   class RowIterator {
   public:

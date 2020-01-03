@@ -83,6 +83,18 @@ public:
 
   size_t size() const { return rows_.size(); }
 
+  std::pair<size_t, size_t> shape() {
+    std::pair<size_t, size_t> result{0, 0};
+    std::stringstream stream;
+    print(stream);
+    auto buffer = stream.str();
+    auto lines = Format::split_lines(buffer, "\n", "", true);
+    if (lines.size()) {
+      result = {get_sequence_length(lines[0], "", true), lines.size()};
+    }
+    return result;
+  }
+
   Format &format() { return format_; }
 
   void print(std::ostream &stream) { Printer::print_table(stream, *this); }

@@ -76,10 +76,10 @@ private:
             .column_separator("|")
             .corner("|");
         cell->set_text(c);
-	if (c == ":---:")
-	  cell->format().font_align(FontAlign::center);
-	else if (c == "----:")
-	  cell->format().font_align(FontAlign::right);
+        if (c == ":---:")
+          cell->format().font_align(FontAlign::center);
+        else if (c == "----:")
+          cell->format().font_align(FontAlign::right);
         alignment_row->add_cell(cell);
       }
 
@@ -124,7 +124,7 @@ private:
     for (auto row : table) {
       for (auto &cell : row) {
         cell.format() = formats_[format_index];
-	format_index += 1;
+        format_index += 1;
       }
     }
   }
