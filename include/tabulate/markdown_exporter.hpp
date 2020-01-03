@@ -44,6 +44,10 @@ private:
             .column_separator("|")
             .corner("|");
         cell->set_text(c);
+	if (c == ":---:")
+	  cell->format().font_align(FontAlign::center);
+	else if (c == "----:")
+	  cell->format().font_align(FontAlign::right);
         alignment_row->add_cell(cell);
       }
 
