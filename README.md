@@ -645,7 +645,6 @@ The above table renders in Markdown like below.
 
 **NOTE**: Unlike `tabulate`, you cannot align individual cells in Markdown. Alignment is on a per-column basis. Markdown allows a second header row where such column-wise alignment can be specified. The `MarkdownExporter` uses the formatting of the header cells in the original `tabulate::Table` to decide how to align each column. As per the Markdown spec, columns are left-aligned by default.
 
-
 | S/N       | Movie Name       |     Director    | Estimated Budget |     Release Date |
 | :----     | :----            |      :---:      |            ----: |            ----: |
 | tt1979376 | Toy Story 4      |   Josh Cooley   |     $200,000,000 |     21 June 2019 |
