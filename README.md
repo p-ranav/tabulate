@@ -641,6 +641,14 @@ int main() {
   <img src="img/markdown_export.png"/>  
 </p>
 
+.. which renders in Markdown like so:
+
+| S/N       | Movie Name       |     Director    | Estimated Budget |     Release Date |
+| :----     | :----            |      :---:      |            ----: |            ----: |
+| tt1979376 | Toy Story 4      |   Josh Cooley   |     $200,000,000 |     21 June 2019 |
+| tt3263904 | Sully            |  Clint Eastwood |      $60,000,000 | 9 September 2016 |
+| tt1535109 | Captain Phillips | Paul Greengrass |      $55,000,000 |  11 October 2013 |
+
 ## Building Samples
 
 There are a number of samples in the `samples/` directory, e.g., [Mario](https://github.com/p-ranav/tabulate/blob/master/samples/mario.cpp). You can build these samples by running the following commands.
