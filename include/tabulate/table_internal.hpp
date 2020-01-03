@@ -98,6 +98,7 @@ public:
 
 private:
   friend class Table;
+  friend class MarkdownExporter;
 
   TableInternal() {}
   TableInternal &operator=(const TableInternal &);

@@ -13,6 +13,9 @@ target_link_libraries(font_styles PRIVATE tabulate::tabulate)
 add_executable(iterators iterators.cpp)
 target_link_libraries(iterators PRIVATE tabulate::tabulate)
 
+add_executable(markdown_export markdown_export.cpp)
+target_link_libraries(markdown_export PRIVATE tabulate::tabulate)
+
 add_executable(mario mario.cpp)
 target_link_libraries(mario PRIVATE tabulate::tabulate)
 

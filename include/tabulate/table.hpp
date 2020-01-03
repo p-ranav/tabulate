@@ -109,6 +109,7 @@ public:
   auto end() { return RowIterator(table_->rows_.end()); }
 
 private:
+  friend class MarkdownExporter;
   friend std::ostream &operator<<(std::ostream &stream, const Table &table);
   size_t rows_{0};
   size_t cols_{0};

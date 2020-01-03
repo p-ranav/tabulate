@@ -681,6 +681,7 @@ private:
   friend class Column;
   friend class TableInternal;
   friend class Printer;
+  friend class MarkdownExporter;
 
   void set_defaults() {
     // NOTE: width and height are not set here
