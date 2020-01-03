@@ -643,7 +643,8 @@ int main() {
 
 The above table renders in Markdown like below.
 
-**NOTE**: The second header row in Markdown which is used for alignment is based on the header row in the `tabulate::Table`, i.e., the alignment is selected based on the alignment of the cells in the header row.
+**NOTE**: Unlike `tabulate`, you cannot align individual cells in Markdown. Alignment is on a per-column basis. Markdown allows a second header row where such column-wise alignment can be specified. The `MarkdownExporter` uses the formatting of the header cells in the original `tabulate::Table` to decide how to align each column. As per the Markdown spec, columns are left-aligned by default.
+
 
 | S/N       | Movie Name       |     Director    | Estimated Budget |     Release Date |
 | :----     | :----            |      :---:      |            ----: |            ----: |
