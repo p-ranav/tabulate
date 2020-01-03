@@ -33,6 +33,7 @@ SOFTWARE.
 #pragma once
 #include <algorithm>
 #include <cstddef>
+#include <cctype>
 #include <optional>
 #include <sstream>
 #include <string>
