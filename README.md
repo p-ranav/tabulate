@@ -641,7 +641,7 @@ int main() {
   <img src="img/markdown_export.png"/>  
 </p>
 
-.. which renders in Markdown like so:
+The above table renders in Markdown like so:
 
 | S/N       | Movie Name       |     Director    | Estimated Budget |     Release Date |
 | :----     | :----            |      :---:      |            ----: |            ----: |
