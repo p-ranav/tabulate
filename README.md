@@ -626,6 +626,7 @@ int main() {
     movies[0][i].format().font_color(Color::yellow).font_style({FontStyle::bold});
   }
 
+  // Export to Markdown
   MarkdownExporter exporter;
   auto markdown = exporter.dump(movies);
 
