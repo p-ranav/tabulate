@@ -87,8 +87,8 @@ private:
     size_t format_index{0};
     for (auto row : table) {
       for (auto &cell : row) {
-        auto format = cell.format();
         cell.format() = formats_[format_index];
+	format_index += 1;
       }
     }
   }
