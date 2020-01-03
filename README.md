@@ -641,7 +641,9 @@ int main() {
   <img src="img/markdown_export.png"/>  
 </p>
 
-The above table renders in Markdown like so:
+The above table renders in Markdown like below.
+
+**NOTE**: The second header row in Markdown which is used for alignment is based on the header row in the `tabulate::Table`, i.e., the alignment is selected based on the alignment of the cells in the header row.
 
 | S/N       | Movie Name       |     Director    | Estimated Budget |     Release Date |
 | :----     | :----            |      :---:      |            ----: |            ----: |
