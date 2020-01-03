@@ -38,6 +38,8 @@
     *   [Range-based Iteration](#range-based-iteration)
     *   [Nested Tables](#nested-tables)
     *   [UTF-8 Support](#utf-8-support)
+*   [Exporters](#exporters)
+    *   [Markdown](#markdown)
 *   [Building Samples](#building-samples)
 *   [Contributing](#contributing)
 *   [License](#license)
@@ -591,6 +593,53 @@ You can explicitly set the locale for a cell using `.format().locale(value)`. No
   table[9][1].format().locale("ru_RU.UTF-8");  // Russian
   table[10][1].format().locale("he_IL.UTF-8"); // Hebrew
 ```
+
+## Exporters
+
+### Markdown
+
+Tables can be exported to GitHub-flavored markdown using a `MarkdownExporter`. Simply create an exporter object and call `exporter.dump(table)` to generate a Markdown-formatted `std::string`. 
+
+```cpp
+#include <tabulate/markdown_exporter.hpp>
+using namespace tabulate;
+
+int main() {
+  Table movies;
+  movies.add_row({"S/N", "Movie Name", "Director", "Estimated Budget", "Release Date"});  
+  movies.add_row({"tt1979376", "Toy Story 4", "Josh Cooley", "$200,000,000", "21 June 2019"});
+  movies.add_row({"tt3263904", "Sully", "Clint Eastwood", "$60,000,000", "9 September 2016"});
+  movies.add_row(
+      {"tt1535109", "Captain Phillips", "Paul Greengrass", "$55,000,000", " 11 October 2013"});
+
+  // center align 'Director' column
+  movies.column(2).format().font_align(FontAlign::center);
+
+  // right align 'Estimated Budget' column
+  movies.column(3).format().font_align(FontAlign::right);
+
+  // right align 'Release Date' column
+  movies.column(4).format().font_align(FontAlign::right);
+
+  // Color header cells
+  for (size_t i = 0; i < 5; ++i) {
+    movies[0][i].format().font_color(Color::yellow).font_style({FontStyle::bold});
+  }
+
+  MarkdownExporter exporter;
+  auto markdown = exporter.dump(movies);
+
+  // tabulate::table
+  std::cout << movies << "\n\n";
+
+  // Exported Markdown
+  std::cout << markdown << std::endl;
+}
+```
+
+<p align="center">
+  <img src="img/markdown_export.png"/>  
+</p>
 
 ## Building Samples
 
