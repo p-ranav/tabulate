@@ -119,7 +119,7 @@ private:
   std::shared_ptr<TableInternal> table_;
 };
 
-std::ostream &operator<<(std::ostream &stream, const Table &table) {
+inline std::ostream &operator<<(std::ostream &stream, const Table &table) {
   const_cast<Table &>(table).print(stream);
   return stream;
 }
