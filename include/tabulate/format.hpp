@@ -32,8 +32,8 @@ SOFTWARE.
 */
 #pragma once
 #include <algorithm>
-#include <cstddef>
 #include <cctype>
+#include <cstddef>
 #include <optional>
 #include <sstream>
 #include <string>

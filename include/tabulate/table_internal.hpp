@@ -250,9 +250,9 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
 }
 
 inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
-                                const std::pair<size_t, size_t> &index,
-                                const std::pair<size_t, size_t> &dimension, size_t num_columns,
-                                size_t row_index) {
+                                       const std::pair<size_t, size_t> &index,
+                                       const std::pair<size_t, size_t> &dimension,
+                                       size_t num_columns, size_t row_index) {
   auto column_width = dimension.second;
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
@@ -362,9 +362,9 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
 }
 
 inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
-                                    const std::pair<size_t, size_t> &index,
-                                    const std::pair<size_t, size_t> &dimension,
-                                    size_t num_columns) {
+                                           const std::pair<size_t, size_t> &index,
+                                           const std::pair<size_t, size_t> &dimension,
+                                           size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
   std::locale::global(std::locale(locale));
@@ -404,9 +404,9 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
 }
 
 inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &table,
-                                       const std::pair<size_t, size_t> &index,
-                                       const std::pair<size_t, size_t> &dimension,
-                                       size_t num_columns) {
+                                              const std::pair<size_t, size_t> &index,
+                                              const std::pair<size_t, size_t> &dimension,
+                                              size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
   std::locale::global(std::locale(locale));
