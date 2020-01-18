@@ -113,6 +113,8 @@ public:
 
 private:
   friend class MarkdownExporter;
+  friend class LatexExporter;
+
   friend std::ostream &operator<<(std::ostream &stream, const Table &table);
   size_t rows_{0};
   size_t cols_{0};
