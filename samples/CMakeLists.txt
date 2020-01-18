@@ -13,6 +13,9 @@ target_link_libraries(font_styles PRIVATE tabulate::tabulate)
 add_executable(iterators iterators.cpp)
 target_link_libraries(iterators PRIVATE tabulate::tabulate)
 
+add_executable(latex_export latex_export.cpp)
+target_link_libraries(latex_export PRIVATE tabulate::tabulate)
+
 add_executable(markdown_export markdown_export.cpp)
 target_link_libraries(markdown_export PRIVATE tabulate::tabulate)
 
