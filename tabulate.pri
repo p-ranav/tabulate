@@ -10,6 +10,7 @@ HEADERS += 	$$PWD/include/tabulate/cell.hpp \
 			$$PWD/include/tabulate/format.hpp \
 			$$PWD/include/tabulate/latex_exporter.hpp \
 			$$PWD/include/tabulate/markdown_exporter.hpp \
+			$$PWD/include/tabulate/asciidoc_exporter.hpp \
 			$$PWD/include/tabulate/printer.hpp \
 			$$PWD/include/tabulate/row.hpp \
 			$$PWD/include/tabulate/table.hpp \
