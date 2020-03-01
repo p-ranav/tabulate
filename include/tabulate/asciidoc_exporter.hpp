@@ -105,7 +105,6 @@ private:
     ss << R"("])";
     ss << new_line;
     ss << "|===";
-    ss << new_line;
    
     return ss.str();
   }
