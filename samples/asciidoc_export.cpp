@@ -21,22 +21,25 @@ int main() {
   // right align 'Release Date' column
   movies.column(4).format().font_align(FontAlign::right);
 
+  movies[1][2].format().font_style({FontStyle::bold, FontStyle::italic});
+  movies[2][1].format().font_style({FontStyle::italic});
+
   // Color header cells
   for (size_t i = 0; i < 5; ++i) {
     movies[0][i]
         .format()
-        .font_color(Color::white)
+       .font_color(Color::white)
         .font_style({FontStyle::bold})
-        .background_color(Color::blue);
+       .background_color(Color::blue);
   }
 
   AsciiDocExporter exporter;
   exporter.configure().indentation(8);
-  auto latex = exporter.dump(movies);
+  auto asciidoc = exporter.dump(movies);
 
   // tabulate::table
   std::cout << movies << "\n\n";
 
   // Exported Markdown
-  std::cout << latex << std::endl;
+  std::cout << asciidoc << std::endl;
 }

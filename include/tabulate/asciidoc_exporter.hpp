@@ -32,8 +32,10 @@ SOFTWARE.
 */
 #pragma once
 #include <sstream>
+#include <string>
 #include <tabulate/exporter.hpp>
 #include <optional>
+#include <algorithm>
 
 namespace tabulate {
 
@@ -60,18 +62,22 @@ public:
     std::stringstream ss;
     ss << add_alignment_header(table);
     ss << new_line;
-    
 
     const auto rows = table.rows_;
     // iterate content and put text into the table.
-    for (auto i = 0; i < rows; i++) {
+    for (size_t i = 0; i < rows; i++) {
       auto &row = table[i];
 
-      for (auto j = 0; j < row.size(); j++) {
+      for (size_t j = 0; j < row.size(); j++) {
         ss << "|";
-        ss << row[j].get_text();
+        ss << add_formatted_cell(row[j]);
+        
+        
       }
       ss << new_line;
+      if(i == 0) {
+        ss << new_line;
+      }
     }
 
     ss << "|===";
@@ -79,6 +85,44 @@ public:
   }
 
 private:
+  std::string add_formatted_cell(Cell& cell) const {
+    std::stringstream ss;
+     auto format = cell.format();
+     std::string cell_string = cell.get_text();
+
+      auto font_style = format.font_style_.value();
+      
+      bool format_bold = false;
+      bool format_italic = false;
+      std::for_each(
+        font_style.begin(), 
+        font_style.end(), 
+        [&](auto& style){
+          if(style == FontStyle::bold) {
+            format_bold = true;
+          }
+          else if(style == FontStyle::italic) {
+            format_italic = true;
+          }
+        });
+      
+      if(format_bold) {
+        ss << '*';
+      }
+      if(format_italic) {
+        ss << '_';
+      }
+
+      ss << cell_string;
+      if(format_italic) {
+        ss << '_';
+      }
+      if(format_bold) {
+        ss << '*';
+      }
+    return ss.str();
+  }
+
   std::string add_alignment_header(Table &table) {
     std::stringstream ss;
     ss << (R"([cols=")");
