@@ -31,11 +31,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #pragma once
+#include <algorithm>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <tabulate/exporter.hpp>
-#include <optional>
-#include <algorithm>
 
 namespace tabulate {
 
@@ -46,8 +46,8 @@ class AsciiDocExporter : public Exporter {
 public:
   class ExportOptions {
   public:
-    ExportOptions &indentation(std::size_t value) { 
-      indentation_ = value; 
+    ExportOptions &indentation(std::size_t value) {
+      indentation_ = value;
       return *this;
     }
 
@@ -56,7 +56,7 @@ public:
     std::optional<size_t> indentation_;
   };
 
-  ExportOptions& configure() { return options_; }
+  ExportOptions &configure() { return options_; }
 
   std::string dump(Table &table) override {
     std::stringstream ss;
@@ -65,17 +65,15 @@ public:
 
     const auto rows = table.rows_;
     // iterate content and put text into the table.
-    for (size_t i = 0; i < rows; i++) {
-      auto &row = table[i];
+    for (size_t row_index = 0; row_index < rows; row_index++) {
+      auto &row = table[row_index];
 
-      for (size_t j = 0; j < row.size(); j++) {
+      for (size_t cell_index = 0; cell_index < row.size(); cell_index++) {
         ss << "|";
-        ss << add_formatted_cell(row[j]);
-        
-        
+        ss << add_formatted_cell(row[cell_index]);
       }
       ss << new_line;
-      if(i == 0) {
+      if (row_index == 0) {
         ss << new_line;
       }
     }
@@ -85,41 +83,37 @@ public:
   }
 
 private:
-  std::string add_formatted_cell(Cell& cell) const {
+  std::string add_formatted_cell(Cell &cell) const {
     std::stringstream ss;
-     auto format = cell.format();
-     std::string cell_string = cell.get_text();
+    auto format = cell.format();
+    std::string cell_string = cell.get_text();
 
-      auto font_style = format.font_style_.value();
-      
-      bool format_bold = false;
-      bool format_italic = false;
-      std::for_each(
-        font_style.begin(), 
-        font_style.end(), 
-        [&](auto& style){
-          if(style == FontStyle::bold) {
-            format_bold = true;
-          }
-          else if(style == FontStyle::italic) {
-            format_italic = true;
-          }
-        });
-      
-      if(format_bold) {
-        ss << '*';
-      }
-      if(format_italic) {
-        ss << '_';
-      }
+    auto font_style = format.font_style_.value();
 
-      ss << cell_string;
-      if(format_italic) {
-        ss << '_';
+    bool format_bold = false;
+    bool format_italic = false;
+    std::for_each(font_style.begin(), font_style.end(), [&](auto &style) {
+      if (style == FontStyle::bold) {
+        format_bold = true;
+      } else if (style == FontStyle::italic) {
+        format_italic = true;
       }
-      if(format_bold) {
-        ss << '*';
-      }
+    });
+
+    if (format_bold) {
+      ss << '*';
+    }
+    if (format_italic) {
+      ss << '_';
+    }
+
+    ss << cell_string;
+    if (format_italic) {
+      ss << '_';
+    }
+    if (format_bold) {
+      ss << '*';
+    }
     return ss.str();
   }
 
@@ -131,7 +125,7 @@ private:
     size_t column_index = 0;
     for (auto &cell : table[0]) {
       auto format = cell.format();
- 
+
       if (format.font_align_.value() == FontAlign::left) {
         ss << '<';
       } else if (format.font_align_.value() == FontAlign::center) {
@@ -141,7 +135,7 @@ private:
       }
 
       ++column_index;
-      if(column_index != column_count) {
+      if (column_index != column_count) {
         ss << ",";
       }
     }
@@ -149,7 +143,7 @@ private:
     ss << R"("])";
     ss << new_line;
     ss << "|===";
-   
+
     return ss.str();
   }
   ExportOptions options_;

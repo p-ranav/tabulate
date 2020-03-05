@@ -31,8 +31,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #pragma once
-#include <tabulate/exporter.hpp>
 #include <optional>
+#include <tabulate/exporter.hpp>
 
 namespace tabulate {
 
@@ -43,8 +43,8 @@ class LatexExporter : public Exporter {
 public:
   class ExportOptions {
   public:
-    ExportOptions &indentation(std::size_t value) { 
-      indentation_ = value; 
+    ExportOptions &indentation(std::size_t value) {
+      indentation_ = value;
       return *this;
     }
 
@@ -53,7 +53,7 @@ public:
     std::optional<size_t> indentation_;
   };
 
-  ExportOptions& configure() { return options_; }
+  ExportOptions &configure() { return options_; }
 
   std::string dump(Table &table) override {
     std::string result{"\\begin{tabular}"};
