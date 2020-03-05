@@ -1,4 +1,4 @@
-#include <tabulate/latex_exporter.hpp>
+#include <tabulate/asciidoc_exporter.hpp>
 using namespace tabulate;
 
 int main() {
@@ -18,6 +18,9 @@ int main() {
   // right align 'Release Date' column
   movies.column(4).format().font_align(FontAlign::right);
 
+  movies[1][2].format().font_style({FontStyle::bold, FontStyle::italic});
+  movies[2][1].format().font_style({FontStyle::italic});
+
   // Color header cells
   for (size_t i = 0; i < 5; ++i) {
     movies[0][i]
@@ -27,13 +30,12 @@ int main() {
         .background_color(Color::blue);
   }
 
-  LatexExporter exporter;
-  exporter.configure().indentation(8);
-  auto latex = exporter.dump(movies);
+  AsciiDocExporter exporter;
+  auto asciidoc = exporter.dump(movies);
 
   // tabulate::table
   std::cout << movies << "\n\n";
 
   // Exported Markdown
-  std::cout << latex << std::endl;
+  std::cout << asciidoc << std::endl;
 }

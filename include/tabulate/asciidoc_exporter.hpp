@@ -31,82 +31,107 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #pragma once
+#include <algorithm>
 #include <optional>
+#include <sstream>
+#include <string>
 #include <tabulate/exporter.hpp>
 
 namespace tabulate {
 
-class LatexExporter : public Exporter {
+class AsciiDocExporter : public Exporter {
 
   static const char new_line = '\n';
 
 public:
-  class ExportOptions {
-  public:
-    ExportOptions &indentation(std::size_t value) {
-      indentation_ = value;
-      return *this;
-    }
-
-  private:
-    friend class LatexExporter;
-    std::optional<size_t> indentation_;
-  };
-
-  ExportOptions &configure() { return options_; }
-
   std::string dump(Table &table) override {
-    std::string result{"\\begin{tabular}"};
-    result += new_line;
+    std::stringstream ss;
+    ss << add_alignment_header(table);
+    ss << new_line;
 
-    result += add_alignment_header(table);
-    result += new_line;
     const auto rows = table.rows_;
     // iterate content and put text into the table.
-    for (auto i = 0; i < rows; i++) {
-      auto &row = table[i];
-      // apply row content indentation
-      if (options_.indentation_.has_value()) {
-        result += std::string(options_.indentation_.value(), ' ');
+    for (size_t row_index = 0; row_index < rows; row_index++) {
+      auto &row = table[row_index];
+
+      for (size_t cell_index = 0; cell_index < row.size(); cell_index++) {
+        ss << "|";
+        ss << add_formatted_cell(row[cell_index]);
       }
-
-      for (auto j = 0; j < row.size(); j++) {
-
-        result += row[j].get_text();
-
-        // check column position, need "\\" at the end of each row
-        if (j < row.size() - 1) {
-          result += " & ";
-        } else {
-          result += " \\\\";
-        }
+      ss << new_line;
+      if (row_index == 0) {
+        ss << new_line;
       }
-      result += new_line;
     }
 
-    result += "\\end{tabular}";
-    return result;
+    ss << "|===";
+    return ss.str();
   }
 
 private:
-  std::string add_alignment_header(Table &table) {
-    std::string result{"{"};
+  std::string add_formatted_cell(Cell &cell) const {
+    std::stringstream ss;
+    auto format = cell.format();
+    std::string cell_string = cell.get_text();
 
+    auto font_style = format.font_style_.value();
+
+    bool format_bold = false;
+    bool format_italic = false;
+    std::for_each(font_style.begin(), font_style.end(), [&](auto &style) {
+      if (style == FontStyle::bold) {
+        format_bold = true;
+      } else if (style == FontStyle::italic) {
+        format_italic = true;
+      }
+    });
+
+    if (format_bold) {
+      ss << '*';
+    }
+    if (format_italic) {
+      ss << '_';
+    }
+
+    ss << cell_string;
+    if (format_italic) {
+      ss << '_';
+    }
+    if (format_bold) {
+      ss << '*';
+    }
+    return ss.str();
+  }
+
+  std::string add_alignment_header(Table &table) {
+    std::stringstream ss;
+    ss << (R"([cols=")");
+
+    size_t column_count = table[0].size();
+    size_t column_index = 0;
     for (auto &cell : table[0]) {
       auto format = cell.format();
+
       if (format.font_align_.value() == FontAlign::left) {
-        result += 'l';
+        ss << '<';
       } else if (format.font_align_.value() == FontAlign::center) {
-        result += 'c';
+        ss << '^';
       } else if (format.font_align_.value() == FontAlign::right) {
-        result += 'r';
+        ss << '>';
+      }
+
+      ++column_index;
+      if (column_index != column_count) {
+        ss << ",";
       }
     }
 
-    result += "}";
-    return result;
+    ss << R"("])";
+    ss << new_line;
+    ss << "|===";
+
+    return ss.str();
   }
-  ExportOptions options_;
 };
 
 } // namespace tabulate

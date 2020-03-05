@@ -45,3 +45,6 @@ target_link_libraries(universal_constants PRIVATE tabulate::tabulate)
 
 add_executable(word_wrapping word_wrapping.cpp)
 target_link_libraries(word_wrapping PRIVATE tabulate::tabulate)
+
+add_executable(asciidoc_export asciidoc_export.cpp)
+target_link_libraries(asciidoc_export PRIVATE tabulate::tabulate)
