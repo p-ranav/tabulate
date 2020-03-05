@@ -124,69 +124,6 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
   <img src="img/universal_constants.png"/>  
 </p>
 
-### AsciiDoc
-
-Tabulate can export tables as AsciiDoc using an `AsciiDocExporter`. 
-
-```cpp
-#include <tabulate/asciidoc_exporter.hpp>
-using namespace tabulate;
-
-int main() {
-  Table movies;
-  movies.add_row({"S/N", "Movie Name", "Director", "Estimated Budget", "Release Date"});
-  movies.add_row({"tt1979376", "Toy Story 4", "Josh Cooley", "$200,000,000", "21 June 2019"});
-  movies.add_row({"tt3263904", "Sully", "Clint Eastwood", "$60,000,000", "9 September 2016"});
-  movies.add_row(
-      {"tt1535109", "Captain Phillips", "Paul Greengrass", "$55,000,000", " 11 October 2013"});
-
-  // center align 'Director' column
-  movies.column(2).format().font_align(FontAlign::center);
-
-  // right align 'Estimated Budget' column
-  movies.column(3).format().font_align(FontAlign::right);
-
-  // right align 'Release Date' column
-  movies.column(4).format().font_align(FontAlign::right);
-
-  movies[1][2].format().font_style({FontStyle::bold, FontStyle::italic});
-  movies[2][1].format().font_style({FontStyle::italic});
-
-  // Color header cells
-  for (size_t i = 0; i < 5; ++i) {
-    movies[0][i]
-        .format()
-        .font_color(Color::white)
-        .font_style({FontStyle::bold})
-        .background_color(Color::blue);
-  }
-
-  AsciiDocExporter exporter;
-  auto asciidoc = exporter.dump(movies);
-
-  // tabulate::table
-  std::cout << movies << "\n\n";
-
-  // Exported AsciiDoc
-  std::cout << asciidoc << std::endl;
-}
-```
-Below is the export of the example above:
-
-```
-[cols="<,<,^,>,>"]
-|===
-|*S/N*|*Movie Name*|*Director*|*Estimated Budget*|*Release Date*
-
-|tt1979376|Toy Story 4|*_Josh Cooley_*|$200,000,000|21 June 2019
-|tt3263904|_Sully_|Clint Eastwood|$60,000,000|9 September 2016
-|tt1535109|Captain Phillips|Paul Greengrass|$55,000,000| 11 October 2013
-|===
-```
-The rendered output you can see here: http://tpcg.io/pbbfU3ks
-
-**NOTE** Alignment is only supported per column. The font styles `FontStyle::bold` and `FontStyle::italic` can be used for each cell, also in combination.
-
 ## Formatting Options
 
 ### Style Inheritance Model
@@ -715,6 +652,69 @@ The above table renders in Markdown like below.
 | tt1979376 | Toy Story 4      |   Josh Cooley   |     $200,000,000 |     21 June 2019 |
 | tt3263904 | Sully            |  Clint Eastwood |      $60,000,000 | 9 September 2016 |
 | tt1535109 | Captain Phillips | Paul Greengrass |      $55,000,000 |  11 October 2013 |
+
+### AsciiDoc
+
+Tabulate can export tables as AsciiDoc using an `AsciiDocExporter`. 
+
+```cpp
+#include <tabulate/asciidoc_exporter.hpp>
+using namespace tabulate;
+
+int main() {
+  Table movies;
+  movies.add_row({"S/N", "Movie Name", "Director", "Estimated Budget", "Release Date"});
+  movies.add_row({"tt1979376", "Toy Story 4", "Josh Cooley", "$200,000,000", "21 June 2019"});
+  movies.add_row({"tt3263904", "Sully", "Clint Eastwood", "$60,000,000", "9 September 2016"});
+  movies.add_row(
+      {"tt1535109", "Captain Phillips", "Paul Greengrass", "$55,000,000", " 11 October 2013"});
+
+  // center align 'Director' column
+  movies.column(2).format().font_align(FontAlign::center);
+
+  // right align 'Estimated Budget' column
+  movies.column(3).format().font_align(FontAlign::right);
+
+  // right align 'Release Date' column
+  movies.column(4).format().font_align(FontAlign::right);
+
+  movies[1][2].format().font_style({FontStyle::bold, FontStyle::italic});
+  movies[2][1].format().font_style({FontStyle::italic});
+
+  // Color header cells
+  for (size_t i = 0; i < 5; ++i) {
+    movies[0][i]
+        .format()
+        .font_color(Color::white)
+        .font_style({FontStyle::bold})
+        .background_color(Color::blue);
+  }
+
+  AsciiDocExporter exporter;
+  auto asciidoc = exporter.dump(movies);
+
+  // tabulate::table
+  std::cout << movies << "\n\n";
+
+  // Exported AsciiDoc
+  std::cout << asciidoc << std::endl;
+}
+```
+Below is the export of the example above:
+
+```
+[cols="<,<,^,>,>"]
+|===
+|*S/N*|*Movie Name*|*Director*|*Estimated Budget*|*Release Date*
+
+|tt1979376|Toy Story 4|*_Josh Cooley_*|$200,000,000|21 June 2019
+|tt3263904|_Sully_|Clint Eastwood|$60,000,000|9 September 2016
+|tt1535109|Captain Phillips|Paul Greengrass|$55,000,000| 11 October 2013
+|===
+```
+The rendered output you can see here: http://tpcg.io/pbbfU3ks
+
+**NOTE** Alignment is only supported per column. The font styles `FontStyle::bold` and `FontStyle::italic` can be used for each cell, also in combination.
 
 ## Building Samples
 
