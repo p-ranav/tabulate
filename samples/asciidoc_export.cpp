@@ -31,7 +31,6 @@ int main() {
   }
 
   AsciiDocExporter exporter;
-  exporter.configure().indentation(8);
   auto asciidoc = exporter.dump(movies);
 
   // tabulate::table

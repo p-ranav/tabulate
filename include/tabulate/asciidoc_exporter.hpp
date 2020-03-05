@@ -44,20 +44,6 @@ class AsciiDocExporter : public Exporter {
   static const char new_line = '\n';
 
 public:
-  class ExportOptions {
-  public:
-    ExportOptions &indentation(std::size_t value) {
-      indentation_ = value;
-      return *this;
-    }
-
-  private:
-    friend class AsciiDocExporter;
-    std::optional<size_t> indentation_;
-  };
-
-  ExportOptions &configure() { return options_; }
-
   std::string dump(Table &table) override {
     std::stringstream ss;
     ss << add_alignment_header(table);
@@ -146,7 +132,6 @@ private:
 
     return ss.str();
   }
-  ExportOptions options_;
 };
 
 } // namespace tabulate
