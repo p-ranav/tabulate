@@ -331,7 +331,7 @@ public:
   Format &font_style(const std::vector<FontStyle> &style) {
     if (font_style_.has_value()) {
       for (auto &s : style)
-        font_style_.value().push_back(s);
+        font_style_->push_back(s);
     } else {
       font_style_ = style;
     }
@@ -458,15 +458,15 @@ public:
 
     if (first.font_style_.has_value()) {
       // Merge font styles using std::set_union
-      std::vector<FontStyle> merged_font_style(first.font_style_.value().size() +
-                                               second.font_style_.value().size());
+      std::vector<FontStyle> merged_font_style(first.font_style_->size() +
+                                               second.font_style_->size());
 #if defined(_WIN32) || defined(_WIN64)
       // Fixes error in Windows - Sequence not ordered
-      std::sort(first.font_style_.value().begin(), first.font_style_.value().end());
-      std::sort(second.font_style_.value().begin(), second.font_style_.value().end());
+      std::sort(first.font_style_->begin(), first.font_style_->end());
+      std::sort(second.font_style_->begin(), second.font_style_->end());
 #endif
-      std::set_union(first.font_style_.value().begin(), first.font_style_.value().end(),
-                     second.font_style_.value().begin(), second.font_style_.value().end(),
+      std::set_union(first.font_style_->begin(), first.font_style_->end(),
+                     second.font_style_->begin(), second.font_style_->end(),
                      merged_font_style.begin());
       result.font_style_ = merged_font_style;
     } else
