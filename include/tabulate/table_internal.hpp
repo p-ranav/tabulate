@@ -127,13 +127,13 @@ inline Format &Cell::format() {
   } else {
     // Cell has formatting
     // Merge cell formatting with parent row formatting
-    format_ = Format::merge(format_.value(), parent->format());
+    format_ = Format::merge(*format_, parent->format());
   }
-  return format_.value();
+  return *format_;
 }
 
 inline bool Cell::is_multi_byte_character_support_enabled() {
-  return format().multi_byte_characters_.value();
+  return (*format().multi_byte_characters_);
 }
 
 inline Format &Row::format() {
@@ -143,9 +143,9 @@ inline Format &Row::format() {
   } else {
     // Row has formatting rules
     // Merge with parent table format
-    format_ = Format::merge(format_.value(), parent->format());
+    format_ = Format::merge(*format_, parent->format());
   }
-  return format_.value();
+  return *format_;
 }
 
 inline std::pair<std::vector<size_t>, std::vector<size_t>>
@@ -228,8 +228,8 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
       for (size_t j = 0; j < num_columns; ++j) {
         auto cell = table[i][j];
         auto format = cell.format();
-        auto corner = format.corner_bottom_left_.value();
-        auto border_bottom = format.border_bottom_.value();
+        auto corner = *format.corner_bottom_left_;
+        auto border_bottom = *format.border_bottom_;
         if (corner == "" && border_bottom == "") {
           bottom_border_needed = false;
           break;
@@ -263,16 +263,16 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
   auto word_wrapped_text =
       Format::word_wrap(text, column_width, locale, is_multi_byte_character_support_enabled);
   auto text_height = std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n') + 1;
-  auto padding_top = format.padding_top_.value();
+  auto padding_top = *format.padding_top_;
 
-  if (format.show_border_left_.value()) {
-    apply_element_style(stream, format.border_left_color_.value(),
-                        format.border_left_background_color_.value(), {});
-    stream << format.border_left_.value();
+  if (*format.show_border_left_) {
+    apply_element_style(stream, *format.border_left_color_,
+                        *format.border_left_background_color_, {});
+    stream << *format.border_left_;
     reset_element_style(stream);
   }
 
-  apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+  apply_element_style(stream, *format.font_color_, *format.font_background_color_,
                       {});
   if (row_index < padding_top) {
     // Padding top
@@ -283,8 +283,8 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
     // Retrieve padding left and right
     // (column_width - padding_left - padding_right) is the amount of space
     // available for cell text - Use this to word wrap cell contents
-    auto padding_left = format.padding_left_.value();
-    auto padding_right = format.padding_right_.value();
+    auto padding_left = *format.padding_left_;
+    auto padding_right = *format.padding_right_;
 
     // Check if input text has embedded \n that are to be respected
     auto newlines_in_input = Format::split_lines(text, "\n", cell.locale(),
@@ -326,7 +326,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
       auto line_with_padding_size =
           get_sequence_length(line, cell.locale(), cell.is_multi_byte_character_support_enabled()) +
           padding_left + padding_right;
-      switch (format.font_align_.value()) {
+      switch (*format.font_align_) {
       case FontAlign::left:
         print_content_left_aligned(stream, line, format, line_with_padding_size, column_width);
         break;
@@ -352,10 +352,10 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
 
   if (index.second + 1 == num_columns) {
     // Print right border after last column
-    if (format.show_border_right_.value()) {
-      apply_element_style(stream, format.border_right_color_.value(),
-                          format.border_right_background_color_.value(), {});
-      stream << format.border_right_.value();
+    if (*format.show_border_right_) {
+      apply_element_style(stream, *format.border_right_color_,
+                          *format.border_right_background_color_, {});
+      stream << *format.border_right_;
       reset_element_style(stream);
     }
   }
@@ -371,12 +371,12 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
   auto format = cell.format();
   auto column_width = dimension.second;
 
-  auto corner = format.corner_top_left_.value();
-  auto corner_color = format.corner_top_left_color_.value();
-  auto corner_background_color = format.corner_top_left_background_color_.value();
-  auto border_top = format.border_top_.value();
+  auto corner = *format.corner_top_left_;
+  auto corner_color = *format.corner_top_left_color_;
+  auto corner_background_color = *format.corner_top_left_background_color_;
+  auto border_top = *format.border_top_;
 
-  if ((corner == "" && border_top == "") || !format.show_border_top_.value())
+  if ((corner == "" && border_top == "") || !*format.show_border_top_)
     return false;
 
   apply_element_style(stream, corner_color, corner_background_color, {});
@@ -384,17 +384,17 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
   reset_element_style(stream);
 
   for (size_t i = 0; i < column_width; ++i) {
-    apply_element_style(stream, format.border_top_color_.value(),
-                        format.border_top_background_color_.value(), {});
+    apply_element_style(stream, *format.border_top_color_,
+                        *format.border_top_background_color_, {});
     stream << border_top;
     reset_element_style(stream);
   }
 
   if (index.second + 1 == num_columns) {
     // Print corner after last column
-    corner = format.corner_top_right_.value();
-    corner_color = format.corner_top_right_color_.value();
-    corner_background_color = format.corner_top_right_background_color_.value();
+    corner = *format.corner_top_right_;
+    corner_color = *format.corner_top_right_color_;
+    corner_background_color = *format.corner_top_right_background_color_;
 
     apply_element_style(stream, corner_color, corner_background_color, {});
     stream << corner;
@@ -413,12 +413,12 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
   auto format = cell.format();
   auto column_width = dimension.second;
 
-  auto corner = format.corner_bottom_left_.value();
-  auto corner_color = format.corner_bottom_left_color_.value();
-  auto corner_background_color = format.corner_bottom_left_background_color_.value();
-  auto border_bottom = format.border_bottom_.value();
+  auto corner = *format.corner_bottom_left_;
+  auto corner_color = *format.corner_bottom_left_color_;
+  auto corner_background_color = *format.corner_bottom_left_background_color_;
+  auto border_bottom = *format.border_bottom_;
 
-  if ((corner == "" && border_bottom == "") || !format.show_border_bottom_.value())
+  if ((corner == "" && border_bottom == "") || !*format.show_border_bottom_)
     return false;
 
   apply_element_style(stream, corner_color, corner_background_color, {});
@@ -426,17 +426,17 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
   reset_element_style(stream);
 
   for (size_t i = 0; i < column_width; ++i) {
-    apply_element_style(stream, format.border_bottom_color_.value(),
-                        format.border_bottom_background_color_.value(), {});
+    apply_element_style(stream, *format.border_bottom_color_,
+                        *format.border_bottom_background_color_, {});
     stream << border_bottom;
     reset_element_style(stream);
   }
 
   if (index.second + 1 == num_columns) {
     // Print corner after last column
-    corner = format.corner_bottom_right_.value();
-    corner_color = format.corner_bottom_right_color_.value();
-    corner_background_color = format.corner_bottom_right_background_color_.value();
+    corner = *format.corner_bottom_right_;
+    corner_color = *format.corner_bottom_right_color_;
+    corner_background_color = *format.corner_bottom_right_background_color_;
 
     apply_element_style(stream, corner_color, corner_background_color, {});
     stream << corner;

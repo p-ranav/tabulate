@@ -75,13 +75,13 @@ private:
                                          size_t column_width) {
 
     // Apply font style
-    apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
-                        format.font_style_.value());
+    apply_element_style(stream, *format.font_color_, *format.font_background_color_,
+                        *format.font_style_);
     stream << cell_content;
     // Only apply font_style to the font
     // Not the padding. So calling apply_element_style with font_style = {}
     reset_element_style(stream);
-    apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+    apply_element_style(stream, *format.font_color_, *format.font_background_color_,
                         {});
 
     if (text_with_padding_size < column_width) {
@@ -101,13 +101,13 @@ private:
         stream << " ";
 
       // Apply font style
-      apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
-                          format.font_style_.value());
+      apply_element_style(stream, *format.font_color_, *format.font_background_color_,
+                          *format.font_style_);
       stream << cell_content;
       // Only apply font_style to the font
       // Not the padding. So calling apply_element_style with font_style = {}
       reset_element_style(stream);
-      apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+      apply_element_style(stream, *format.font_color_, *format.font_background_color_,
                           {});
 
       for (size_t j = 0; j < num_spaces / 2; ++j)
@@ -118,13 +118,13 @@ private:
         stream << " ";
 
       // Apply font style
-      apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
-                          format.font_style_.value());
+      apply_element_style(stream, *format.font_color_, *format.font_background_color_,
+                          *format.font_style_);
       stream << cell_content;
       // Only apply font_style to the font
       // Not the padding. So calling apply_element_style with font_style = {}
       reset_element_style(stream);
-      apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+      apply_element_style(stream, *format.font_color_, *format.font_background_color_,
                           {});
 
       for (size_t j = 0; j < num_spaces - num_spaces_before; ++j)
@@ -142,13 +142,13 @@ private:
     }
 
     // Apply font style
-    apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
-                        format.font_style_.value());
+    apply_element_style(stream, *format.font_color_, *format.font_background_color_,
+                        *format.font_style_);
     stream << cell_content;
     // Only apply font_style to the font
     // Not the padding. So calling apply_element_style with font_style = {}
     reset_element_style(stream);
-    apply_element_style(stream, format.font_color_.value(), format.font_background_color_.value(),
+    apply_element_style(stream, *format.font_color_, *format.font_background_color_,
                         {});
   }
 

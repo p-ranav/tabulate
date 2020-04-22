@@ -61,9 +61,9 @@ public:
     for (size_t i = 0; i < cells.size(); ++i) {
       auto cell = cells[i];
       if (std::holds_alternative<std::string>(cell)) {
-        cell_strings[i] = std::get<std::string>(cell);
+        cell_strings[i] = *std::get_if<std::string>(&cell);
       } else {
-        auto table = std::get<Table>(cell);
+        auto table = *std::get_if<Table>(&cell);
         std::stringstream stream;
         table.print(stream);
         cell_strings[i] = stream.str();

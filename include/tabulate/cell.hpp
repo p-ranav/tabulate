@@ -53,7 +53,7 @@ public:
     return get_sequence_length(data_, locale(), is_multi_byte_character_support_enabled());
   }
 
-  std::string locale() { return format().locale_.value(); }
+  std::string locale() { return *format().locale_; }
 
   Format &format();
 
