@@ -13,6 +13,12 @@ target_link_libraries(font_styles PRIVATE tabulate::tabulate)
 add_executable(iterators iterators.cpp)
 target_link_libraries(iterators PRIVATE tabulate::tabulate)
 
+add_executable(latex_export latex_export.cpp)
+target_link_libraries(latex_export PRIVATE tabulate::tabulate)
+
+add_executable(markdown_export markdown_export.cpp)
+target_link_libraries(markdown_export PRIVATE tabulate::tabulate)
+
 add_executable(mario mario.cpp)
 target_link_libraries(mario PRIVATE tabulate::tabulate)
 
@@ -25,6 +31,9 @@ target_link_libraries(padding PRIVATE tabulate::tabulate)
 add_executable(runic runic.cpp)
 target_link_libraries(runic PRIVATE tabulate::tabulate)
 
+add_executable(shape shape.cpp)
+target_link_libraries(shape PRIVATE tabulate::tabulate)
+
 add_executable(summary summary.cpp)
 target_link_libraries(summary PRIVATE tabulate::tabulate)
 
@@ -36,3 +45,6 @@ target_link_libraries(universal_constants PRIVATE tabulate::tabulate)
 
 add_executable(word_wrapping word_wrapping.cpp)
 target_link_libraries(word_wrapping PRIVATE tabulate::tabulate)
+
+add_executable(asciidoc_export asciidoc_export.cpp)
+target_link_libraries(asciidoc_export PRIVATE tabulate::tabulate)

@@ -4,10 +4,11 @@ using namespace tabulate;
 int main() {
   Table table;
 
-  table.format().corner("♥")
-    .font_style({FontStyle::bold})
-    .corner_color(Color::magenta)
-    .border_color(Color::magenta);
+  table.format()
+      .corner("♥")
+      .font_style({FontStyle::bold})
+      .corner_color(Color::magenta)
+      .border_color(Color::magenta);
 
   table.add_row({"English", "I love you"});
   table.add_row({"French", "Je t’aime"});

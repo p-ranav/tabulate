@@ -12,7 +12,7 @@
   <a href="https://github.com/p-ranav/tabulate/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="license"/>
   </a>
-  <img src="https://img.shields.io/badge/version-1.0-blue.svg?cacheSeconds=2592000" alt="version"/>
+  <img src="https://img.shields.io/badge/version-1.1-blue.svg?cacheSeconds=2592000" alt="version"/>
 </p>
 
 <p align="center">
@@ -38,6 +38,9 @@
     *   [Range-based Iteration](#range-based-iteration)
     *   [Nested Tables](#nested-tables)
     *   [UTF-8 Support](#utf-8-support)
+*   [Exporters](#exporters)
+    *   [Markdown](#markdown)
+    *   [AsciiDoc](#asciidoc)
 *   [Building Samples](#building-samples)
 *   [Contributing](#contributing)
 *   [License](#license)
@@ -80,7 +83,7 @@ You can format this table using `Table.format()` which returns a `Format` object
 
 You can access rows in the table using `Table[row_index]`. This will return a `Row` object on which you can similarly call `Row.format()` to format properties of all the cells in that row.
 
-Now, let's format the header of the table. The following code changes the font background of the header row to `red`, aligns the cell contents to `center` and applied a padding to the top and bottom of the row.
+Now, let's format the header of the table. The following code changes the font background of the header row to `red`, aligns the cell contents to `center` and applies a padding to the top and bottom of the row.
 
 ```cpp
   universal_constants[0].format()
@@ -137,7 +140,7 @@ This enables overriding the formatting for a particular cell even though row or 
 
 `tabulate` supports automatic word-wrapping when printing cells. 
 
-Although word-wrapping is automatic, there is a simple override. Automatic word-wrapping is used only if the cell contents do not have any embedded newline `\n` characters. So, you can embed newline characters in the cell contents and enfore the word-wrapping manually. 
+Although word-wrapping is automatic, there is a simple override. Automatic word-wrapping is used only if the cell contents do not have any embedded newline `\n` characters. So, you can embed newline characters in the cell contents and enforce the word-wrapping manually. 
 
 ```cpp
 #include <tabulate/table.hpp>
@@ -160,7 +163,7 @@ int main() {
 
 *  The above table has 1 row and 2 columns. 
 *  The first cell has automatic word-wrapping. 
-*  The second cell uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enfore the cell style.
+*  The second cell uses the embedded newline characters in the cell contents - even though the second column has plenty of space (50 characters width), it uses user-provided newline characters to break into new lines and enforce the cell style.
 *  **NOTE**: Whether word-wrapping is automatic or not, `tabulate` performs a trim operation on each line of each cell to remove whitespace characters from either side of line.
 
 <p align="center">
@@ -591,6 +594,127 @@ You can explicitly set the locale for a cell using `.format().locale(value)`. No
   table[9][1].format().locale("ru_RU.UTF-8");  // Russian
   table[10][1].format().locale("he_IL.UTF-8"); // Hebrew
 ```
+
+## Exporters
+
+### Markdown
+
+Tables can be exported to GitHub-flavored markdown using a `MarkdownExporter`. Simply create an exporter object and call `exporter.dump(table)` to generate a Markdown-formatted `std::string`. 
+
+```cpp
+#include <tabulate/markdown_exporter.hpp>
+using namespace tabulate;
+
+int main() {
+  Table movies;
+  movies.add_row({"S/N", "Movie Name", "Director", "Estimated Budget", "Release Date"});  
+  movies.add_row({"tt1979376", "Toy Story 4", "Josh Cooley", "$200,000,000", "21 June 2019"});
+  movies.add_row({"tt3263904", "Sully", "Clint Eastwood", "$60,000,000", "9 September 2016"});
+  movies.add_row(
+      {"tt1535109", "Captain Phillips", "Paul Greengrass", "$55,000,000", " 11 October 2013"});
+
+  // center align 'Director' column
+  movies.column(2).format().font_align(FontAlign::center);
+
+  // right align 'Estimated Budget' column
+  movies.column(3).format().font_align(FontAlign::right);
+
+  // right align 'Release Date' column
+  movies.column(4).format().font_align(FontAlign::right);
+
+  // Color header cells
+  for (size_t i = 0; i < 5; ++i) {
+    movies[0][i].format().font_color(Color::yellow).font_style({FontStyle::bold});
+  }
+
+  // Export to Markdown
+  MarkdownExporter exporter;
+  auto markdown = exporter.dump(movies);
+
+  // tabulate::table
+  std::cout << movies << "\n\n";
+
+  // Exported Markdown
+  std::cout << markdown << std::endl;
+}
+```
+
+<p align="center">
+  <img src="img/markdown_export.png"/>  
+</p>
+
+The above table renders in Markdown like below.
+
+**NOTE**: Unlike `tabulate`, you cannot align individual cells in Markdown. Alignment is on a per-column basis. Markdown allows a second header row where such column-wise alignment can be specified. The `MarkdownExporter` uses the formatting of the header cells in the original `tabulate::Table` to decide how to align each column. As per the Markdown spec, columns are left-aligned by default.
+
+| S/N       | Movie Name       |     Director    | Estimated Budget |     Release Date |
+| :----     | :----            |      :---:      |            ----: |            ----: |
+| tt1979376 | Toy Story 4      |   Josh Cooley   |     $200,000,000 |     21 June 2019 |
+| tt3263904 | Sully            |  Clint Eastwood |      $60,000,000 | 9 September 2016 |
+| tt1535109 | Captain Phillips | Paul Greengrass |      $55,000,000 |  11 October 2013 |
+
+### AsciiDoc
+
+Tabulate can export tables as AsciiDoc using an `AsciiDocExporter`. 
+
+```cpp
+#include <tabulate/asciidoc_exporter.hpp>
+using namespace tabulate;
+
+int main() {
+  Table movies;
+  movies.add_row({"S/N", "Movie Name", "Director", "Estimated Budget", "Release Date"});
+  movies.add_row({"tt1979376", "Toy Story 4", "Josh Cooley", "$200,000,000", "21 June 2019"});
+  movies.add_row({"tt3263904", "Sully", "Clint Eastwood", "$60,000,000", "9 September 2016"});
+  movies.add_row(
+      {"tt1535109", "Captain Phillips", "Paul Greengrass", "$55,000,000", " 11 October 2013"});
+
+  // center align 'Director' column
+  movies.column(2).format().font_align(FontAlign::center);
+
+  // right align 'Estimated Budget' column
+  movies.column(3).format().font_align(FontAlign::right);
+
+  // right align 'Release Date' column
+  movies.column(4).format().font_align(FontAlign::right);
+
+  movies[1][2].format().font_style({FontStyle::bold, FontStyle::italic});
+  movies[2][1].format().font_style({FontStyle::italic});
+
+  // Color header cells
+  for (size_t i = 0; i < 5; ++i) {
+    movies[0][i]
+        .format()
+        .font_color(Color::white)
+        .font_style({FontStyle::bold})
+        .background_color(Color::blue);
+  }
+
+  AsciiDocExporter exporter;
+  auto asciidoc = exporter.dump(movies);
+
+  // tabulate::table
+  std::cout << movies << "\n\n";
+
+  // Exported AsciiDoc
+  std::cout << asciidoc << std::endl;
+}
+```
+Below is the export of the example above:
+
+```
+[cols="<,<,^,>,>"]
+|===
+|*S/N*|*Movie Name*|*Director*|*Estimated Budget*|*Release Date*
+
+|tt1979376|Toy Story 4|*_Josh Cooley_*|$200,000,000|21 June 2019
+|tt3263904|_Sully_|Clint Eastwood|$60,000,000|9 September 2016
+|tt1535109|Captain Phillips|Paul Greengrass|$55,000,000| 11 October 2013
+|===
+```
+The rendered output you can see here: http://tpcg.io/pbbfU3ks
+
+**NOTE** Alignment is only supported per column. The font styles `FontStyle::bold` and `FontStyle::italic` can be used for each cell, also in combination.
 
 ## Building Samples
 
