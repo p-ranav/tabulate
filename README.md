@@ -42,6 +42,7 @@
     *   [Markdown](#markdown)
     *   [AsciiDoc](#asciidoc)
 *   [Building Samples](#building-samples)
+*   [Generating Single Header](#generating-single-header)
 *   [Contributing](#contributing)
 *   [License](#license)
 
@@ -735,6 +736,12 @@ Note the `USE_CPP17` variable. `Tabulate` uses `std::variant` and `std::optional
 <p align="center">
   <img width="400" src="img/mario.png"/>  
 </p>
+
+## Generating Single Header
+
+```bash
+python3 utils/amalgamate/amalgamate.py -c single_include.json -s .
+```
 
 ## Contributing
 Contributions are welcome, have a look at the [CONTRIBUTING.md](CONTRIBUTING.md) document for more information.
