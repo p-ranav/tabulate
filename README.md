@@ -6,8 +6,8 @@
   <a href="https://travis-ci.com/p-ranav/tabulate">
     <img src="https://travis-ci.com/p-ranav/tabulate.svg?token=haZMYySrhmkE9vsJse61&branch=master" alt="ci status"/>
   </a>
-  <a href="https://en.wikipedia.org/wiki/C%2B%2B17">
-    <img src="https://img.shields.io/badge/C%2B%2B-17-blue.svg" alt="standard"/>
+  <a href="https://en.wikipedia.org/wiki/C%2B%2B11">
+    <img src="https://img.shields.io/badge/C%2B%2B-11-blue.svg" alt="standard"/>
   </a>
   <a href="https://github.com/p-ranav/tabulate/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="license"/>
