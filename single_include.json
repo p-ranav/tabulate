@@ -1,0 +1,25 @@
+{
+    "project": "Table Maker for Modern C++",
+    "target": "single_include/tabulate/tabulate.hpp",
+    "sources": [
+        "include/tabulate/variant_lite.hpp",
+        "include/tabulate/optional_lite.hpp",
+        "include/tabulate/termcolor.hpp",
+        "include/tabulate/utf8.hpp",
+        "include/tabulate/color.hpp",
+        "include/tabulate/font_align.hpp",
+        "include/tabulate/font_style.hpp",
+        "include/tabulate/cell.hpp",
+        "include/tabulate/row.hpp",
+        "include/tabulate/column_format.hpp",
+        "include/tabulate/column.hpp",
+        "include/tabulate/printer.hpp",
+        "include/tabulate/table_internal.hpp",
+        "include/tabulate/table.hpp",
+        "include/tabulate/exporter.hpp",
+        "include/tabulate/markdown_exporter.hpp",
+        "include/tabulate/latex_exporter.hpp",
+        "include/tabulate/asciidoc_exporter.hpp"
+    ],
+    "include_paths": ["include"]
+}
