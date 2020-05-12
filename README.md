@@ -6,8 +6,8 @@
   <a href="https://travis-ci.com/p-ranav/tabulate">
     <img src="https://travis-ci.com/p-ranav/tabulate.svg?token=haZMYySrhmkE9vsJse61&branch=master" alt="ci status"/>
   </a>
-  <a href="https://en.wikipedia.org/wiki/C%2B%2B17">
-    <img src="https://img.shields.io/badge/C%2B%2B-17-blue.svg" alt="standard"/>
+  <a href="https://en.wikipedia.org/wiki/C%2B%2B11">
+    <img src="https://img.shields.io/badge/C%2B%2B-11-blue.svg" alt="standard"/>
   </a>
   <a href="https://github.com/p-ranav/tabulate/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="license"/>
@@ -48,6 +48,8 @@
 ## Quick Start
 
 `tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. 
+
+**NOTE** Tabulate supports `>=C++11`. The rest of this README, however, assumes `C++17` support. 
 
 Create a `Table` object and call `Table.add_rows` to add rows to your table.
 
@@ -723,10 +725,12 @@ There are a number of samples in the `samples/` directory, e.g., [Mario](https:/
 ```bash
 mkdir build
 cd build
-cmake -DSAMPLES=ON ..
+cmake -DSAMPLES=ON -DUSE_CPP17=ON ..
 make
 ./samples/mario
 ```
+
+Note the `USE_CPP17` variable. `Tabulate` uses `std::variant` and `std::optional`. If you do not have `C++17` compiler support for these data structures, build without this flag. `Tabulate` will then use [variant-lite](https://github.com/martinmoene/variant-lite) and [optional-lite](https://github.com/martinmoene/optional-lite).
 
 <p align="center">
   <img width="400" src="img/mario.png"/>  

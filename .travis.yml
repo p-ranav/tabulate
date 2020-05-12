@@ -51,5 +51,5 @@ matrix:
 script:
     - if [[ "$CXX" == clang* ]]; then export CXXFLAGS="-stdlib=libc++"; fi
     - mkdir build && cd build
-    - cmake -DSAMPLES=ON ..
+    - cmake -DSAMPLES=ON -DUSE_CPP17=ON ..
     - make

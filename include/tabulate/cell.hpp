@@ -33,10 +33,18 @@ SOFTWARE.
 #pragma once
 #include <iostream>
 #include <memory>
-#include <optional>
 #include <string>
 #include <tabulate/format.hpp>
 #include <tabulate/utf8.hpp>
+
+#if __cplusplus >= 201703L
+#include <optional>
+using std::optional;
+#else
+#include <tabulate/optional_lite.hpp>
+using nonstd::optional;
+#endif
+
 #include <vector>
 
 namespace tabulate {
@@ -62,7 +70,7 @@ public:
 private:
   std::string data_;
   std::weak_ptr<class Row> parent_;
-  std::optional<Format> format_;
+  optional<Format> format_;
 };
 
 } // namespace tabulate

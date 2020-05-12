@@ -266,14 +266,13 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
   auto padding_top = *format.padding_top_;
 
   if (*format.show_border_left_) {
-    apply_element_style(stream, *format.border_left_color_,
-                        *format.border_left_background_color_, {});
+    apply_element_style(stream, *format.border_left_color_, *format.border_left_background_color_,
+                        {});
     stream << *format.border_left_;
     reset_element_style(stream);
   }
 
-  apply_element_style(stream, *format.font_color_, *format.font_background_color_,
-                      {});
+  apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
   if (row_index < padding_top) {
     // Padding top
     stream << std::string(column_width, ' ');
@@ -384,8 +383,8 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
   reset_element_style(stream);
 
   for (size_t i = 0; i < column_width; ++i) {
-    apply_element_style(stream, *format.border_top_color_,
-                        *format.border_top_background_color_, {});
+    apply_element_style(stream, *format.border_top_color_, *format.border_top_background_color_,
+                        {});
     stream << border_top;
     reset_element_style(stream);
   }

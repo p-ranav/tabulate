@@ -78,8 +78,8 @@ public:
     std::vector<std::reference_wrapper<Cell>>::iterator ptr;
   };
 
-  auto begin() { return CellIterator(cells_.begin()); }
-  auto end() { return CellIterator(cells_.end()); }
+  auto begin() -> CellIterator { return CellIterator(cells_.begin()); }
+  auto end() -> CellIterator { return CellIterator(cells_.end()); }
 
 private:
   friend class ColumnFormat;

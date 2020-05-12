@@ -31,8 +31,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #pragma once
-#include <optional>
 #include <tabulate/exporter.hpp>
+
+#if __cplusplus >= 201703L
+#include <optional>
+using std::optional;
+#else
+#include <tabulate/optional_lite.hpp>
+using nonstd::optional;
+#endif
 
 namespace tabulate {
 
@@ -50,7 +57,7 @@ public:
 
   private:
     friend class LatexExporter;
-    std::optional<size_t> indentation_;
+    optional<size_t> indentation_;
   };
 
   ExportOptions &configure() { return options_; }
@@ -63,14 +70,14 @@ public:
     result += new_line;
     const auto rows = table.rows_;
     // iterate content and put text into the table.
-    for (auto i = 0; i < rows; i++) {
+    for (size_t i = 0; i < rows; i++) {
       auto &row = table[i];
       // apply row content indentation
       if (options_.indentation_.has_value()) {
         result += std::string(options_.indentation_.value(), ' ');
       }
 
-      for (auto j = 0; j < row.size(); j++) {
+      for (size_t j = 0; j < row.size(); j++) {
 
         result += row[j].get_text();
 

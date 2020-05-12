@@ -1,15 +1,24 @@
 #include <tabulate/table.hpp>
 using namespace tabulate;
 
+#if __cplusplus >= 201703L
+#include <variant>
+using std::variant;
+#else
+#include <tabulate/variant_lite.hpp>
+using nonstd::variant;
+#endif
+using Row_t = std::vector<variant<std::string, const char *, Table>>;
+
 int main() {
 
   Table readme;
   readme.format().border_color(Color::yellow);
 
-  readme.add_row({"tabulate for Modern C++"});
+  readme.add_row(Row_t{"tabulate for Modern C++"});
   readme[0].format().font_align(FontAlign::center).font_color(Color::yellow);
 
-  readme.add_row({"https://github.com/p-ranav/tabulate"});
+  readme.add_row(Row_t{"https://github.com/p-ranav/tabulate"});
   readme[1]
       .format()
       .font_align(FontAlign::center)
@@ -17,25 +26,25 @@ int main() {
       .font_color(Color::white)
       .hide_border_top();
 
-  readme.add_row({"Tabulate is a header-only library for printing aligned, formatted, and "
-                  "colorized tables in Modern C++"});
+  readme.add_row(Row_t{"Tabulate is a header-only library for printing aligned, formatted, and "
+                       "colorized tables in Modern C++"});
   readme[2].format().font_style({FontStyle::italic}).font_color(Color::magenta);
 
   Table highlights;
-  highlights.add_row({"Header-only Library", "Requires C++17", "MIT License"});
-  readme.add_row({highlights});
+  highlights.add_row(Row_t{"Header-only Library", "Requires C++17", "MIT License"});
+  readme.add_row(Row_t{highlights});
   readme[3].format().font_align(FontAlign::center).hide_border_top();
 
   Table empty_row;
   empty_row.format().hide_border();
-  readme.add_row({empty_row});
+  readme.add_row(Row_t{empty_row});
   readme[4].format().hide_border_left().hide_border_right();
 
-  readme.add_row({"Easily format and align content within cells"});
+  readme.add_row(Row_t{"Easily format and align content within cells"});
   readme[5].format().font_align(FontAlign::center);
 
   Table format;
-  format.add_row({"Horizontal Alignment", "Left aligned", "Center aligned", "Right aligned"});
+  format.add_row(Row_t{"Horizontal Alignment", "Left aligned", "Center aligned", "Right aligned"});
   format[0].format().font_align(FontAlign::center);
   format[0][0].format().font_color(Color::green).column_separator(":");
 
@@ -56,7 +65,7 @@ int main() {
   format.column(0).format().width(23);
   format.column(1).format().border_left(":");
 
-  readme.add_row({format});
+  readme.add_row(Row_t{format});
 
   readme[5]
       .format()
@@ -68,27 +77,28 @@ int main() {
 
   readme[6].format().hide_border_top().padding_top(0);
 
-  readme.add_row({empty_row});
+  readme.add_row(Row_t{empty_row});
   readme[7].format().hide_border_left().hide_border_right();
 
   Table embedded_table;
   embedded_table.add_row(
       {"You can even\n embed tables...",
-       Table().add_row(
-           {"within tables",
-            Table().add_row(
-                {"within tables",
-                 Table().add_row({"within tables", Table().add_row({"within tables.. "})})})})});
+       Table().add_row({"within tables",
+                        Table().add_row({"within tables",
+                                         Table().add_row(Row_t{
+                                             "within tables",
+                                             Table().add_row(Row_t{"within tables.. "})})})})});
 
-  readme.add_row({"Nested Representations"});
+  readme.add_row(Row_t{"Nested Representations"});
   readme[8].format().font_align(FontAlign::center);
 
-  readme.add_row({embedded_table});
+  readme.add_row(Row_t{embedded_table});
 
   readme[9].format().hide_border_top().border_color(Color::white).font_color(Color::yellow);
 
-  readme.add_row({"ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ ᚦ ᚧ ᚨ ᚩ ᚪ ᚫ ᚬ ᚭ ᚮ ᚯ ᚰ ᚱ ᚲ ᚳ ᚴ ᚵ ᚶ ᚷ ᚸ ᚹ ᚺ ᚻ ᚼ ᚽ ᚾ ᚿ ᛀ ᛁ ᛂ ᛃ ᛄ ᛅ ᛆ ᛇ "
-                  "ᛈ ᛉ ᛊ ᛋ ᛌ ᛍ ᛎ ᛏ ᛐ ᛑ ᛒ ᛓ"});
+  readme.add_row(
+      Row_t{"ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ ᚦ ᚧ ᚨ ᚩ ᚪ ᚫ ᚬ ᚭ ᚮ ᚯ ᚰ ᚱ ᚲ ᚳ ᚴ ᚵ ᚶ ᚷ ᚸ ᚹ ᚺ ᚻ ᚼ ᚽ ᚾ ᚿ ᛀ ᛁ ᛂ ᛃ ᛄ ᛅ ᛆ ᛇ "
+            "ᛈ ᛉ ᛊ ᛋ ᛌ ᛍ ᛎ ᛏ ᛐ ᛑ ᛒ ᛓ"});
   readme[10]
       .format()
       .font_background_color(Color::red)
@@ -107,7 +117,7 @@ int main() {
       .hide_border();
 
   for (size_t i = 0; i < 9; ++i) {
-    std::vector<std::variant<std::string, Table>> row;
+    std::vector<variant<std::string, const char *, Table>> row;
     row.push_back(std::to_string(90 - i * 10));
     for (size_t j = 0; j <= 50; ++j) {
       row.push_back(" ");
@@ -115,7 +125,7 @@ int main() {
     chart.add_row(row);
   }
 
-  std::vector<std::variant<std::string, Table>> row;
+  std::vector<variant<std::string, const char *, Table>> row;
   for (int i = 0; i <= 12; ++i) {
     if ((i + 1) % 4 == 0) {
       row.push_back(std::to_string(i + 1));
@@ -124,7 +134,7 @@ int main() {
     }
   }
   chart.add_row(row);
-  chart.add_row({});
+  chart.add_row(Row_t{});
 
   chart.column(0).format().padding_left(1).padding_right(1).border_left(" ");
 
@@ -175,8 +185,8 @@ int main() {
   chart[4][16].set_text("Batch 2");
 
   Table legend;
-  legend.add_row({"Batch 1", "10", "40", "50", "20", "10", "50"});
-  legend.add_row({"Batch 2", "30", "60", "(70)", "50", "40", "30"});
+  legend.add_row(Row_t{"Batch 1", "10", "40", "50", "20", "10", "50"});
+  legend.add_row(Row_t{"Batch 2", "30", "60", "(70)", "50", "40", "30"});
 
   legend[0].format().font_align(FontAlign::center);
   legend[1].format().font_align(FontAlign::center);
