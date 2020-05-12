@@ -19,7 +19,12 @@ include(GNUInstallDirs)
 add_library(tabulate INTERFACE)
 add_library(tabulate::tabulate ALIAS tabulate)
 
-target_compile_features(tabulate INTERFACE cxx_std_17)
+if (USE_CPP17)
+  target_compile_features(tabulate INTERFACE cxx_std_17)
+else()
+  target_compile_features(tabulate INTERFACE cxx_std_11)
+endif()
+
 target_include_directories(tabulate INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)

@@ -1,16 +1,25 @@
 #include <tabulate/table.hpp>
 using namespace tabulate;
 
+#if __cplusplus >= 201703L
+#include <variant>
+using std::variant;
+#else
+#include <tabulate/variant_lite.hpp>
+using nonstd::variant;
+#endif
+using Row_t = std::vector<variant<std::string, const char *, Table>>;
+
 int main() {
   Table table;
 
-  table.add_row({"Company", "Contact", "Country"});
-  table.add_row({"Alfreds Futterkiste", "Maria Anders", "Germany"});
-  table.add_row({"Centro comercial Moctezuma", "Francisco Chang", "Mexico"});
-  table.add_row({"Ernst Handel", "Roland Mendel", "Austria"});
-  table.add_row({"Island Trading", "Helen Bennett", "UK"});
-  table.add_row({"Laughing Bacchus Winecellars", "Yoshi Tannamuri", "Canada"});
-  table.add_row({"Magazzini Alimentari Riuniti", "Giovanni Rovelli", "Italy"});
+  table.add_row(Row_t{"Company", "Contact", "Country"});
+  table.add_row(Row_t{"Alfreds Futterkiste", "Maria Anders", "Germany"});
+  table.add_row(Row_t{"Centro comercial Moctezuma", "Francisco Chang", "Mexico"});
+  table.add_row(Row_t{"Ernst Handel", "Roland Mendel", "Austria"});
+  table.add_row(Row_t{"Island Trading", "Helen Bennett", "UK"});
+  table.add_row(Row_t{"Laughing Bacchus Winecellars", "Yoshi Tannamuri", "Canada"});
+  table.add_row(Row_t{"Magazzini Alimentari Riuniti", "Giovanni Rovelli", "Italy"});
 
   // Set width of cells in each column
   table.column(0).format().width(40);

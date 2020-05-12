@@ -78,7 +78,7 @@ private:
 
     bool format_bold = false;
     bool format_italic = false;
-    std::for_each(font_style.begin(), font_style.end(), [&](auto &style) {
+    std::for_each(font_style.begin(), font_style.end(), [&](FontStyle &style) {
       if (style == FontStyle::bold) {
         format_bold = true;
       } else if (style == FontStyle::italic) {

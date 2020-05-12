@@ -33,9 +33,17 @@ SOFTWARE.
 #pragma once
 #include <iostream>
 #include <memory>
-#include <optional>
 #include <string>
 #include <tabulate/cell.hpp>
+
+#if __cplusplus >= 201703L
+#include <optional>
+using std::optional;
+#else
+#include <tabulate/optional_lite.hpp>
+using nonstd::optional;
+#endif
+
 #include <vector>
 #ifdef max
 #undef max
@@ -77,8 +85,8 @@ public:
     std::vector<std::shared_ptr<Cell>>::iterator ptr;
   };
 
-  auto begin() { return CellIterator(cells_.begin()); }
-  auto end() { return CellIterator(cells_.end()); }
+  auto begin() -> CellIterator { return CellIterator(cells_.begin()); }
+  auto end() -> CellIterator { return CellIterator(cells_.end()); }
 
 private:
   friend class Printer;
@@ -176,7 +184,7 @@ private:
 
   std::vector<std::shared_ptr<Cell>> cells_;
   std::weak_ptr<class TableInternal> parent_;
-  std::optional<Format> format_;
+  optional<Format> format_;
 };
 
 } // namespace tabulate

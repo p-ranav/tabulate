@@ -1,12 +1,22 @@
 #include <tabulate/table.hpp>
 using namespace tabulate;
 
+#if __cplusplus >= 201703L
+#include <variant>
+using std::variant;
+#else
+#include <tabulate/variant_lite.hpp>
+using nonstd::variant;
+#endif
+using Row_t = std::vector<variant<std::string, const char *, Table>>;
+
 int main() {
   Table colors;
 
-  colors.add_row({"Font Color is Red", "Font Color is Blue", "Font Color is Green"});
-  colors.add_row({"Everything is Red", "Everything is Blue", "Everything is Green"});
-  colors.add_row({"Font Background is Red", "Font Background is Blue", "Font Background is Green"});
+  colors.add_row(Row_t{"Font Color is Red", "Font Color is Blue", "Font Color is Green"});
+  colors.add_row(Row_t{"Everything is Red", "Everything is Blue", "Everything is Green"});
+  colors.add_row(
+      Row_t{"Font Background is Red", "Font Background is Blue", "Font Background is Green"});
 
   colors[0][0].format().font_color(Color::red).font_style({FontStyle::bold});
   colors[0][1].format().font_color(Color::blue).font_style({FontStyle::bold});
