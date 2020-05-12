@@ -21,8 +21,10 @@ add_library(tabulate::tabulate ALIAS tabulate)
 
 if (USE_CPP17)
   target_compile_features(tabulate INTERFACE cxx_std_17)
+  message(STATUS "Using C++17")
 else()
   target_compile_features(tabulate INTERFACE cxx_std_11)
+  message(STATUS "Using C++11")
 endif()
 
 target_include_directories(tabulate INTERFACE
