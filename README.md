@@ -48,7 +48,7 @@
 
 ## Quick Start
 
-`tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. 
+`tabulate` is a header-only library. Just add `include/` to your `include_directories` and you should be good to go. A single header file version is also available in `single_include/`.
 
 **NOTE** Tabulate supports `>=C++11`. The rest of this README, however, assumes `C++17` support. 
 
