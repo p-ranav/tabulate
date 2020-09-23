@@ -50,9 +50,9 @@ SOFTWARE.
 // #endif
 
 // Project version
-#define TABULATE_VERSION_MAJOR 0
-#define TABULATE_VERSION_MINOR 1
-#define TABULATE_VERSION_PATCH 3
+#define TABULATE_VERSION_MAJOR 1
+#define TABULATE_VERSION_MINOR 3
+#define TABULATE_VERSION_PATCH 0
 
 // Composing the protocol version string from major, and minor
 #define TABULATE_CONCATENATE(A, B) TABULATE_CONCATENATE_IMPL(A, B)
