@@ -19,7 +19,8 @@
         "include/tabulate/exporter.hpp",
         "include/tabulate/markdown_exporter.hpp",
         "include/tabulate/latex_exporter.hpp",
-        "include/tabulate/asciidoc_exporter.hpp"
+        "include/tabulate/asciidoc_exporter.hpp",
+        "include/tabulate/tabulate.hpp"
     ],
     "include_paths": ["include"]
 }
