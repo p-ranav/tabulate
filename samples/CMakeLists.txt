@@ -48,3 +48,5 @@ target_link_libraries(word_wrapping PRIVATE tabulate::tabulate)
 
 add_executable(asciidoc_export asciidoc_export.cpp)
 target_link_libraries(asciidoc_export PRIVATE tabulate::tabulate)
+
+add_executable(refresh_table refresh_table.cpp) 
