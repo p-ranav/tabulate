@@ -1,24 +1,20 @@
-#include <chrono>
-#include <random>
 #include <tabulate/table.hpp>
-#include <thread>
 
 using namespace tabulate;
 using Row_t = std::vector<variant<std::string, const char *, Table>>;
-static volatile bool keep_running = true;
+std::atomic_bool keep_running(true);
 
-static void *userInput_thread(void *) {
+void waitingForWorkEnterKey() {
   while (keep_running) {
     if (std::cin.get() == 10) {
       keep_running = false;
     }
   }
-  return NULL;
+  return;
 }
 
 int main() {
-  pthread_t tId;
-  (void)pthread_create(&tId, 0, userInput_thread, 0);
+  std::thread tUserInput(waitingForWorkEnterKey);
   while (keep_running) {
     Table process_table;
     std::random_device rd;
@@ -35,16 +31,10 @@ int main() {
                            std::to_string((int)round(dis(gen) * 100)), "root",
                            "-20"});
 
-    // center align 'Director' column
     process_table.column(2).format().font_align(FontAlign::center);
-
-    // right align 'Estimated Budget' column
     process_table.column(3).format().font_align(FontAlign::right);
-
-    // right align 'Release Date' column
     process_table.column(4).format().font_align(FontAlign::right);
 
-    // center-align and color header cells
     for (size_t i = 0; i < 5; ++i) {
       process_table[0][i]
           .format()
@@ -59,7 +49,7 @@ int main() {
     std::cout << "\033[F\033[F\033[F\033[F\033[F\033[F\033[F\033[F\033[F\033[F";
   }
   std::cout << "\033[B\033[B\033[B\033[B\033[B\033[B\033[B\033[B\033[B\033[B";
-  (void)pthread_join(tId, NULL);
+  tUserInput.join();
 
   return 0;
 }
