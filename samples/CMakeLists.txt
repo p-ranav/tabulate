@@ -50,4 +50,4 @@ add_executable(asciidoc_export asciidoc_export.cpp)
 target_link_libraries(asciidoc_export PRIVATE tabulate::tabulate)
 
 add_executable(refresh_table refresh_table.cpp) 
-target_link_libraries(refresh_table PRIVATE tabulate::tabulate)
+target_link_libraries(refresh_table PRIVATE tabulate::tabulate pthread)
