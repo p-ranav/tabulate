@@ -51,7 +51,7 @@ SOFTWARE.
 
 // Project version
 #define TABULATE_VERSION_MAJOR 1
-#define TABULATE_VERSION_MINOR 3
+#define TABULATE_VERSION_MINOR 4
 #define TABULATE_VERSION_PATCH 0
 
 // Composing the protocol version string from major, and minor
