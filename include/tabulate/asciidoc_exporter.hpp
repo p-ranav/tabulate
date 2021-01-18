@@ -69,6 +69,8 @@ public:
     return ss.str();
   }
 
+  virtual ~AsciiDocExporter() {}
+
 private:
   std::string add_formatted_cell(Cell &cell) const {
     std::stringstream ss;

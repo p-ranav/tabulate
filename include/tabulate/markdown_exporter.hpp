@@ -46,6 +46,8 @@ public:
     return result;
   }
 
+  virtual ~MarkdownExporter() {}
+
 private:
   void add_alignment_header_row(Table &table) {
     auto &rows = table.table_->rows_;
