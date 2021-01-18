@@ -40,6 +40,7 @@ namespace tabulate {
 class Exporter {
 public:
   virtual std::string dump(Table &table) = 0;
+  virtual ~Exporter() {}
 };
 
 } // namespace tabulate

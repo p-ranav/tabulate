@@ -96,6 +96,8 @@ public:
     return result;
   }
 
+  virtual ~LatexExporter() {}
+
 private:
   std::string add_alignment_header(Table &table) {
     std::string result{"{"};

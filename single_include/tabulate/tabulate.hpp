@@ -7117,6 +7117,7 @@ namespace tabulate {
 class Exporter {
 public:
   virtual std::string dump(Table &table) = 0;
+  virtual ~Exporter() {}
 };
 
 } // namespace tabulate
@@ -7167,6 +7168,8 @@ public:
     restore_table_format(table);
     return result;
   }
+
+  virtual ~MarkdownExporter() {}
 
 private:
   void add_alignment_header_row(Table &table) {
@@ -7354,6 +7357,8 @@ public:
     return result;
   }
 
+  virtual ~LatexExporter() {}
+
 private:
   std::string add_alignment_header(Table &table) {
     std::string result{"{"};
@@ -7446,6 +7451,8 @@ public:
     ss << "|===";
     return ss.str();
   }
+
+  virtual ~AsciiDocExporter() {}
 
 private:
   std::string add_formatted_cell(Cell &cell) const {
