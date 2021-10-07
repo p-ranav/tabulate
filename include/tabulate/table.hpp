@@ -35,17 +35,21 @@ SOFTWARE.
 #include <tabulate/table_internal.hpp>
 
 #if __cplusplus >= 201703L
+#include <string_view>
 #include <variant>
 using std::get_if;
 using std::holds_alternative;
 using std::variant;
 using std::visit;
+using std::string_view;
 #else
+#include <tabulate/string_view_lite.hpp>
 #include <tabulate/variant_lite.hpp>
 using nonstd::get_if;
 using nonstd::holds_alternative;
 using nonstd::variant;
 using nonstd::visit;
+using nonstd::string_view;
 #endif
 
 #include <utility>
@@ -56,7 +60,9 @@ class Table {
 public:
   Table() : table_(TableInternal::create()) {}
 
-  Table &add_row(const std::vector<variant<std::string, const char *, Table>> &cells) {
+  using Row_t = std::vector<variant<std::string, const char *, string_view, Table>>;
+
+  Table &add_row(const Row_t &cells) {
 
     if (rows_ == 0) {
       // This is the first row added
@@ -79,6 +85,8 @@ public:
         cell_strings[i] = *get_if<std::string>(&cell);
       } else if (holds_alternative<const char *>(cell)) {
         cell_strings[i] = *get_if<const char *>(&cell);
+      }  else if (holds_alternative<string_view>(cell)) {
+        cell_strings[i] = std::string{*get_if<string_view>(&cell)};
       } else {
         auto table = *get_if<Table>(&cell);
         std::stringstream stream;

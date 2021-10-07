@@ -6,7 +6,7 @@
 
 
 using namespace tabulate;
-using Row_t = std::vector<variant<std::string, const char *, Table>>;
+using Row_t = Table::Row_t;
 std::atomic_bool keep_running(true);
 
 void waitingForWorkEnterKey() {
