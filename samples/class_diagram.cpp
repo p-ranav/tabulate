@@ -1,14 +1,6 @@
 #include <tabulate/table.hpp>
 using namespace tabulate;
-
-#if __cplusplus >= 201703L
-#include <variant>
-using std::variant;
-#else
-#include <tabulate/variant_lite.hpp>
-using nonstd::variant;
-#endif
-using Row_t = std::vector<variant<std::string, const char *, Table>>;
+using Row_t = Table::Row_t;
 
 int main() {
   Table class_diagram;

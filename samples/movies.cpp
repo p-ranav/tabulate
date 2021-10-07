@@ -1,6 +1,6 @@
 #include <tabulate/table.hpp>
 using namespace tabulate;
-using Row_t = std::vector<variant<std::string, const char *, Table>>;
+using Row_t = Table::Row_t;
 
 int main() {
   Table movies;

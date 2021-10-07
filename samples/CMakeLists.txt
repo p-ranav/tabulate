@@ -51,3 +51,6 @@ target_link_libraries(asciidoc_export PRIVATE tabulate::tabulate)
 
 add_executable(refresh_table refresh_table.cpp) 
 target_link_libraries(refresh_table PRIVATE tabulate::tabulate pthread)
+
+add_executable(string_view_in_row string_view_in_row.cpp) 
+target_link_libraries(string_view_in_row PRIVATE tabulate::tabulate pthread)

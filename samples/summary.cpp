@@ -1,14 +1,6 @@
 #include <tabulate/table.hpp>
 using namespace tabulate;
-
-#if __cplusplus >= 201703L
-#include <variant>
-using std::variant;
-#else
-#include <tabulate/variant_lite.hpp>
-using nonstd::variant;
-#endif
-using Row_t = std::vector<variant<std::string, const char *, Table>>;
+using Row_t = Table::Row_t;
 
 int main() {
 
@@ -117,7 +109,7 @@ int main() {
       .hide_border();
 
   for (size_t i = 0; i < 9; ++i) {
-    std::vector<variant<std::string, const char *, Table>> row;
+    Row_t row;
     row.push_back(std::to_string(90 - i * 10));
     for (size_t j = 0; j <= 50; ++j) {
       row.push_back(" ");
@@ -125,7 +117,7 @@ int main() {
     chart.add_row(row);
   }
 
-  std::vector<variant<std::string, const char *, Table>> row;
+  Row_t row;
   for (int i = 0; i <= 12; ++i) {
     if ((i + 1) % 4 == 0) {
       row.push_back(std::to_string(i + 1));

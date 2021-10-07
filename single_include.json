@@ -4,6 +4,7 @@
     "sources": [
         "include/tabulate/variant_lite.hpp",
         "include/tabulate/optional_lite.hpp",
+        "include/tabulate/string_view_lite.hpp",        
         "include/tabulate/termcolor.hpp",
         "include/tabulate/utf8.hpp",
         "include/tabulate/color.hpp",
