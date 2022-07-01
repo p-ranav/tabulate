@@ -36,7 +36,15 @@ SOFTWARE.
 #include <functional>
 #include <iostream>
 #include <memory>
+
+#if __cplusplus >= 201703L
 #include <optional>
+using std::optional;
+#else
+#include <tabulate/optional_lite.hpp>
+using nonstd::optional;
+#endif
+
 #include <string>
 #include <tabulate/cell.hpp>
 #include <tabulate/column_format.hpp>
