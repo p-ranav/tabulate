@@ -76,6 +76,7 @@ inline size_t get_sequence_length(const std::string &text, const std::string &lo
     return text.length();
 
 #if defined(_WIN32) || defined(_WIN64)
+  (void) locale; // unused parameter
   return (text.length() - std::count_if(text.begin(), text.end(),
                                         [](char c) -> bool { return (c & 0xC0) == 0x80; }));
 #elif defined(__unix__) || defined(__unix) || defined(__APPLE__)
