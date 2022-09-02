@@ -225,7 +225,7 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
     if (i + 1 == num_rows) {
 
       // Check if there is bottom border to print:
-      auto bottom_border_needed{true};
+      bool bottom_border_needed{true};
       for (size_t j = 0; j < num_columns; ++j) {
         auto cell = table[i][j];
         auto format = cell.format();
@@ -258,7 +258,11 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
   auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
+#if 4 < __GNUC__
   auto old_locale = std::locale::global(std::locale(locale));
+#else
+  auto old_locale = std::locale::global(std::locale(locale.c_str()));
+#endif
   auto format = cell.format();
   auto text = cell.get_text();
   auto word_wrapped_text =
@@ -368,7 +372,11 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
                                            size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
+  #if 4 < __GNUC__
   auto old_locale = std::locale::global(std::locale(locale));
+#else
+  auto old_locale = std::locale::global(std::locale(locale.c_str()));
+#endif
   auto format = cell.format();
   auto column_width = dimension.second;
 
@@ -411,7 +419,11 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
                                               size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
+#if 4 < __GNUC__
   auto old_locale = std::locale::global(std::locale(locale));
+#else
+  auto old_locale = std::locale::global(std::locale(locale.c_str()));
+#endif
   auto format = cell.format();
   auto column_width = dimension.second;
 
