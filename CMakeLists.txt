@@ -5,7 +5,7 @@ option(SAMPLES "Build Samples" OFF)
 
 set(TABULATE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# Versionning
+# Versioning
 # ===========
 
 # Project version
