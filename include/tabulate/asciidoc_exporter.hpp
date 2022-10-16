@@ -33,7 +33,9 @@ SOFTWARE.
 */
 #pragma once
 #include <algorithm>
+#if 4 < __GNUC__
 #include <optional>
+#endif
 #include <sstream>
 #include <string>
 #include <tabulate/exporter.hpp>

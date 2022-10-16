@@ -6124,7 +6124,11 @@ inline int get_wcswidth(const std::string &string, const std::string &locale,
 
   // The behavior of wcswidth() depends on the LC_CTYPE category of the current locale.
   // Set the current locale based on cell properties before computing width
+#if 4 < __GNUC__
   auto old_locale = std::locale::global(std::locale(locale));
+#else
+  auto old_locale = std::locale::global(std::locale(locale.c_str()));
+#endif
 
   // Convert from narrow std::string to wide string
   wchar_t *wide_string = new wchar_t[string.size()];
@@ -7531,7 +7535,9 @@ SOFTWARE.
 #include <functional>
 #include <iostream>
 #include <memory>
+#if 4 < __GNUC__
 #include <optional>
+#endif
 #include <string>
 // #include <tabulate/cell.hpp>
 // #include <tabulate/column_format.hpp>
@@ -8345,7 +8351,7 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
     if (i + 1 == num_rows) {
 
       // Check if there is bottom border to print:
-      auto bottom_border_needed{true};
+      bool bottom_border_needed{true};
       for (size_t j = 0; j < num_columns; ++j) {
         auto cell = table[i][j];
         auto format = cell.format();
@@ -8378,7 +8384,11 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
   auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
+#if 4 < __GNUC__
   auto old_locale = std::locale::global(std::locale(locale));
+#else
+  auto old_locale = std::locale::global(std::locale(locale.c_str()));
+#endif
   auto format = cell.format();
   auto text = cell.get_text();
   auto word_wrapped_text =
@@ -8488,7 +8498,11 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
                                            size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
+#if 4 < __GNUC__
   auto old_locale = std::locale::global(std::locale(locale));
+#else
+  auto old_locale = std::locale::global(std::locale(locale.c_str()));
+#endif
   auto format = cell.format();
   auto column_width = dimension.second;
 
@@ -8531,7 +8545,11 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
                                               size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
+#if 4 < __GNUC__
   auto old_locale = std::locale::global(std::locale(locale));
+#else
+  auto old_locale = std::locale::global(std::locale(locale.c_str()));
+#endif
   auto format = cell.format();
   auto column_width = dimension.second;
 
@@ -9065,7 +9083,9 @@ SOFTWARE.
 */
 #pragma once
 #include <algorithm>
+#if 4 < __GNUC__
 #include <optional>
+#endif
 #include <sstream>
 #include <string>
 // #include <tabulate/exporter.hpp>

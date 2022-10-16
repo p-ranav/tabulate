@@ -53,7 +53,11 @@ inline int get_wcswidth(const std::string &string, const std::string &locale,
 
   // The behavior of wcswidth() depends on the LC_CTYPE category of the current locale.
   // Set the current locale based on cell properties before computing width
+#if 4 < __GNUC__
   auto old_locale = std::locale::global(std::locale(locale));
+#else
+  auto old_locale = std::locale::global(std::locale(locale.c_str()));
+#endif
 
   // Convert from narrow std::string to wide string
   wchar_t *wide_string = new wchar_t[string.size()];
