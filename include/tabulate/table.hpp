@@ -39,17 +39,17 @@ SOFTWARE.
 #include <variant>
 using std::get_if;
 using std::holds_alternative;
+using std::string_view;
 using std::variant;
 using std::visit;
-using std::string_view;
 #else
 #include <tabulate/string_view_lite.hpp>
 #include <tabulate/variant_lite.hpp>
 using nonstd::get_if;
 using nonstd::holds_alternative;
+using nonstd::string_view;
 using nonstd::variant;
 using nonstd::visit;
-using nonstd::string_view;
 #endif
 
 #include <utility>
@@ -60,7 +60,8 @@ class Table {
 public:
   Table() : table_(TableInternal::create()) {}
 
-  using Row_t = std::vector<variant<std::string, const char *, string_view, Table>>;
+  using Row_t =
+      std::vector<variant<std::string, const char *, string_view, Table>>;
 
   Table &add_row(const Row_t &cells) {
 
@@ -85,7 +86,7 @@ public:
         cell_strings[i] = *get_if<std::string>(&cell);
       } else if (holds_alternative<const char *>(cell)) {
         cell_strings[i] = *get_if<const char *>(&cell);
-      }  else if (holds_alternative<string_view>(cell)) {
+      } else if (holds_alternative<string_view>(cell)) {
         cell_strings[i] = std::string{*get_if<string_view>(&cell)};
       } else {
         auto table = *get_if<Table>(&cell);
@@ -116,11 +117,14 @@ public:
     return stream.str();
   }
 
+  size_t size() const { return table_->size(); }
+
   std::pair<size_t, size_t> shape() { return table_->shape(); }
 
   class RowIterator {
   public:
-    explicit RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr) : ptr(ptr) {}
+    explicit RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr)
+        : ptr(ptr) {}
 
     RowIterator operator++() {
       ++ptr;
