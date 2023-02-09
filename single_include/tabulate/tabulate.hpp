@@ -6122,8 +6122,9 @@ inline int get_wcswidth(const std::string &string, const std::string &locale,
   if (string.size() == 0)
     return 0;
 
-  // The behavior of wcswidth() depends on the LC_CTYPE category of the current locale.
-  // Set the current locale based on cell properties before computing width
+  // The behavior of wcswidth() depends on the LC_CTYPE category of the current
+  // locale. Set the current locale based on cell properties before computing
+  // width
   auto old_locale = std::locale::global(std::locale(locale));
 
   // Convert from narrow std::string to wide string
@@ -6147,7 +6148,7 @@ inline size_t get_sequence_length(const std::string &text, const std::string &lo
     return text.length();
 
 #if defined(_WIN32) || defined(_WIN64)
-  (void) locale; // unused parameter
+  (void)locale; // unused parameter
   return (text.length() - std::count_if(text.begin(), text.end(),
                                         [](char c) -> bool { return (c & 0xC0) == 0x80; }));
 #elif defined(__unix__) || defined(__unix) || defined(__APPLE__)
@@ -6723,15 +6724,16 @@ public:
           current_line_length = 0;
         }
 
-        // If the current word is too long to fit on a line even on it's own then
-        // split the word up.
+        // If the current word is too long to fit on a line even on it's own
+        // then split the word up.
         while (get_sequence_length(word, locale, is_multi_byte_character_support_enabled) > width) {
           result += word.substr(0, width - 1) + "-";
           word = word.substr(width - 1);
           result += '\n';
         }
 
-        // Remove leading whitespace from the word so the new line starts flush to the left.
+        // Remove leading whitespace from the word so the new line starts flush
+        // to the left.
         word = trim_left(word);
       }
       result += word;
@@ -7090,7 +7092,8 @@ private:
 
       std::string word = input.substr(start_index, index - start_index);
       char next_character = input.substr(index, 1)[0];
-      // Unlike whitespace, dashes and the like should stick to the word occurring before it.
+      // Unlike whitespace, dashes and the like should stick to the word
+      // occurring before it.
       if (isspace(next_character)) {
         result.push_back(word);
         result.push_back(std::string(1, next_character));
@@ -7930,7 +7933,8 @@ public:
   static void print_row_in_cell(std::ostream &stream, TableInternal &table,
                                 const std::pair<size_t, size_t> &index,
                                 const std::pair<size_t, size_t> &dimension, size_t num_columns,
-                                size_t row_index);
+                                size_t row_index,
+                                const std::vector<std::string> &splitted_cell_text);
 
   static bool print_cell_border_top(std::ostream &stream, TableInternal &table,
                                     const std::pair<size_t, size_t> &index,
@@ -8328,6 +8332,44 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
   auto dimensions = compute_cell_dimensions(table);
   auto row_heights = dimensions.first;
   auto column_widths = dimensions.second;
+  auto splitted_cells_text = std::vector<std::vector<std::vector<std::string>>>(
+      num_rows, std::vector<std::vector<std::string>>(num_columns, std::vector<std::string>{}));
+
+  // Pre-compute the cells' content and split them into lines before actually
+  // iterating the cells.
+  for (size_t i = 0; i < num_rows; ++i) {
+    Row row = table[i];
+    for (size_t j = 0; j < num_columns; ++j) {
+      Cell cell = row.cell(j);
+      const std::string &text = cell.get_text();
+      auto padding_left = *cell.format().padding_left_;
+      auto padding_right = *cell.format().padding_right_;
+
+      // Check if input text has embedded \n that are to be respected
+      bool has_new_line = text.find_first_of('\n') != std::string::npos;
+
+      if (has_new_line) {
+        // Respect to the embedded '\n' characters
+        splitted_cells_text[i][j] = Format::split_lines(
+            text, "\n", cell.locale(), cell.is_multi_byte_character_support_enabled());
+      } else {
+        // If there are no embedded \n characters, then apply word wrap.
+        //
+        // Configured column width cannot be lower than (padding_left +
+        // padding_right) This is a bad configuration E.g., the user is trying
+        // to force the column width to be 5 when padding_left and padding_right
+        // are each configured to 3 (padding_left + padding_right) = 6 >
+        // column_width
+        auto content_width = column_widths[j] > padding_left + padding_right
+                                 ? column_widths[j] - padding_left - padding_right
+                                 : column_widths[j];
+        auto word_wrapped_text = Format::word_wrap(text, content_width, cell.locale(),
+                                                   cell.is_multi_byte_character_support_enabled());
+        splitted_cells_text[i][j] = Format::split_lines(
+            word_wrapped_text, "\n", cell.locale(), cell.is_multi_byte_character_support_enabled());
+      }
+    }
+  }
 
   // For each row,
   for (size_t i = 0; i < num_rows; ++i) {
@@ -8344,8 +8386,8 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
     // Print row contents with word wrapping
     for (size_t k = 0; k < row_heights[i]; ++k) {
       for (size_t j = 0; j < num_columns; ++j) {
-        print_row_in_cell(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns,
-                          k);
+        print_row_in_cell(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns, k,
+                          splitted_cells_text[i][j]);
       }
       if (k + 1 < row_heights[i])
         stream << termcolor::reset << "\n";
@@ -8382,17 +8424,15 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
 inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
                                        const std::pair<size_t, size_t> &index,
                                        const std::pair<size_t, size_t> &dimension,
-                                       size_t num_columns, size_t row_index) {
+                                       size_t num_columns, size_t row_index,
+                                       const std::vector<std::string> &splitted_cell_text) {
   auto column_width = dimension.second;
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
   auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
   auto old_locale = std::locale::global(std::locale(locale));
   auto format = cell.format();
-  auto text = cell.get_text();
-  auto word_wrapped_text =
-      Format::word_wrap(text, column_width, locale, is_multi_byte_character_support_enabled);
-  auto text_height = std::count(word_wrapped_text.begin(), word_wrapped_text.end(), '\n') + 1;
+  auto text_height = splitted_cell_text.size();
   auto padding_top = *format.padding_top_;
 
   if (*format.show_border_left_) {
@@ -8407,45 +8447,14 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
     // Padding top
     stream << std::string(column_width, ' ');
   } else if (row_index >= padding_top && (row_index <= (padding_top + text_height))) {
-    // // Row contents
-
     // Retrieve padding left and right
     // (column_width - padding_left - padding_right) is the amount of space
     // available for cell text - Use this to word wrap cell contents
     auto padding_left = *format.padding_left_;
     auto padding_right = *format.padding_right_;
 
-    // Check if input text has embedded \n that are to be respected
-    auto newlines_in_input = Format::split_lines(text, "\n", cell.locale(),
-                                                 cell.is_multi_byte_character_support_enabled())
-                                 .size() -
-                             1;
-    std::string word_wrapped_text;
-
-    // If there are no embedded \n characters, then apply word wrap
-    if (newlines_in_input == 0) {
-      // Apply word wrapping to input text
-      // Then display one word-wrapped line at a time within cell
-      if (column_width > (padding_left + padding_right))
-        word_wrapped_text =
-            Format::word_wrap(text, column_width - padding_left - padding_right, cell.locale(),
-                              cell.is_multi_byte_character_support_enabled());
-      else {
-        // Configured column width cannot be lower than (padding_left + padding_right)
-        // This is a bad configuration
-        // E.g., the user is trying to force the column width to be 5
-        // when padding_left and padding_right are each configured to 3
-        // (padding_left + padding_right) = 6 > column_width
-      }
-    } else {
-      word_wrapped_text = text; // repect the embedded '\n' characters
-    }
-
-    auto lines = Format::split_lines(word_wrapped_text, "\n", cell.locale(),
-                                     cell.is_multi_byte_character_support_enabled());
-
-    if (row_index - padding_top < lines.size()) {
-      auto line = lines[row_index - padding_top];
+    if (row_index - padding_top < text_height) {
+      auto line = splitted_cell_text[row_index - padding_top];
 
       // Print left padding characters
       stream << std::string(padding_left, ' ');
@@ -8453,7 +8462,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
       // Print word-wrapped line
       line = Format::trim(line);
       auto line_with_padding_size =
-          get_sequence_length(line, cell.locale(), cell.is_multi_byte_character_support_enabled()) +
+          get_sequence_length(line, cell.locale(), is_multi_byte_character_support_enabled) +
           padding_left + padding_right;
       switch (*format.font_align_) {
       case FontAlign::left:
@@ -8640,8 +8649,7 @@ class Table {
 public:
   Table() : table_(TableInternal::create()) {}
 
-  using Row_t =
-      std::vector<variant<std::string, const char *, string_view, Table>>;
+  using Row_t = std::vector<variant<std::string, const char *, string_view, Table>>;
 
   Table &add_row(const Row_t &cells) {
 
@@ -8703,8 +8711,7 @@ public:
 
   class RowIterator {
   public:
-    explicit RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr)
-        : ptr(ptr) {}
+    explicit RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr) : ptr(ptr) {}
 
     RowIterator operator++() {
       ++ptr;
@@ -9236,7 +9243,7 @@ SOFTWARE.
 
 // Project version
 #define TABULATE_VERSION_MAJOR 1
-#define TABULATE_VERSION_MINOR 4
+#define TABULATE_VERSION_MINOR 5
 #define TABULATE_VERSION_PATCH 0
 
 // Composing the protocol version string from major, and minor
