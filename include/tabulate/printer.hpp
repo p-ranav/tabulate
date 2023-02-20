@@ -46,22 +46,19 @@ public:
 
   static void print_table(std::ostream &stream, TableInternal &table);
 
-  static void
-  print_row_in_cell(std::ostream &stream, TableInternal &table,
-                    const std::pair<size_t, size_t> &index,
-                    const std::pair<size_t, size_t> &dimension,
-                    size_t num_columns, size_t row_index,
-                    const std::vector<std::string> &splitted_cell_text);
+  static void print_row_in_cell(std::ostream &stream, TableInternal &table,
+                                const std::pair<size_t, size_t> &index,
+                                const std::pair<size_t, size_t> &dimension, size_t num_columns,
+                                size_t row_index,
+                                const std::vector<std::string> &splitted_cell_text);
 
   static bool print_cell_border_top(std::ostream &stream, TableInternal &table,
                                     const std::pair<size_t, size_t> &index,
-                                    const std::pair<size_t, size_t> &dimension,
-                                    size_t num_columns);
-  static bool
-  print_cell_border_bottom(std::ostream &stream, TableInternal &table,
-                           const std::pair<size_t, size_t> &index,
-                           const std::pair<size_t, size_t> &dimension,
-                           size_t num_columns);
+                                    const std::pair<size_t, size_t> &dimension, size_t num_columns);
+  static bool print_cell_border_bottom(std::ostream &stream, TableInternal &table,
+                                       const std::pair<size_t, size_t> &index,
+                                       const std::pair<size_t, size_t> &dimension,
+                                       size_t num_columns);
 
   static void apply_element_style(std::ostream &stream, Color foreground_color,
                                   Color background_color,
@@ -72,26 +69,21 @@ public:
       apply_font_style(stream, style);
   }
 
-  static void reset_element_style(std::ostream &stream) {
-    stream << termcolor::reset;
-  }
+  static void reset_element_style(std::ostream &stream) { stream << termcolor::reset; }
 
 private:
-  static void print_content_left_aligned(std::ostream &stream,
-                                         const std::string &cell_content,
-                                         const Format &format,
-                                         size_t text_with_padding_size,
+  static void print_content_left_aligned(std::ostream &stream, const std::string &cell_content,
+                                         const Format &format, size_t text_with_padding_size,
                                          size_t column_width) {
 
     // Apply font style
-    apply_element_style(stream, *format.font_color_,
-                        *format.font_background_color_, *format.font_style_);
+    apply_element_style(stream, *format.font_color_, *format.font_background_color_,
+                        *format.font_style_);
     stream << cell_content;
     // Only apply font_style to the font
     // Not the padding. So calling apply_element_style with font_style = {}
     reset_element_style(stream);
-    apply_element_style(stream, *format.font_color_,
-                        *format.font_background_color_, {});
+    apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
 
     if (text_with_padding_size < column_width) {
       for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
@@ -100,10 +92,8 @@ private:
     }
   }
 
-  static void print_content_center_aligned(std::ostream &stream,
-                                           const std::string &cell_content,
-                                           const Format &format,
-                                           size_t text_with_padding_size,
+  static void print_content_center_aligned(std::ostream &stream, const std::string &cell_content,
+                                           const Format &format, size_t text_with_padding_size,
                                            size_t column_width) {
     auto num_spaces = column_width - text_with_padding_size;
     if (num_spaces % 2 == 0) {
@@ -112,14 +102,13 @@ private:
         stream << " ";
 
       // Apply font style
-      apply_element_style(stream, *format.font_color_,
-                          *format.font_background_color_, *format.font_style_);
+      apply_element_style(stream, *format.font_color_, *format.font_background_color_,
+                          *format.font_style_);
       stream << cell_content;
       // Only apply font_style to the font
       // Not the padding. So calling apply_element_style with font_style = {}
       reset_element_style(stream);
-      apply_element_style(stream, *format.font_color_,
-                          *format.font_background_color_, {});
+      apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
 
       for (size_t j = 0; j < num_spaces / 2; ++j)
         stream << " ";
@@ -129,24 +118,21 @@ private:
         stream << " ";
 
       // Apply font style
-      apply_element_style(stream, *format.font_color_,
-                          *format.font_background_color_, *format.font_style_);
+      apply_element_style(stream, *format.font_color_, *format.font_background_color_,
+                          *format.font_style_);
       stream << cell_content;
       // Only apply font_style to the font
       // Not the padding. So calling apply_element_style with font_style = {}
       reset_element_style(stream);
-      apply_element_style(stream, *format.font_color_,
-                          *format.font_background_color_, {});
+      apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
 
       for (size_t j = 0; j < num_spaces - num_spaces_before; ++j)
         stream << " ";
     }
   }
 
-  static void print_content_right_aligned(std::ostream &stream,
-                                          const std::string &cell_content,
-                                          const Format &format,
-                                          size_t text_with_padding_size,
+  static void print_content_right_aligned(std::ostream &stream, const std::string &cell_content,
+                                          const Format &format, size_t text_with_padding_size,
                                           size_t column_width) {
     if (text_with_padding_size < column_width) {
       for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
@@ -155,14 +141,13 @@ private:
     }
 
     // Apply font style
-    apply_element_style(stream, *format.font_color_,
-                        *format.font_background_color_, *format.font_style_);
+    apply_element_style(stream, *format.font_color_, *format.font_background_color_,
+                        *format.font_style_);
     stream << cell_content;
     // Only apply font_style to the font
     // Not the padding. So calling apply_element_style with font_style = {}
     reset_element_style(stream);
-    apply_element_style(stream, *format.font_color_,
-                        *format.font_background_color_, {});
+    apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
   }
 
   static void apply_font_style(std::ostream &stream, FontStyle style) {
@@ -196,8 +181,7 @@ private:
     }
   }
 
-  static void apply_foreground_color(std::ostream &stream,
-                                     Color foreground_color) {
+  static void apply_foreground_color(std::ostream &stream, Color foreground_color) {
     switch (foreground_color) {
     case Color::grey:
       stream << termcolor::grey;
@@ -229,8 +213,7 @@ private:
     }
   }
 
-  static void apply_background_color(std::ostream &stream,
-                                     Color background_color) {
+  static void apply_background_color(std::ostream &stream, Color background_color) {
     switch (background_color) {
     case Color::grey:
       stream << termcolor::on_grey;

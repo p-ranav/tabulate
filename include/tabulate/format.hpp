@@ -405,15 +405,16 @@ public:
           current_line_length = 0;
         }
 
-        // If the current word is too long to fit on a line even on it's own then
-        // split the word up.
+        // If the current word is too long to fit on a line even on it's own
+        // then split the word up.
         while (get_sequence_length(word, locale, is_multi_byte_character_support_enabled) > width) {
           result += word.substr(0, width - 1) + "-";
           word = word.substr(width - 1);
           result += '\n';
         }
 
-        // Remove leading whitespace from the word so the new line starts flush to the left.
+        // Remove leading whitespace from the word so the new line starts flush
+        // to the left.
         word = trim_left(word);
       }
       result += word;
@@ -772,7 +773,8 @@ private:
 
       std::string word = input.substr(start_index, index - start_index);
       char next_character = input.substr(index, 1)[0];
-      // Unlike whitespace, dashes and the like should stick to the word occurring before it.
+      // Unlike whitespace, dashes and the like should stick to the word
+      // occurring before it.
       if (isspace(next_character)) {
         result.push_back(word);
         result.push_back(std::string(1, next_character));

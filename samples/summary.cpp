@@ -44,12 +44,14 @@ int main() {
   format.column(2).format().width(25).font_align(FontAlign::center);
   format.column(3).format().width(25).font_align(FontAlign::right);
 
-  format.add_row(
-      {"Word-Wrapping algorithm taking shamelessly from StackOverflow",
-       "Long sentences automatically word-wrap based on the width of the column",
-       "Word-wrapping also plays nicely with alignment rules. For instance, this cell is center "
-       "aligned.",
-       "Enforce \ncustom word-wrapping \nby embedding '\\n' \ncharacters in your cell\n content."});
+  format.add_row({"Word-Wrapping algorithm taking shamelessly from StackOverflow",
+                  "Long sentences automatically word-wrap based on the width of the "
+                  "column",
+                  "Word-wrapping also plays nicely with alignment rules. For instance, "
+                  "this cell is center "
+                  "aligned.",
+                  "Enforce \ncustom word-wrapping \nby embedding '\\n' \ncharacters in "
+                  "your cell\n content."});
   format[1][0].format().font_align(FontAlign::center);
   format[1][2].format().font_align(FontAlign::center);
   format[1][3].format().font_align(FontAlign::right);
@@ -88,9 +90,9 @@ int main() {
 
   readme[9].format().hide_border_top().border_color(Color::white).font_color(Color::yellow);
 
-  readme.add_row(
-      Row_t{"ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ ᚦ ᚧ ᚨ ᚩ ᚪ ᚫ ᚬ ᚭ ᚮ ᚯ ᚰ ᚱ ᚲ ᚳ ᚴ ᚵ ᚶ ᚷ ᚸ ᚹ ᚺ ᚻ ᚼ ᚽ ᚾ ᚿ ᛀ ᛁ ᛂ ᛃ ᛄ ᛅ ᛆ ᛇ "
-            "ᛈ ᛉ ᛊ ᛋ ᛌ ᛍ ᛎ ᛏ ᛐ ᛑ ᛒ ᛓ"});
+  readme.add_row(Row_t{"ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ ᚦ ᚧ ᚨ ᚩ ᚪ ᚫ ᚬ ᚭ ᚮ ᚯ ᚰ ᚱ ᚲ ᚳ ᚴ ᚵ ᚶ ᚷ ᚸ ᚹ ᚺ "
+                       "ᚻ ᚼ ᚽ ᚾ ᚿ ᛀ ᛁ ᛂ ᛃ ᛄ ᛅ ᛆ ᛇ "
+                       "ᛈ ᛉ ᛊ ᛋ ᛌ ᛍ ᛎ ᛏ ᛐ ᛑ ᛒ ᛓ"});
   readme[10]
       .format()
       .font_background_color(Color::red)
