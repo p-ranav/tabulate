@@ -60,8 +60,7 @@ class Table {
 public:
   Table() : table_(TableInternal::create()) {}
 
-  using Row_t =
-      std::vector<variant<std::string, const char *, string_view, Table>>;
+  using Row_t = std::vector<variant<std::string, const char *, string_view, Table>>;
 
   Table &add_row(const Row_t &cells) {
 
@@ -123,8 +122,7 @@ public:
 
   class RowIterator {
   public:
-    explicit RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr)
-        : ptr(ptr) {}
+    explicit RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr) : ptr(ptr) {}
 
     RowIterator operator++() {
       ++ptr;

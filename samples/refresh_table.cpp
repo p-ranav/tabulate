@@ -4,7 +4,6 @@
 #include <tabulate/table.hpp>
 #include <thread>
 
-
 using namespace tabulate;
 using Row_t = Table::Row_t;
 std::atomic_bool keep_running(true);
@@ -26,15 +25,12 @@ int main() {
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(0, 1);
     process_table.add_row(Row_t{"PID", "%CPU", "%MEM", "User", "NI"});
-    process_table.add_row(
-        Row_t{"4297", std::to_string((int)round(dis(gen) * 100)),
-              std::to_string((int)round(dis(gen) * 100)), "ubuntu", "20"});
-    process_table.add_row(
-        Row_t{"12671", std::to_string((int)round(dis(gen) * 100)),
-              std::to_string((int)round(dis(gen) * 100)), "root", "0"});
+    process_table.add_row(Row_t{"4297", std::to_string((int)round(dis(gen) * 100)),
+                                std::to_string((int)round(dis(gen) * 100)), "ubuntu", "20"});
+    process_table.add_row(Row_t{"12671", std::to_string((int)round(dis(gen) * 100)),
+                                std::to_string((int)round(dis(gen) * 100)), "root", "0"});
     process_table.add_row({"810", std::to_string((int)round(dis(gen) * 100)),
-                           std::to_string((int)round(dis(gen) * 100)), "root",
-                           "-20"});
+                           std::to_string((int)round(dis(gen) * 100)), "root", "-20"});
 
     process_table.column(2).format().font_align(FontAlign::center);
     process_table.column(3).format().font_align(FontAlign::right);
