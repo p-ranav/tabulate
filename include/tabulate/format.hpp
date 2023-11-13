@@ -381,6 +381,18 @@ public:
     locale_ = value;
     return *this;
   }
+  
+  enum class TrimMode {
+    kNone = 0,
+    kLeft = 1 << 0,
+    kRight = 1 << 1,
+    kBoth = kLeft | kRight,
+  };
+  
+  Format &trim_mode(TrimMode trim_mode) {
+    trim_mode_ = trim_mode;
+    return *this;
+  }
 
   // Apply word wrap
   // Given an input string and a line length, this will insert \n
@@ -683,6 +695,11 @@ public:
     else
       result.locale_ = second.locale_;
 
+    if (first.trim_mode_.has_value())
+      result.trim_mode_ = first.trim_mode_;
+    else
+      result.trim_mode_ = second.trim_mode_;
+
     return result;
   }
 
@@ -718,6 +735,7 @@ private:
     column_separator_color_ = column_separator_background_color_ = Color::none;
     multi_byte_characters_ = false;
     locale_ = "";
+    trim_mode_ = TrimMode::kBoth;
   }
 
   // Helper methods for word wrapping:
@@ -849,6 +867,8 @@ private:
   // Internationalization
   optional<bool> multi_byte_characters_{};
   optional<std::string> locale_{};
+  
+  optional<TrimMode> trim_mode_{};
 };
 
 } // namespace tabulate

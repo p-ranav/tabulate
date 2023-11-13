@@ -27,6 +27,9 @@ target_link_libraries(mario PRIVATE tabulate::tabulate)
 add_executable(movies movies.cpp)
 target_link_libraries(movies PRIVATE tabulate::tabulate)
 
+add_executable(no_trim no_trim.cpp)
+target_link_libraries(no_trim PRIVATE tabulate::tabulate)
+
 add_executable(padding padding.cpp)
 target_link_libraries(padding PRIVATE tabulate::tabulate)
 
