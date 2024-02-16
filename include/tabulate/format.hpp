@@ -381,14 +381,14 @@ public:
     locale_ = value;
     return *this;
   }
-  
+
   enum class TrimMode {
     kNone = 0,
     kLeft = 1 << 0,
     kRight = 1 << 1,
     kBoth = kLeft | kRight,
   };
-  
+
   Format &trim_mode(TrimMode trim_mode) {
     trim_mode_ = trim_mode;
     return *this;
@@ -867,7 +867,7 @@ private:
   // Internationalization
   optional<bool> multi_byte_characters_{};
   optional<std::string> locale_{};
-  
+
   optional<TrimMode> trim_mode_{};
 };
 
