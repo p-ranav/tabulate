@@ -6701,6 +6701,18 @@ public:
     return *this;
   }
 
+  enum class TrimMode {
+    kNone = 0,
+    kLeft = 1 << 0,
+    kRight = 1 << 1,
+    kBoth = kLeft | kRight,
+  };
+
+  Format &trim_mode(TrimMode trim_mode) {
+    trim_mode_ = trim_mode;
+    return *this;
+  }
+
   // Apply word wrap
   // Given an input string and a line length, this will insert \n
   // in strategic places in input string and apply word wrapping
@@ -7002,6 +7014,11 @@ public:
     else
       result.locale_ = second.locale_;
 
+    if (first.trim_mode_.has_value())
+      result.trim_mode_ = first.trim_mode_;
+    else
+      result.trim_mode_ = second.trim_mode_;
+
     return result;
   }
 
@@ -7037,6 +7054,7 @@ private:
     column_separator_color_ = column_separator_background_color_ = Color::none;
     multi_byte_characters_ = false;
     locale_ = "";
+    trim_mode_ = TrimMode::kBoth;
   }
 
   // Helper methods for word wrapping:
@@ -7168,6 +7186,8 @@ private:
   // Internationalization
   optional<bool> multi_byte_characters_{};
   optional<std::string> locale_{};
+
+  optional<TrimMode> trim_mode_{};
 };
 
 } // namespace tabulate
@@ -8460,7 +8480,20 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
       stream << std::string(padding_left, ' ');
 
       // Print word-wrapped line
-      line = Format::trim(line);
+      switch (*format.trim_mode_) {
+      case Format::TrimMode::kBoth:
+        line = Format::trim(line);
+        break;
+      case Format::TrimMode::kLeft:
+        line = Format::trim_left(line);
+        break;
+      case Format::TrimMode::kRight:
+        line = Format::trim_right(line);
+        break;
+      case Format::TrimMode::kNone:
+        break;
+      }
+
       auto line_with_padding_size =
           get_sequence_length(line, cell.locale(), is_multi_byte_character_support_enabled) +
           padding_left + padding_right;
@@ -8742,6 +8775,70 @@ inline std::ostream &operator<<(std::ostream &stream, const Table &table) {
   const_cast<Table &>(table).print(stream);
   return stream;
 }
+
+class RowStream {
+public:
+  operator const Table::Row_t &() const { return row_; }
+
+  template <typename T, typename = typename std::enable_if<
+                            !std::is_convertible<T, Table::Row_t::value_type>::value>::type>
+  RowStream &operator<<(const T &obj) {
+    oss_ << obj;
+    std::string cell{oss_.str()};
+    oss_.str("");
+    if (!cell.empty()) {
+      row_.push_back(cell);
+    }
+    return *this;
+  }
+
+  RowStream &operator<<(const Table::Row_t::value_type &cell) {
+    row_.push_back(cell);
+    return *this;
+  }
+
+  RowStream &copyfmt(const RowStream &other) {
+    oss_.copyfmt(other.oss_);
+    return *this;
+  }
+
+  RowStream &copyfmt(const std::ios &other) {
+    oss_.copyfmt(other);
+    return *this;
+  }
+
+  std::ostringstream::char_type fill() const { return oss_.fill(); }
+  std::ostringstream::char_type fill(std::ostringstream::char_type ch) { return oss_.fill(ch); }
+
+  std::ios_base::iostate exceptions() const { return oss_.exceptions(); }
+  void exceptions(std::ios_base::iostate except) { oss_.exceptions(except); }
+
+  std::locale imbue(const std::locale &loc) { return oss_.imbue(loc); }
+  std::locale getloc() const { return oss_.getloc(); }
+
+  char narrow(std::ostringstream::char_type c, char dfault) const { return oss_.narrow(c, dfault); }
+  std::ostringstream::char_type widen(char c) const { return oss_.widen(c); }
+
+  std::ios::fmtflags flags() const { return oss_.flags(); }
+  std::ios::fmtflags flags(std::ios::fmtflags flags) { return oss_.flags(flags); }
+
+  std::ios::fmtflags setf(std::ios::fmtflags flags) { return oss_.setf(flags); }
+  std::ios::fmtflags setf(std::ios::fmtflags flags, std::ios::fmtflags mask) {
+    return oss_.setf(flags, mask);
+  }
+
+  void unsetf(std::ios::fmtflags flags) { oss_.unsetf(flags); }
+
+  std::streamsize precision() const { return oss_.precision(); }
+  std::streamsize precision(std::streamsize new_precision) { return oss_.precision(new_precision); }
+
+  std::streamsize width() const { return oss_.width(); }
+  std::streamsize width(std::streamsize new_width) { return oss_.width(new_width); }
+
+private:
+  Table::Row_t row_;
+  std::ostringstream oss_;
+};
 
 } // namespace tabulate
 

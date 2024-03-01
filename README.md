@@ -72,6 +72,15 @@ int main() {
   universal_constants.add_row({"Speed of light in vacuum", "299 792 458 m·s⁻¹"});
 ```
 
+Use `RowStream` to format table data with stream insertion.
+
+```cpp
+  employees.add_row({"Emp. ID", "First Name", "Last Name", "Department / Business Unit", "Pay Rate"});
+  employees.add_row(RowStream{} << 101 << "Donald" << "Patrick" << "Finance" << 59.6154);
+  employees.add_row(RowStream{} << 102 << "Rachel" << "Williams" << "Marketing and Operational\nLogistics Planning" << 34.9707);
+  employees.add_row(RowStream{} << 103 << "Ian" << "Jacob" << department << 57.0048);
+```
+
 You can format this table using `Table.format()` which returns a `Format` object. Using a fluent interface, format properties of the table, e.g., borders, font styles, colors etc.
 
 ```cpp

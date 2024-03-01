@@ -328,19 +328,19 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
 
       // Print word-wrapped line
       switch (*format.trim_mode_) {
-        case Format::TrimMode::kBoth:
-          line = Format::trim(line);
-          break;
-        case Format::TrimMode::kLeft:
-          line = Format::trim_left(line);
-          break;
-        case Format::TrimMode::kRight:
-          line = Format::trim_right(line);
-          break;
-        case Format::TrimMode::kNone:
-          break;
+      case Format::TrimMode::kBoth:
+        line = Format::trim(line);
+        break;
+      case Format::TrimMode::kLeft:
+        line = Format::trim_left(line);
+        break;
+      case Format::TrimMode::kRight:
+        line = Format::trim_right(line);
+        break;
+      case Format::TrimMode::kNone:
+        break;
       }
-      
+
       auto line_with_padding_size =
           get_sequence_length(line, cell.locale(), is_multi_byte_character_support_enabled) +
           padding_left + padding_right;

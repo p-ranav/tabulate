@@ -154,4 +154,68 @@ inline std::ostream &operator<<(std::ostream &stream, const Table &table) {
   return stream;
 }
 
+class RowStream {
+public:
+  operator const Table::Row_t &() const { return row_; }
+
+  template <typename T, typename = typename std::enable_if<
+                            !std::is_convertible<T, Table::Row_t::value_type>::value>::type>
+  RowStream &operator<<(const T &obj) {
+    oss_ << obj;
+    std::string cell{oss_.str()};
+    oss_.str("");
+    if (!cell.empty()) {
+      row_.push_back(cell);
+    }
+    return *this;
+  }
+
+  RowStream &operator<<(const Table::Row_t::value_type &cell) {
+    row_.push_back(cell);
+    return *this;
+  }
+
+  RowStream &copyfmt(const RowStream &other) {
+    oss_.copyfmt(other.oss_);
+    return *this;
+  }
+
+  RowStream &copyfmt(const std::ios &other) {
+    oss_.copyfmt(other);
+    return *this;
+  }
+
+  std::ostringstream::char_type fill() const { return oss_.fill(); }
+  std::ostringstream::char_type fill(std::ostringstream::char_type ch) { return oss_.fill(ch); }
+
+  std::ios_base::iostate exceptions() const { return oss_.exceptions(); }
+  void exceptions(std::ios_base::iostate except) { oss_.exceptions(except); }
+
+  std::locale imbue(const std::locale &loc) { return oss_.imbue(loc); }
+  std::locale getloc() const { return oss_.getloc(); }
+
+  char narrow(std::ostringstream::char_type c, char dfault) const { return oss_.narrow(c, dfault); }
+  std::ostringstream::char_type widen(char c) const { return oss_.widen(c); }
+
+  std::ios::fmtflags flags() const { return oss_.flags(); }
+  std::ios::fmtflags flags(std::ios::fmtflags flags) { return oss_.flags(flags); }
+
+  std::ios::fmtflags setf(std::ios::fmtflags flags) { return oss_.setf(flags); }
+  std::ios::fmtflags setf(std::ios::fmtflags flags, std::ios::fmtflags mask) {
+    return oss_.setf(flags, mask);
+  }
+
+  void unsetf(std::ios::fmtflags flags) { oss_.unsetf(flags); }
+
+  std::streamsize precision() const { return oss_.precision(); }
+  std::streamsize precision(std::streamsize new_precision) { return oss_.precision(new_precision); }
+
+  std::streamsize width() const { return oss_.width(); }
+  std::streamsize width(std::streamsize new_width) { return oss_.width(new_width); }
+
+private:
+  Table::Row_t row_;
+  std::ostringstream oss_;
+};
+
 } // namespace tabulate
