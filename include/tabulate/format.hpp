@@ -240,6 +240,13 @@ public:
 	  return *this;
   }
 
+  Format& show_row_separator()
+  {
+    show_border_top_ = true;
+    show_row_separator_ = true;
+    return *this;
+  }
+
   Format &corner(const std::string &value) {
     corner_top_left_ = value;
     corner_top_right_ = value;
@@ -711,6 +718,11 @@ public:
     else
       result.trim_mode_ = second.trim_mode_;
 
+    if (first.show_row_separator_.has_value())
+		  result.show_row_separator_ = first.show_row_separator_;
+	  else
+		  result.show_row_separator_ = second.show_row_separator_;
+
     return result;
   }
 
@@ -748,6 +760,7 @@ private:
     multi_byte_characters_ = false;
     locale_ = "";
     trim_mode_ = TrimMode::kBoth;
+    show_row_separator_ = false;
   }
 
   // Helper methods for word wrapping:
@@ -882,6 +895,8 @@ private:
   optional<std::string> locale_{};
 
   optional<TrimMode> trim_mode_{};
+
+  optional<bool> show_row_separator_{};
 };
 
 } // namespace tabulate
