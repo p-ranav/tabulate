@@ -6553,6 +6553,12 @@ public:
     return *this;
   }
 
+  Format& show_column_separator()
+  {
+    show_column_separator_ = true;
+	  return *this;
+  }
+
   Format &corner(const std::string &value) {
     corner_top_left_ = value;
     corner_top_right_ = value;
@@ -6988,6 +6994,11 @@ public:
       result.corner_bottom_right_background_color_ = second.corner_bottom_right_background_color_;
 
     // Column separator
+    if (first.show_column_separator_.has_value())
+   	  result.show_column_separator_ = first.show_column_separator_;
+    else
+	    result.show_column_separator_ = second.show_column_separator_;
+
     if (first.column_separator_.has_value())
       result.column_separator_ = first.column_separator_;
     else
@@ -7050,6 +7061,7 @@ private:
         corner_top_right_background_color_ = corner_bottom_left_color_ =
             corner_bottom_left_background_color_ = corner_bottom_right_color_ =
                 corner_bottom_right_background_color_ = Color::none;
+    show_column_separator_ = true;
     column_separator_ = "|";
     column_separator_color_ = column_separator_background_color_ = Color::none;
     multi_byte_characters_ = false;
@@ -7179,6 +7191,7 @@ private:
   optional<Color> corner_bottom_right_background_color_{};
 
   // Element column separator
+  optional<bool> show_column_separator_{};
   optional<std::string> column_separator_{};
   optional<Color> column_separator_color_{};
   optional<Color> column_separator_background_color_{};
@@ -8459,6 +8472,14 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
     apply_element_style(stream, *format.border_left_color_, *format.border_left_background_color_,
                         {});
     stream << *format.border_left_;
+    reset_element_style(stream);
+  }
+
+  if (*format.show_column_separator_) {
+    apply_element_style(stream, *format.column_separator_color_, *format.column_separator_background_color_,
+                        {});
+   	if (index.second != 0)
+		  stream << *format.column_separator_;
     reset_element_style(stream);
   }
 
