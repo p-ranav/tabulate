@@ -6553,14 +6553,12 @@ public:
     return *this;
   }
 
-  Format& show_column_separator()
-  {
+  Format& show_column_separator() {
     show_column_separator_ = true;
 	  return *this;
   }
 
-  Format& show_row_separator()
-  {
+  Format& show_row_separator() {
     show_border_top_ = true;
     show_row_separator_ = true;
     return *this;
