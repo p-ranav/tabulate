@@ -6553,6 +6553,17 @@ public:
     return *this;
   }
 
+  Format& show_column_separator() {
+    show_column_separator_ = true;
+	  return *this;
+  }
+
+  Format& show_row_separator() {
+    show_border_top_ = true;
+    show_row_separator_ = true;
+    return *this;
+  }
+
   Format &corner(const std::string &value) {
     corner_top_left_ = value;
     corner_top_right_ = value;
@@ -6988,6 +6999,11 @@ public:
       result.corner_bottom_right_background_color_ = second.corner_bottom_right_background_color_;
 
     // Column separator
+    if (first.show_column_separator_.has_value())
+   	  result.show_column_separator_ = first.show_column_separator_;
+    else
+	    result.show_column_separator_ = second.show_column_separator_;
+
     if (first.column_separator_.has_value())
       result.column_separator_ = first.column_separator_;
     else
@@ -7018,6 +7034,11 @@ public:
       result.trim_mode_ = first.trim_mode_;
     else
       result.trim_mode_ = second.trim_mode_;
+
+    if (first.show_row_separator_.has_value())
+		  result.show_row_separator_ = first.show_row_separator_;
+	  else
+		  result.show_row_separator_ = second.show_row_separator_;
 
     return result;
   }
@@ -7050,11 +7071,13 @@ private:
         corner_top_right_background_color_ = corner_bottom_left_color_ =
             corner_bottom_left_background_color_ = corner_bottom_right_color_ =
                 corner_bottom_right_background_color_ = Color::none;
+    show_column_separator_ = true;
     column_separator_ = "|";
     column_separator_color_ = column_separator_background_color_ = Color::none;
     multi_byte_characters_ = false;
     locale_ = "";
     trim_mode_ = TrimMode::kBoth;
+    show_row_separator_ = false;
   }
 
   // Helper methods for word wrapping:
@@ -7179,6 +7202,7 @@ private:
   optional<Color> corner_bottom_right_background_color_{};
 
   // Element column separator
+  optional<bool> show_column_separator_{};
   optional<std::string> column_separator_{};
   optional<Color> column_separator_color_{};
   optional<Color> column_separator_background_color_{};
@@ -7188,6 +7212,8 @@ private:
   optional<std::string> locale_{};
 
   optional<TrimMode> trim_mode_{};
+
+  optional<bool> show_row_separator_{};
 };
 
 } // namespace tabulate
@@ -8462,6 +8488,14 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
     reset_element_style(stream);
   }
 
+  if (*format.show_column_separator_) {
+    apply_element_style(stream, *format.column_separator_color_, *format.column_separator_background_color_,
+                        {});
+   	if (index.second != 0)
+		  stream << *format.column_separator_;
+    reset_element_style(stream);
+  }
+
   apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
   if (row_index < padding_top) {
     // Padding top
@@ -8552,13 +8586,26 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
     return false;
 
   apply_element_style(stream, corner_color, corner_background_color, {});
-  stream << corner;
+  if (*format.show_row_separator_) {
+    if (index.first != 0)
+      stream << corner;
+    else
+      stream << " ";
+  }
+  else
+    stream << corner;
   reset_element_style(stream);
 
   for (size_t i = 0; i < column_width; ++i) {
     apply_element_style(stream, *format.border_top_color_, *format.border_top_background_color_,
                         {});
-    stream << border_top;
+    if (*format.show_row_separator_) {
+      if (index.first != 0)
+        stream << border_top;
+      else
+        stream << " ";
+    } else
+      stream << border_top;
     reset_element_style(stream);
   }
 
@@ -8569,7 +8616,14 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
     corner_background_color = *format.corner_top_right_background_color_;
 
     apply_element_style(stream, corner_color, corner_background_color, {});
-    stream << corner;
+    if (*format.show_row_separator_) {
+      if (index.first != 0)
+        stream << corner;
+      else
+        stream << " ";
+    }
+    else
+      stream << corner;
     reset_element_style(stream);
   }
   std::locale::global(old_locale);
