@@ -309,14 +309,6 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
     reset_element_style(stream);
   }
 
-  if (*format.show_column_separator_) {
-    apply_element_style(stream, *format.column_separator_color_, *format.column_separator_background_color_,
-                        {});
-   	if (index.second != 0)
-		  stream << *format.column_separator_;
-    reset_element_style(stream);
-  }
-
   apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
   if (row_index < padding_top) {
     // Padding top
