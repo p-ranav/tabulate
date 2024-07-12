@@ -395,9 +395,11 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
   auto corner_background_color = *format.corner_top_left_background_color_;
   auto border_top = *format.border_top_;
 
-  if ((corner == "" && border_top == "") || !*format.show_border_top_)
+  if ((corner == "" && border_top == "") || !*format.show_border_top_){
+    std::locale::global(old_locale);
     return false;
-
+  }
+    
   apply_element_style(stream, corner_color, corner_background_color, {});
   if (*format.show_row_separator_) {
     if (index.first != 0)
@@ -458,9 +460,11 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
   auto corner_background_color = *format.corner_bottom_left_background_color_;
   auto border_bottom = *format.border_bottom_;
 
-  if ((corner == "" && border_bottom == "") || !*format.show_border_bottom_)
+  if ((corner == "" && border_bottom == "") || !*format.show_border_bottom_){
+    std::locale::global(old_locale);
     return false;
-
+  }
+    
   apply_element_style(stream, corner_color, corner_background_color, {});
   stream << corner;
   reset_element_style(stream);
