@@ -297,7 +297,8 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
   auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
-  auto old_locale = std::locale::global(std::locale(locale));
+  auto old_locale = std::locale();
+  stream.imbue(std::locale(locale));
   auto format = cell.format();
   auto text_height = splitted_cell_text.size();
   auto padding_top = *format.padding_top_;
@@ -377,7 +378,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
       reset_element_style(stream);
     }
   }
-  std::locale::global(old_locale);
+  stream.imbue(old_locale);
 }
 
 inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
@@ -386,7 +387,8 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
                                            size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
-  auto old_locale = std::locale::global(std::locale(locale));
+  auto old_locale = std::locale();
+  stream.imbue(std::locale(locale));
   auto format = cell.format();
   auto column_width = dimension.second;
 
@@ -441,7 +443,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
       stream << corner;
     reset_element_style(stream);
   }
-  std::locale::global(old_locale);
+  stream.imbue(old_locale);
   return true;
 }
 
@@ -451,7 +453,8 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
                                               size_t num_columns) {
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
-  auto old_locale = std::locale::global(std::locale(locale));
+  auto old_locale = std::locale();
+  stream.imbue(std::locale(locale));
   auto format = cell.format();
   auto column_width = dimension.second;
 
@@ -486,7 +489,7 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
     stream << corner;
     reset_element_style(stream);
   }
-  std::locale::global(old_locale);
+  stream.imbue(old_locale);
   return true;
 }
 
