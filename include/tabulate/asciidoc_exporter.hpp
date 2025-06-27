@@ -33,7 +33,13 @@ SOFTWARE.
 */
 #pragma once
 #include <algorithm>
+#if __cplusplus >= 201703L
 #include <optional>
+using std::optional;
+#else
+// #include <tabulate/optional_lite.hpp>
+using nonstd::optional;
+#endif
 #include <sstream>
 #include <string>
 #include <tabulate/exporter.hpp>
