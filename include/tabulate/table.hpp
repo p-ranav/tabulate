@@ -35,6 +35,8 @@ SOFTWARE.
 #include <tabulate/table_internal.hpp>
 
 #if __cplusplus >= 201703L
+#include <optional>
+using std::optional;
 #include <string_view>
 #include <variant>
 using std::get_if;
@@ -43,6 +45,8 @@ using std::string_view;
 using std::variant;
 using std::visit;
 #else
+#include <tabulate/optional_lite.hpp>
+using nonstd::optional;
 #include <tabulate/string_view_lite.hpp>
 #include <tabulate/variant_lite.hpp>
 using nonstd::get_if;
@@ -56,11 +60,23 @@ using nonstd::visit;
 
 namespace tabulate {
 
+// Placehodler to merge cell. Merging is always to the left.
+// Constructor argument says how many merge cells to place.
+// These two lines are equivalent:
+//   table.add_row(Row_t{"Regular cells", Merge{2}});
+//   table.add_row(Row_t{"Regular cells", Merge{}, Merge{}});
+struct Merge {
+  Merge() = default;
+  explicit Merge(size_t width) : merge_width{width} {}
+
+  size_t merge_width{1};
+};
+
 class Table {
 public:
   Table() : table_(TableInternal::create()) {}
 
-  using Row_t = std::vector<variant<std::string, const char *, string_view, Table>>;
+  using Row_t = std::vector<variant<std::string, const char *, string_view, Table, Merge>>;
 
   Table &add_row(const Row_t &cells) {
 
@@ -70,29 +86,45 @@ public:
       cols_ = cells.size();
     }
 
-    std::vector<std::string> cell_strings;
-    if (cells.size() < cols_) {
-      cell_strings.resize(cols_);
-      std::fill(cell_strings.begin(), cell_strings.end(), "");
-    } else {
-      cell_strings.resize(cells.size());
-      std::fill(cell_strings.begin(), cell_strings.end(), "");
-    }
+    std::vector<optional<std::string>> cell_strings;
+    cell_strings.reserve(std::max(cells.size(), cols_));
 
     for (size_t i = 0; i < cells.size(); ++i) {
       auto cell = cells[i];
       if (holds_alternative<std::string>(cell)) {
-        cell_strings[i] = *get_if<std::string>(&cell);
+        cell_strings.push_back(*get_if<std::string>(&cell));
       } else if (holds_alternative<const char *>(cell)) {
-        cell_strings[i] = *get_if<const char *>(&cell);
+        cell_strings.push_back(*get_if<const char *>(&cell));
       } else if (holds_alternative<string_view>(cell)) {
-        cell_strings[i] = std::string{*get_if<string_view>(&cell)};
+        cell_strings.push_back(std::string{*get_if<string_view>(&cell)});
+      } else if (holds_alternative<Merge>(cell)) {
+        const auto alt = get_if<Merge>(&cell);
+        for (size_t j = 0; j < alt->merge_width; ++j) {
+
+          // It may happen that in the first row we have already wide (> 1) merged cells.
+          // Then cell_string will have incorrect value.
+          // We need to check whether we extend the array and add extra elements.
+          if ((i + 1) > cols_) {
+            cell_strings.push_back({});
+            cols_ = cell_strings.size();
+          } else {
+            cell_strings.push_back({});
+          }
+        }
       } else {
         auto table = *get_if<Table>(&cell);
         std::stringstream stream;
         table.print(stream);
-        cell_strings[i] = stream.str();
+        cell_strings.push_back(stream.str());
       }
+    }
+
+    if (rows_ == 0) {
+      cols_ = cell_strings.size();
+    }
+
+    while (cell_strings.size() < cols_) {
+      cell_strings.push_back("");
     }
 
     table_->add_row(cell_strings);

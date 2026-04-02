@@ -29,6 +29,7 @@
 
 *   [Quick Start](#quick-start)
 *   [Formatting Options](#formatting-options)
+    *   [Cells Merging](#cells-merging)
     *   [Style Inheritance Model](#style-inheritance-model)
     *   [Word Wrapping](#word-wrapping)
     *   [Font Alignment](#font-alignment)
@@ -137,6 +138,51 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
 </p>
 
 ## Formatting Options
+
+### Cells Merging
+
+Cells can be merged horizontally using `Merge` placeholder. Merging is always done to the left cell.
+Following code defines table structure with merged cells:
+```c++
+  table.add_row(Row_t{"A", "", "", ""});
+  table.add_row(Row_t{"B", Merge{}});
+  table.add_row(Row_t{"C", Merge{1}});
+  table.add_row(Row_t{"D", Merge{2}});
+  table.add_row(Row_t{"", "F", Merge{1}});
+  // table.add_row(RowStream{} << "" << "F" << Merge{1}); // would also works
+  table.add_row(Row_t{"", "G", Merge{2}});
+```
+
+When applying style, always referr to the cell to which cells are merged.
+```c++
+  table[0][0].format().width(5);
+  table[0][1].format().width(5);
+  table[0][2].format().width(5);
+  table[0][3].format().width(5);
+
+  table[1][0].format().font_align(FontAlign::center);
+  table[2][0].format().font_align(FontAlign::center);
+  table[3][0].format().font_align(FontAlign::center);
+  table[4][1].format().font_align(FontAlign::center);
+  table[5][1].format().font_align(FontAlign::center);
+```
+
+Example above produces following table:
+```
++-----+-----+-----+-----+
+| A   |     |     |     |
++-----------+-----+-----+
+|     B     |     |     |
++-----------+-----+-----+
+|     C     |     |     |
++-----------------+-----+
+|        D        |     |
++-----+-----------+-----+
+|     |     F     |     |
++-----+-----------------+
+|     |        G        |
++-----+-----------------+
+```
 
 ### Style Inheritance Model
 

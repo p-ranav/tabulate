@@ -34,6 +34,7 @@ SOFTWARE.
 #pragma once
 #include <algorithm>
 #include <iostream>
+#include <numeric>
 #include <string>
 #include <tabulate/column.hpp>
 #include <tabulate/font_style.hpp>
@@ -48,6 +49,14 @@ SOFTWARE.
 #undef min
 #endif
 
+#if __cplusplus >= 201703L
+#include <optional>
+using std::optional;
+#else
+#include <tabulate/optional_lite.hpp>
+using nonstd::optional;
+#endif
+
 namespace tabulate {
 
 class TableInternal : public std::enable_shared_from_this<TableInternal> {
@@ -58,12 +67,24 @@ public:
     return result;
   }
 
-  void add_row(const std::vector<std::string> &cells) {
+  void add_row(const std::vector<optional<std::string>> &cells) {
     auto row = std::make_shared<Row>(shared_from_this());
+    Cell *last_cell{nullptr};
     for (auto &c : cells) {
-      auto cell = std::make_shared<Cell>(row);
-      cell->set_text(c);
-      row->add_cell(cell);
+      if (c.has_value()) {
+        auto cell = std::make_shared<Cell>(row);
+        cell->set_text(c.value());
+        cell->merge_cell();
+        row->add_cell(cell);
+        last_cell = cell.get();
+      } else {
+        if (last_cell) {
+          last_cell->merge_cell();
+        }
+
+        auto cell = std::make_shared<Cell>(row);
+        row->add_cell(cell);
+      }
     }
     rows_.push_back(row);
   }
@@ -149,28 +170,50 @@ inline Format &Row::format() {
   return *format_;
 }
 
-inline std::pair<std::vector<size_t>, std::vector<size_t>>
+inline std::pair<std::vector<size_t>, std::vector<std::vector<size_t>>>
 Printer::compute_cell_dimensions(TableInternal &table) {
-  std::pair<std::vector<size_t>, std::vector<size_t>> result;
   size_t num_rows = table.size();
   size_t num_columns = table.estimate_num_columns();
 
-  std::vector<size_t> row_heights, column_widths{};
+  std::vector<std::vector<size_t>> column_widths{};
+  std::vector<size_t> row_heights{}, table_column_widths{};
 
   for (size_t i = 0; i < num_columns; ++i) {
     Column column = table.column(i);
     size_t configured_width = column.get_configured_width();
     size_t computed_width = column.get_computed_width();
     if (configured_width != 0)
-      column_widths.push_back(configured_width);
+      table_column_widths.push_back(configured_width);
     else
-      column_widths.push_back(computed_width);
+      table_column_widths.push_back(computed_width);
   }
 
   for (size_t i = 0; i < num_rows; ++i) {
+    column_widths.push_back(std::vector<size_t>{});
+
     Row row = table[i];
+
+    // Since now each row may have different cells layout, we need to calculate columns_widths for
+    // each row. Columns, which are merged (`Merge{}` columns) have always width 0. Their width is
+    // add to the cell which is merged with them.
+    for (size_t j = 0; j < num_columns; ++j) {
+      auto &cell = row.cell(j);
+      auto n_merged_cells = cell.merged_cells();
+
+      if (!n_merged_cells) {
+        column_widths[i].push_back(0);
+      } else {
+        // Calculate width of n-merged cells. For n cells, there is n-1 borders between them.
+        // One needs to add n-1 to the total width - thus initial value for accumulate.
+        auto merged_width = std::accumulate(table_column_widths.begin() + j,
+                                            table_column_widths.begin() + (j + n_merged_cells),
+                                            n_merged_cells - 1ul);
+
+        column_widths[i].push_back(merged_width);
+      }
+    }
     size_t configured_height = row.get_configured_height();
-    size_t computed_height = row.get_computed_height(column_widths);
+    size_t computed_height = row.get_computed_height(column_widths[i]);
 
     // NOTE: Unlike column width, row height is calculated as the max
     // b/w configured height and computed height
@@ -187,10 +230,7 @@ Printer::compute_cell_dimensions(TableInternal &table) {
     row_heights.push_back(std::max(configured_height, computed_height));
   }
 
-  result.first = row_heights;
-  result.second = column_widths;
-
-  return result;
+  return {row_heights, column_widths};
 }
 
 inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
@@ -202,18 +242,27 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
   auto splitted_cells_text = std::vector<std::vector<std::vector<std::string>>>(
       num_rows, std::vector<std::vector<std::string>>(num_columns, std::vector<std::string>{}));
 
+  auto merged_cells = std::vector<std::vector<int>>(num_rows, std::vector<int>(num_columns, 0));
+
+  auto merged_cells_width =
+      std::vector<std::vector<int>>(num_rows, std::vector<int>(num_columns, 0));
+
   // Pre-compute the cells' content and split them into lines before actually
   // iterating the cells.
   for (size_t i = 0; i < num_rows; ++i) {
     Row row = table[i];
-    for (size_t j = 0; j < num_columns; ++j) {
+    for (size_t j = 0; j < num_columns;) {
       Cell cell = row.cell(j);
       const std::string &text = cell.get_text();
       auto padding_left = *cell.format().padding_left_;
       auto padding_right = *cell.format().padding_right_;
 
+      auto n_merged_cells = cell.merged_cells();
+
       // Check if input text has embedded \n that are to be respected
       bool has_new_line = text.find_first_of('\n') != std::string::npos;
+
+      auto merged_width = column_widths[i][j];
 
       if (has_new_line) {
         // Respect to the embedded '\n' characters
@@ -227,14 +276,20 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
         // to force the column width to be 5 when padding_left and padding_right
         // are each configured to 3 (padding_left + padding_right) = 6 >
         // column_width
-        auto content_width = column_widths[j] > padding_left + padding_right
-                                 ? column_widths[j] - padding_left - padding_right
-                                 : column_widths[j];
+
+        auto content_width = merged_width > padding_left + padding_right
+                                 ? merged_width - padding_left - padding_right
+                                 : merged_width;
         auto word_wrapped_text = Format::word_wrap(text, content_width, cell.locale(),
                                                    cell.is_multi_byte_character_support_enabled());
         splitted_cells_text[i][j] = Format::split_lines(
             word_wrapped_text, "\n", cell.locale(), cell.is_multi_byte_character_support_enabled());
       }
+
+      merged_cells[i][j] = n_merged_cells;
+      merged_cells_width[i][j] = merged_width;
+
+      j += n_merged_cells;
     }
   }
 
@@ -243,18 +298,24 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
 
     // Print top border
     bool border_top_printed{true};
-    for (size_t j = 0; j < num_columns; ++j) {
-      border_top_printed &= print_cell_border_top(stream, table, {i, j},
-                                                  {row_heights[i], column_widths[j]}, num_columns);
+    for (size_t j = 0; j < num_columns;) {
+      border_top_printed &=
+          print_cell_border_top(stream, table, {i, j}, merged_cells[i][j],
+                                {row_heights[i], merged_cells_width[i][j]}, num_columns);
+
+      j += merged_cells[i][j];
     }
     if (border_top_printed)
       stream << termcolor::reset << "\n";
 
     // Print row contents with word wrapping
     for (size_t k = 0; k < row_heights[i]; ++k) {
-      for (size_t j = 0; j < num_columns; ++j) {
-        print_row_in_cell(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns, k,
+      for (size_t j = 0; j < num_columns;) {
+        print_row_in_cell(stream, table, {i, j}, merged_cells[i][j],
+                          {row_heights[i], merged_cells_width[i][j]}, num_columns, k,
                           splitted_cells_text[i][j]);
+
+        j += merged_cells[i][j];
       }
       if (k + 1 < row_heights[i])
         stream << termcolor::reset << "\n";
@@ -264,7 +325,7 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
 
       // Check if there is bottom border to print:
       auto bottom_border_needed{true};
-      for (size_t j = 0; j < num_columns; ++j) {
+      for (size_t j = 0; j < num_columns;) {
         auto cell = table[i][j];
         auto format = cell.format();
         auto corner = *format.corner_bottom_left_;
@@ -273,14 +334,18 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
           bottom_border_needed = false;
           break;
         }
+
+        j += merged_cells[i][j];
       }
 
       if (bottom_border_needed)
         stream << termcolor::reset << "\n";
       // Print bottom border for table
-      for (size_t j = 0; j < num_columns; ++j) {
-        print_cell_border_bottom(stream, table, {i, j}, {row_heights[i], column_widths[j]},
-                                 num_columns);
+      for (size_t j = 0; j < num_columns;) {
+        print_cell_border_bottom(stream, table, {i, j}, merged_cells[i][j],
+                                 {row_heights[i], merged_cells_width[i][j]}, num_columns);
+
+        j += merged_cells[i][j];
       }
     }
     if (i + 1 < num_rows)
@@ -289,7 +354,7 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
 }
 
 inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &table,
-                                       const std::pair<size_t, size_t> &index,
+                                       const std::pair<size_t, size_t> &index, size_t merge_width,
                                        const std::pair<size_t, size_t> &dimension,
                                        size_t num_columns, size_t row_index,
                                        const std::vector<std::string> &splitted_cell_text) {
@@ -368,7 +433,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
 
   reset_element_style(stream);
 
-  if (index.second + 1 == num_columns) {
+  if (index.second + merge_width == num_columns) {
     // Print right border after last column
     if (*format.show_border_right_) {
       apply_element_style(stream, *format.border_right_color_,
@@ -382,6 +447,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
 
 inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
                                            const std::pair<size_t, size_t> &index,
+                                           size_t merge_width,
                                            const std::pair<size_t, size_t> &dimension,
                                            size_t num_columns) {
   auto cell = table[index.first][index.second];
@@ -424,7 +490,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
     reset_element_style(stream);
   }
 
-  if (index.second + 1 == num_columns) {
+  if (index.second + merge_width == num_columns) {
     // Print corner after last column
     corner = *format.corner_top_right_;
     corner_color = *format.corner_top_right_color_;
@@ -447,6 +513,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
 
 inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInternal &table,
                                               const std::pair<size_t, size_t> &index,
+                                              size_t merge_width,
                                               const std::pair<size_t, size_t> &dimension,
                                               size_t num_columns) {
   auto cell = table[index.first][index.second];
@@ -476,7 +543,7 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
     reset_element_style(stream);
   }
 
-  if (index.second + 1 == num_columns) {
+  if (index.second + merge_width == num_columns) {
     // Print corner after last column
     corner = *format.corner_bottom_right_;
     corner_color = *format.corner_bottom_right_color_;
