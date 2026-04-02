@@ -1,5 +1,8 @@
 find_package(Threads REQUIRED)
 
+add_executable(cells_merging cells_merging.cpp)
+target_link_libraries(cells_merging PRIVATE tabulate::tabulate)
+
 add_executable(class_diagram class_diagram.cpp)
 target_link_libraries(class_diagram PRIVATE tabulate::tabulate)
 

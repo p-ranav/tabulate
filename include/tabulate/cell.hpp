@@ -68,10 +68,15 @@ public:
 
   bool is_multi_byte_character_support_enabled();
 
+  void merge_cell() { cells_merge++; }
+
+  int merged_cells() const { return cells_merge; }
+
 private:
   std::string data_;
   std::weak_ptr<class Row> parent_;
   optional<Format> format_;
+  int cells_merge{0};
 };
 
 } // namespace tabulate

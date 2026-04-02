@@ -41,22 +41,22 @@ namespace tabulate {
 
 class Printer {
 public:
-  static std::pair<std::vector<size_t>, std::vector<size_t>>
+  static std::pair<std::vector<size_t>, std::vector<std::vector<size_t>>>
   compute_cell_dimensions(TableInternal &table);
 
   static void print_table(std::ostream &stream, TableInternal &table);
 
   static void print_row_in_cell(std::ostream &stream, TableInternal &table,
-                                const std::pair<size_t, size_t> &index,
+                                const std::pair<size_t, size_t> &index, size_t merge_width,
                                 const std::pair<size_t, size_t> &dimension, size_t num_columns,
                                 size_t row_index,
                                 const std::vector<std::string> &splitted_cell_text);
 
   static bool print_cell_border_top(std::ostream &stream, TableInternal &table,
-                                    const std::pair<size_t, size_t> &index,
+                                    const std::pair<size_t, size_t> &index, size_t merge_width,
                                     const std::pair<size_t, size_t> &dimension, size_t num_columns);
   static bool print_cell_border_bottom(std::ostream &stream, TableInternal &table,
-                                       const std::pair<size_t, size_t> &index,
+                                       const std::pair<size_t, size_t> &index, size_t merge_width,
                                        const std::pair<size_t, size_t> &dimension,
                                        size_t num_columns);
 
