@@ -46,7 +46,7 @@ SOFTWARE.
 namespace tabulate {
 
 #if defined(__unix__) || defined(__unix) || defined(__APPLE__)
-inline int get_wcswidth(const std::string &string, const std::string &locale,
+inline int get_wcswidth(const std::string &string, const std::locale &locale,
                         size_t max_column_width) {
   if (string.size() == 0)
     return 0;
@@ -54,7 +54,7 @@ inline int get_wcswidth(const std::string &string, const std::string &locale,
   // The behavior of wcswidth() depends on the LC_CTYPE category of the current
   // locale. Set the current locale based on cell properties before computing
   // width
-  auto old_locale = std::locale::global(std::locale(locale));
+  auto old_locale = std::locale::global(locale);
 
   // Convert from narrow std::string to wide string
   wchar_t *wide_string = new wchar_t[string.size()];
@@ -71,7 +71,7 @@ inline int get_wcswidth(const std::string &string, const std::string &locale,
 }
 #endif
 
-inline size_t get_sequence_length(const std::string &text, const std::string &locale,
+inline size_t get_sequence_length(const std::string &text, const std::locale &locale,
                                   bool is_multi_byte_character_support_enabled) {
   if (!is_multi_byte_character_support_enabled)
     return text.length();

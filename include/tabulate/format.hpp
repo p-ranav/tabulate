@@ -37,6 +37,7 @@ SOFTWARE.
 #include <cstddef>
 #include <sstream>
 #include <string>
+#include <locale>
 #include <tabulate/color.hpp>
 #include <tabulate/font_align.hpp>
 #include <tabulate/font_style.hpp>
@@ -384,6 +385,11 @@ public:
   }
 
   Format &locale(const std::string &value) {
+    locale_ = std::locale(value);
+    return *this;
+  }
+
+  Format &locale(const std::locale &value) {
     locale_ = value;
     return *this;
   }
@@ -403,7 +409,7 @@ public:
   // Apply word wrap
   // Given an input string and a line length, this will insert \n
   // in strategic places in input string and apply word wrapping
-  static std::string word_wrap(const std::string &str, size_t width, const std::string &locale,
+  static std::string word_wrap(const std::string &str, size_t width, const std::locale &locale,
                                bool is_multi_byte_character_support_enabled) {
     std::vector<std::string> words = explode_string(str, {" ", "-", "\t"});
     size_t current_line_length = 0;
@@ -443,7 +449,7 @@ public:
   }
 
   static std::vector<std::string> split_lines(const std::string &text, const std::string &delimiter,
-                                              const std::string &locale,
+                                              const std::locale &locale,
                                               bool is_multi_byte_character_support_enabled) {
     std::vector<std::string> result{};
     std::string input = text;
@@ -744,7 +750,7 @@ private:
     column_separator_ = "|";
     column_separator_color_ = column_separator_background_color_ = Color::none;
     multi_byte_characters_ = false;
-    locale_ = "";
+    locale_ = std::locale("");
     trim_mode_ = TrimMode::kBoth;
     show_row_separator_ = false;
   }
@@ -877,7 +883,7 @@ private:
 
   // Internationalization
   optional<bool> multi_byte_characters_{};
-  optional<std::string> locale_{};
+  optional<std::locale> locale_{};
 
   optional<TrimMode> trim_mode_{};
 

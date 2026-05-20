@@ -6117,7 +6117,7 @@ SOFTWARE.
 namespace tabulate {
 
 #if defined(__unix__) || defined(__unix) || defined(__APPLE__)
-inline int get_wcswidth(const std::string &string, const std::string &locale,
+inline int get_wcswidth(const std::string &string, const std::locale &locale,
                         size_t max_column_width) {
   if (string.size() == 0)
     return 0;
@@ -6125,7 +6125,7 @@ inline int get_wcswidth(const std::string &string, const std::string &locale,
   // The behavior of wcswidth() depends on the LC_CTYPE category of the current
   // locale. Set the current locale based on cell properties before computing
   // width
-  auto old_locale = std::locale::global(std::locale(locale));
+  auto old_locale = std::locale::global(locale);
 
   // Convert from narrow std::string to wide string
   wchar_t *wide_string = new wchar_t[string.size()];
@@ -6142,7 +6142,7 @@ inline int get_wcswidth(const std::string &string, const std::string &locale,
 }
 #endif
 
-inline size_t get_sequence_length(const std::string &text, const std::string &locale,
+inline size_t get_sequence_length(const std::string &text, const std::locale &locale,
                                   bool is_multi_byte_character_support_enabled) {
   if (!is_multi_byte_character_support_enabled)
     return text.length();
@@ -6317,6 +6317,7 @@ SOFTWARE.
 #include <iostream>
 #include <memory>
 #include <string>
+#include <locale>
 // #include <tabulate/format.hpp>
 /*
   __        ___.         .__          __
@@ -6356,6 +6357,7 @@ SOFTWARE.
 #include <cstddef>
 #include <sstream>
 #include <string>
+#include <locale>
 // #include <tabulate/color.hpp>
 // #include <tabulate/font_align.hpp>
 // #include <tabulate/font_style.hpp>
@@ -6703,6 +6705,11 @@ public:
   }
 
   Format &locale(const std::string &value) {
+    locale_ = std::locale(value);
+    return *this;
+  }
+
+  Format &locale(const std::locale &value) {
     locale_ = value;
     return *this;
   }
@@ -6722,7 +6729,7 @@ public:
   // Apply word wrap
   // Given an input string and a line length, this will insert \n
   // in strategic places in input string and apply word wrapping
-  static std::string word_wrap(const std::string &str, size_t width, const std::string &locale,
+  static std::string word_wrap(const std::string &str, size_t width, const std::locale &locale,
                                bool is_multi_byte_character_support_enabled) {
     std::vector<std::string> words = explode_string(str, {" ", "-", "\t"});
     size_t current_line_length = 0;
@@ -6762,7 +6769,7 @@ public:
   }
 
   static std::vector<std::string> split_lines(const std::string &text, const std::string &delimiter,
-                                              const std::string &locale,
+                                              const std::locale &locale,
                                               bool is_multi_byte_character_support_enabled) {
     std::vector<std::string> result{};
     std::string input = text;
@@ -7063,7 +7070,7 @@ private:
     column_separator_ = "|";
     column_separator_color_ = column_separator_background_color_ = Color::none;
     multi_byte_characters_ = false;
-    locale_ = "";
+    locale_ = std::locale("");
     trim_mode_ = TrimMode::kBoth;
     show_row_separator_ = false;
   }
@@ -7196,7 +7203,7 @@ private:
 
   // Internationalization
   optional<bool> multi_byte_characters_{};
-  optional<std::string> locale_{};
+  optional<std::locale> locale_{};
 
   optional<TrimMode> trim_mode_{};
 
@@ -7231,7 +7238,7 @@ public:
     return get_sequence_length(data_, locale(), is_multi_byte_character_support_enabled());
   }
 
-  std::string locale() { return *format().locale_; }
+  const std::locale &locale() { return *format().locale_; }
 
   Format &format();
 
@@ -8255,9 +8262,10 @@ public:
     std::stringstream stream;
     print(stream);
     auto buffer = stream.str();
-    auto lines = Format::split_lines(buffer, "\n", "", true);
+    auto locale = stream.getloc();
+    auto lines = Format::split_lines(buffer, "\n", locale, true);
     if (lines.size()) {
-      result = {get_sequence_length(lines[0], "", true), lines.size()};
+      result = {get_sequence_length(lines[0], locale, true), lines.size()};
     }
     return result;
   }
@@ -8463,7 +8471,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
   auto cell = table[index.first][index.second];
   auto locale = cell.locale();
   auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
-  auto old_locale = std::locale::global(std::locale(locale));
+  auto old_locale = stream.imbue(locale);
   auto format = cell.format();
   auto text_height = splitted_cell_text.size();
   auto padding_top = *format.padding_top_;
@@ -8508,7 +8516,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
       }
 
       auto line_with_padding_size =
-          get_sequence_length(line, cell.locale(), is_multi_byte_character_support_enabled) +
+          get_sequence_length(line, locale, is_multi_byte_character_support_enabled) +
           padding_left + padding_right;
       switch (*format.font_align_) {
       case FontAlign::left:
@@ -8543,7 +8551,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
       reset_element_style(stream);
     }
   }
-  std::locale::global(old_locale);
+  stream.imbue(old_locale);
 }
 
 inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &table,
@@ -8551,8 +8559,6 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
                                            const std::pair<size_t, size_t> &dimension,
                                            size_t num_columns) {
   auto cell = table[index.first][index.second];
-  auto locale = cell.locale();
-  auto old_locale = std::locale::global(std::locale(locale));
   auto format = cell.format();
   auto column_width = dimension.second;
 
@@ -8562,9 +8568,10 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
   auto border_top = *format.border_top_;
 
   if ((corner == "" && border_top == "") || !*format.show_border_top_) {
-    std::locale::global(old_locale);
     return false;
   }
+
+  auto old_locale = stream.imbue(cell.locale());
 
   apply_element_style(stream, corner_color, corner_background_color, {});
   if (*format.show_row_separator_) {
@@ -8607,7 +8614,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
       stream << corner;
     reset_element_style(stream);
   }
-  std::locale::global(old_locale);
+  stream.imbue(old_locale);
   return true;
 }
 
@@ -8616,8 +8623,6 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
                                               const std::pair<size_t, size_t> &dimension,
                                               size_t num_columns) {
   auto cell = table[index.first][index.second];
-  auto locale = cell.locale();
-  auto old_locale = std::locale::global(std::locale(locale));
   auto format = cell.format();
   auto column_width = dimension.second;
 
@@ -8627,9 +8632,10 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
   auto border_bottom = *format.border_bottom_;
 
   if ((corner == "" && border_bottom == "") || !*format.show_border_bottom_) {
-    std::locale::global(old_locale);
     return false;
   }
+
+  auto old_locale = stream.imbue(cell.locale());
 
   apply_element_style(stream, corner_color, corner_background_color, {});
   stream << corner;
@@ -8652,7 +8658,7 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
     stream << corner;
     reset_element_style(stream);
   }
-  std::locale::global(old_locale);
+  stream.imbue(old_locale);
   return true;
 }
 
