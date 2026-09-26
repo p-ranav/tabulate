@@ -1,5 +1,8 @@
 find_package(Threads REQUIRED)
 
+add_executable(ansi_escape_width ansi_escape_width.cpp)
+target_link_libraries(ansi_escape_width PRIVATE tabulate::tabulate)
+
 add_executable(class_diagram class_diagram.cpp)
 target_link_libraries(class_diagram PRIVATE tabulate::tabulate)
 
