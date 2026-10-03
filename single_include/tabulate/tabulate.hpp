@@ -7399,6 +7399,8 @@ public:
 
   void add_cell(std::shared_ptr<Cell> cell) { cells_.push_back(cell); }
 
+  void erase_cell(size_t index) { cells_.erase(cells_.begin() + index); }
+
   Cell &operator[](size_t index) { return cell(index); }
 
   Cell &cell(size_t index) { return *(cells_[index]); }
@@ -8330,6 +8332,12 @@ public:
 
   const Row &operator[](size_t index) const { return *(rows_[index]); }
 
+  void erase_column(size_t index) {
+    for (auto &row : rows_) {
+      row->erase_cell(index);
+    }
+  }
+
   Column column(size_t index) {
     Column column(shared_from_this());
     for (size_t i = 0; i < rows_.size(); ++i) {
@@ -8850,6 +8858,13 @@ public:
   Row &row(size_t index) { return (*table_)[index]; }
 
   Column column(size_t index) { return table_->column(index); }
+
+  Table &erase_column(size_t index) {
+    table_->erase_column(index);
+    if (cols_ > 0)
+      cols_ -= 1;
+    return *this;
+  }
 
   Format &format() { return table_->format(); }
 

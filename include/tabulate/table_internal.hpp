@@ -72,6 +72,12 @@ public:
 
   const Row &operator[](size_t index) const { return *(rows_[index]); }
 
+  void erase_column(size_t index) {
+    for (auto &row : rows_) {
+      row->erase_cell(index);
+    }
+  }
+
   Column column(size_t index) {
     Column column(shared_from_this());
     for (size_t i = 0; i < rows_.size(); ++i) {

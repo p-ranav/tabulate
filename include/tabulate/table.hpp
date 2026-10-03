@@ -111,6 +111,13 @@ public:
 
   Column column(size_t index) { return table_->column(index); }
 
+  Table &erase_column(size_t index) {
+    table_->erase_column(index);
+    if (cols_ > 0)
+      cols_ -= 1;
+    return *this;
+  }
+
   Format &format() { return table_->format(); }
 
   void print(std::ostream &stream) { table_->print(stream); }
