@@ -69,5 +69,8 @@ target_link_libraries(refresh_table PRIVATE tabulate::tabulate ${CMAKE_THREAD_LI
 add_executable(remove_column remove_column.cpp)
 target_link_libraries(remove_column PRIVATE tabulate::tabulate)
 
+add_executable(nested_table_hidden_border nested_table_hidden_border.cpp)
+target_link_libraries(nested_table_hidden_border PRIVATE tabulate::tabulate)
+
 add_executable(string_view_in_row string_view_in_row.cpp) 
 target_link_libraries(string_view_in_row PRIVATE tabulate::tabulate ${CMAKE_THREAD_LIBS_INIT})

@@ -79,6 +79,7 @@ public:
       std::fill(cell_strings.begin(), cell_strings.end(), "");
     }
 
+    std::vector<size_t> nested_table_indices;
     for (size_t i = 0; i < cells.size(); ++i) {
       auto cell = cells[i];
       if (holds_alternative<std::string>(cell)) {
@@ -97,10 +98,14 @@ public:
           stream << termcolor::colorize;
         table.print(stream);
         cell_strings[i] = stream.str();
+        nested_table_indices.push_back(i);
       }
     }
 
     table_->add_row(cell_strings);
+    // A nested table's text is pre-formatted ASCII art: trimming would corrupt its layout.
+    for (auto i : nested_table_indices)
+      row(rows_)[i].format().trim_mode(Format::TrimMode::kNone);
     rows_ += 1;
     return *this;
   }

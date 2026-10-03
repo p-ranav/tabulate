@@ -311,6 +311,11 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
                         {});
     stream << *format.border_left_;
     reset_element_style(stream);
+  } else {
+    // Keep the row the same width as the border/corner lines around it
+    stream << std::string(
+        get_sequence_length(*format.border_left_, cell.locale(), is_multi_byte_character_support_enabled),
+        ' ');
   }
 
   apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
@@ -379,6 +384,11 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
                           *format.border_right_background_color_, {});
       stream << *format.border_right_;
       reset_element_style(stream);
+    } else {
+      // Keep the row the same width as the border/corner lines around it
+      stream << std::string(get_sequence_length(*format.border_right_, cell.locale(),
+                                                is_multi_byte_character_support_enabled),
+                            ' ');
     }
   }
 }
