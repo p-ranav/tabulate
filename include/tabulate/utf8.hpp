@@ -40,10 +40,55 @@ SOFTWARE.
 #include <locale>
 
 #include <cstdlib>
+#include <cwchar>
 #include <tabulate/termcolor.hpp>
 #include <wchar.h>
 
 namespace tabulate {
+
+// Advance past the ANSI escape sequence starting at p, which must point at an
+// ESC byte, and return a pointer to the first byte after the sequence. Escape
+// sequences occupy no columns on screen, so every width calculation has to be
+// able to step over them.
+inline const char *skip_ansi_escape_sequence(const char *p) {
+  const unsigned char introducer = static_cast<unsigned char>(p[1]);
+
+  // CSI: parameter bytes, then intermediate bytes, then one final byte
+  if (introducer == '[') {
+    p += 2;
+    while (*p != '\0' && static_cast<unsigned char>(*p) >= 0x30 &&
+           static_cast<unsigned char>(*p) <= 0x3f)
+      ++p;
+    while (*p != '\0' && static_cast<unsigned char>(*p) >= 0x20 &&
+           static_cast<unsigned char>(*p) <= 0x2f)
+      ++p;
+    if (*p != '\0')
+      ++p;
+    return p;
+  }
+
+  // OSC, DCS, SOS, PM and APC run until a string terminator; OSC also accepts
+  // a BEL as the terminator
+  if (introducer == ']' || introducer == 'P' || introducer == 'X' || introducer == '^' ||
+      introducer == '_') {
+    const bool bel_terminated = introducer == ']';
+    p += 2;
+    while (*p != '\0') {
+      if (bel_terminated && static_cast<unsigned char>(*p) == 0x07)
+        return p + 1;
+      if (static_cast<unsigned char>(*p) == 0x1b && p[1] == '\\')
+        return p + 2;
+      ++p;
+    }
+    return p;
+  }
+
+  // Two-character escape sequence
+  if (introducer >= 0x40 && introducer <= 0x7e)
+    return p + 2;
+
+  return p + 1;
+}
 
 #if defined(__unix__) || defined(__unix) || defined(__APPLE__)
 inline int get_wcswidth(const std::string &string, const std::string &locale,
@@ -51,42 +96,89 @@ inline int get_wcswidth(const std::string &string, const std::string &locale,
   if (string.size() == 0)
     return 0;
 
-  // The behavior of wcswidth() depends on the LC_CTYPE category of the current
+  // The behavior of wcwidth() depends on the LC_CTYPE category of the current
   // locale. Set the current locale based on cell properties before computing
-  // width
-  auto old_locale = std::locale::global(std::locale(locale));
+  // width, and put back exactly what was there before.
+  const char *previous_locale = std::setlocale(LC_CTYPE, nullptr);
+  const std::string saved_locale = previous_locale != nullptr ? previous_locale : "";
+  std::setlocale(LC_CTYPE, locale.c_str());
 
-  // Convert from narrow std::string to wide string
-  wchar_t *wide_string = new wchar_t[string.size()];
-  std::mbstowcs(wide_string, string.c_str(), string.size());
+  const char *p = string.c_str();
+  std::mbstate_t state = std::mbstate_t();
+  size_t characters = 0;
+  int result = 0;
 
-  // Compute display width of wide string
-  int result = wcswidth(wide_string, max_column_width);
-  delete[] wide_string;
+  while (*p != '\0' && characters < max_column_width) {
+    if (static_cast<unsigned char>(*p) == 0x1b) {
+      p = skip_ansi_escape_sequence(p);
+      continue;
+    }
 
-  // Restore old locale
-  std::locale::global(old_locale);
+    wchar_t wide_character;
+    size_t length = std::mbrtowc(&wide_character, p, MB_CUR_MAX, &state);
+
+    // Truncated multi-byte character at the end of the string
+    if (length == static_cast<size_t>(-2))
+      break;
+
+    // Invalid byte, skip it and resynchronize
+    if (length == static_cast<size_t>(-1)) {
+      state = std::mbstate_t();
+      ++p;
+      continue;
+    }
+
+    if (length == 0)
+      length = 1;
+
+    // wcwidth() returns 0 for combining characters and -1 for non-printable
+    // ones; neither of those advances the cursor
+    const int character_width = wcwidth(wide_character);
+    if (character_width > 0)
+      result += character_width;
+
+    ++characters;
+    p += length;
+  }
+
+  if (!saved_locale.empty())
+    std::setlocale(LC_CTYPE, saved_locale.c_str());
 
   return result;
 }
 #endif
 
+// Number of bytes in text that are not part of an ANSI escape sequence, with
+// UTF-8 continuation bytes optionally left out of the count
+inline size_t count_bytes_outside_ansi_escapes(const std::string &text,
+                                               bool skip_utf8_continuation_bytes) {
+  size_t length = 0;
+  for (const char *p = text.c_str(); *p != '\0';) {
+    if (static_cast<unsigned char>(*p) == 0x1b) {
+      p = skip_ansi_escape_sequence(p);
+      continue;
+    }
+    if (!skip_utf8_continuation_bytes || (*p & 0xC0) != 0x80)
+      ++length;
+    ++p;
+  }
+  return length;
+}
+
 inline size_t get_sequence_length(const std::string &text, const std::string &locale,
                                   bool is_multi_byte_character_support_enabled) {
   if (!is_multi_byte_character_support_enabled)
-    return text.length();
+    return count_bytes_outside_ansi_escapes(text, false);
 
 #if defined(_WIN32) || defined(_WIN64)
   (void)locale; // unused parameter
-  return (text.length() - std::count_if(text.begin(), text.end(),
-                                        [](char c) -> bool { return (c & 0xC0) == 0x80; }));
+  return count_bytes_outside_ansi_escapes(text, true);
 #elif defined(__unix__) || defined(__unix) || defined(__APPLE__)
   auto result = get_wcswidth(text, locale, text.size());
   if (result >= 0)
     return result;
   else
-    return (text.length() - std::count_if(text.begin(), text.end(),
-                                          [](char c) -> bool { return (c & 0xC0) == 0x80; }));
+    return count_bytes_outside_ansi_escapes(text, true);
 #endif
 }
 

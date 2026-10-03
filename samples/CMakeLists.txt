@@ -1,5 +1,8 @@
 find_package(Threads REQUIRED)
 
+add_executable(ansi_escape_width ansi_escape_width.cpp)
+target_link_libraries(ansi_escape_width PRIVATE tabulate::tabulate)
+
 add_executable(class_diagram class_diagram.cpp)
 target_link_libraries(class_diagram PRIVATE tabulate::tabulate)
 
@@ -26,6 +29,9 @@ target_link_libraries(mario PRIVATE tabulate::tabulate)
 
 add_executable(movies movies.cpp)
 target_link_libraries(movies PRIVATE tabulate::tabulate)
+
+add_executable(nested_table_colors nested_table_colors.cpp)
+target_link_libraries(nested_table_colors PRIVATE tabulate::tabulate)
 
 add_executable(no_trim no_trim.cpp)
 target_link_libraries(no_trim PRIVATE tabulate::tabulate)
