@@ -205,6 +205,14 @@ public:
 
   void print(std::ostream &stream) { table_->print(stream); }
 
+  // Prints just one row (see TableInternal::print_row() for the column-width
+  // caveat around streaming rows as they're added).
+  void print_row(size_t index, std::ostream &stream = std::cout) { table_->print_row(stream, index); }
+
+  // Prints the table's closing bottom border. Pair with print_row() once
+  // the last row has been added and printed.
+  void print_bottom_border(std::ostream &stream = std::cout) { table_->print_bottom_border(stream); }
+
   std::string str() {
     std::stringstream stream;
     print(stream);

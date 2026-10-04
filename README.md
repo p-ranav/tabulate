@@ -38,6 +38,7 @@
     *   [Borders and Corners](#borders-and-corners)
     *   [Unicode Box Drawing](#unicode-box-drawing)
     *   [Indenting a Table](#indenting-a-table)
+    *   [Streaming Rows](#streaming-rows)
     *   [Range-based Iteration](#range-based-iteration)
     *   [Nested Tables](#nested-tables)
     *   [UTF-8 Support](#utf-8-support)
@@ -491,6 +492,56 @@ std::cout << table << std::endl;
 ```
 
 **NOTE**: `indent()` is only read from the table's own format (`table.format().indent(n)`); setting it on a row or cell has no effect.
+
+### Streaming Rows
+
+By default, nothing is printed until you call `std::cout << table`, which renders every row at once. If you want to print a header immediately and then stream each row to a terminal/log as it's computed, use `Table.print_row(index)` and finish with `Table.print_bottom_border()`:
+
+```cpp
+Table table;
+table.add_row({"Step", "Result"});
+table.column(0).format().width(10);
+table.column(1).format().width(12);
+table.print_row(0); // print the header as soon as it's added
+
+for (int step = 1; step <= 3; ++step) {
+  // ... pretend some computation happens here ...
+  table.add_row({"Step " + std::to_string(step), step % 2 == 0 ? "OK" : "FAILED"});
+  table.print_row(table.size() - 1); // stream the new row immediately
+}
+
+table.print_bottom_border();
+```
+
+**NOTE**: this only produces correctly-aligned output if column widths are fixed up front (as above). Without fixed widths, a later row with wider content would need to retroactively widen a column whose border has already been printed.
+
+**Without a fixed width**, a later row with wider content will break the layout instead of widening it:
+
+```text
++------+--------+
+| Step | Result |
++--------+--------+
+| Step 1 | OK     |
++--------+--------------------------------------------+
+| Step 2 | This is a surprisingly long result message |
++--------+--------------------------------------------+
+```
+
+**With a fixed width**, the same oversized cell just word-wraps within the column instead, keeping every border aligned:
+
+```text
++----------+------------+
+| Step     | Result     |
++----------+------------+
+| Step 1   | OK         |
++----------+------------+
+| Step 2   | This is a  |
+|          | surprisin- |
+|          | gly long   |
+|          | result     |
+|          | message    |
++----------+------------+
+```
 
 ### Range-based Iteration
 

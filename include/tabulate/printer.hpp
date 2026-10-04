@@ -44,6 +44,12 @@ public:
   static std::pair<std::vector<size_t>, std::vector<size_t>>
   compute_cell_dimensions(TableInternal &table);
 
+  // Word-wraps and splits a cell's text into the lines that will be printed,
+  // given the column width it will be rendered at. Shared by print_table()
+  // and TableInternal::print_row() so incremental, per-row printing applies
+  // the exact same word-wrapping as a full print.
+  static std::vector<std::string> split_cell_text(Cell &cell, size_t column_width);
+
   static void print_table(std::ostream &stream, TableInternal &table);
 
   static void print_row_in_cell(std::ostream &stream, TableInternal &table,
