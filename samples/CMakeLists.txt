@@ -93,5 +93,8 @@ target_link_libraries(black_color PRIVATE tabulate::tabulate)
 add_executable(table_dimensions table_dimensions.cpp)
 target_link_libraries(table_dimensions PRIVATE tabulate::tabulate)
 
+add_executable(indentation indentation.cpp)
+target_link_libraries(indentation PRIVATE tabulate::tabulate)
+
 add_executable(string_view_in_row string_view_in_row.cpp) 
 target_link_libraries(string_view_in_row PRIVATE tabulate::tabulate ${CMAKE_THREAD_LIBS_INIT})

@@ -6585,6 +6585,14 @@ public:
     return *this;
   }
 
+  // Number of spaces to prepend to every line of the rendered table. Only
+  // consulted on the table's own format (table.format().indent(n)); row- and
+  // cell-level values have no effect.
+  Format &indent(size_t value) {
+    indent_ = value;
+    return *this;
+  }
+
   Format &height(size_t value) {
     height_ = value;
     return *this;
@@ -7057,6 +7065,7 @@ public:
     if (target.field == previous.field)                                                         \
     target.field.reset()
     TABULATE_RESET_IF_UNCHANGED(width_);
+    TABULATE_RESET_IF_UNCHANGED(indent_);
     TABULATE_RESET_IF_UNCHANGED(height_);
     TABULATE_RESET_IF_UNCHANGED(font_align_);
     TABULATE_RESET_IF_UNCHANGED(font_style_);
@@ -7126,6 +7135,11 @@ public:
       result.width_ = first.width_;
     else
       result.width_ = second.width_;
+
+    if (first.indent_.has_value())
+      result.indent_ = first.indent_;
+    else
+      result.indent_ = second.indent_;
 
     if (first.height_.has_value())
       result.height_ = first.height_;
@@ -7418,6 +7432,7 @@ private:
 
   void set_defaults() {
     // NOTE: width and height are not set here
+    indent_ = 0;
     font_align_ = FontAlign::left;
     font_style_ = std::vector<FontStyle>{};
     font_color_ = font_background_color_ = Color::none;
@@ -7515,6 +7530,7 @@ private:
 
   // Element width and height
   optional<size_t> width_{};
+  optional<size_t> indent_{};
   optional<size_t> height_{};
 
   // Font styling
@@ -8776,6 +8792,10 @@ Printer::compute_cell_dimensions(TableInternal &table) {
 }
 
 inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
+  size_t indent = *table.format().indent_;
+  std::ostringstream buffer_stream;
+  std::ostream &stream_ref = indent == 0 ? stream : buffer_stream;
+
   size_t num_rows = table.size();
   size_t num_columns = table.estimate_num_columns();
   auto dimensions = compute_cell_dimensions(table);
@@ -8826,20 +8846,20 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
     // Print top border
     bool border_top_printed{true};
     for (size_t j = 0; j < num_columns; ++j) {
-      border_top_printed &= print_cell_border_top(stream, table, {i, j},
+      border_top_printed &= print_cell_border_top(stream_ref, table, {i, j},
                                                   {row_heights[i], column_widths[j]}, num_columns);
     }
     if (border_top_printed)
-      stream << termcolor::reset << "\n";
+      stream_ref << termcolor::reset << "\n";
 
     // Print row contents with word wrapping
     for (size_t k = 0; k < row_heights[i]; ++k) {
       for (size_t j = 0; j < num_columns; ++j) {
-        print_row_in_cell(stream, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns, k,
+        print_row_in_cell(stream_ref, table, {i, j}, {row_heights[i], column_widths[j]}, num_columns, k,
                           splitted_cells_text[i][j]);
       }
       if (k + 1 < row_heights[i])
-        stream << termcolor::reset << "\n";
+        stream_ref << termcolor::reset << "\n";
     }
 
     if (i + 1 == num_rows) {
@@ -8858,15 +8878,33 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
       }
 
       if (bottom_border_needed)
-        stream << termcolor::reset << "\n";
+        stream_ref << termcolor::reset << "\n";
       // Print bottom border for table
       for (size_t j = 0; j < num_columns; ++j) {
-        print_cell_border_bottom(stream, table, {i, j}, {row_heights[i], column_widths[j]},
+        print_cell_border_bottom(stream_ref, table, {i, j}, {row_heights[i], column_widths[j]},
                                  num_columns);
       }
     }
     if (i + 1 < num_rows)
-      stream << termcolor::reset << "\n"; // Don't add newline after last row
+      stream_ref << termcolor::reset << "\n"; // Don't add newline after last row
+  }
+
+  if (indent > 0) {
+    // Manual split (not Format::split_lines, which drops a trailing empty
+    // segment): preserves the exact line structure, including a trailing
+    // newline, so indent > 0 and indent == 0 differ only by the padding.
+    const std::string content = buffer_stream.str();
+    const std::string pad(indent, ' ');
+    size_t pos = 0;
+    while (pos < content.size()) {
+      size_t newline_pos = content.find('\n', pos);
+      if (newline_pos == std::string::npos) {
+        stream << pad << content.substr(pos);
+        break;
+      }
+      stream << pad << content.substr(pos, newline_pos - pos) << "\n";
+      pos = newline_pos + 1;
+    }
   }
 }
 

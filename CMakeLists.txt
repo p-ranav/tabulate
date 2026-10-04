@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 project(tabulate VERSION 1.5.0 LANGUAGES CXX)
 option(tabulate_BUILD_TESTS "Build Tests" OFF)
 option(SAMPLES "Build Samples" OFF)

@@ -37,6 +37,7 @@
     *   [Cell Colors](#cell-colors)
     *   [Borders and Corners](#borders-and-corners)
     *   [Unicode Box Drawing](#unicode-box-drawing)
+    *   [Indenting a Table](#indenting-a-table)
     *   [Range-based Iteration](#range-based-iteration)
     *   [Nested Tables](#nested-tables)
     *   [UTF-8 Support](#utf-8-support)
@@ -467,6 +468,29 @@ table.use_unicode_borders(true, BorderStyle::Double);
 ║ val1 ║ val2 ║
 ╚══════╩══════╝
 ```
+
+### Indenting a Table
+
+`Table.format().indent(n)` prefixes every rendered line with `n` spaces, shifting the whole table to the right:
+
+```cpp
+Table table;
+table.add_row({"Command", "Description"});
+table.add_row({"git status", "List all new or modified files"});
+table.format().indent(4);
+
+std::cout << table << std::endl;
+```
+
+```text
+    +------------+--------------------------------+
+    | Command    | Description                    |
+    +------------+--------------------------------+
+    | git status | List all new or modified files |
+    +------------+--------------------------------+
+```
+
+**NOTE**: `indent()` is only read from the table's own format (`table.format().indent(n)`); setting it on a row or cell has no effect.
 
 ### Range-based Iteration
 

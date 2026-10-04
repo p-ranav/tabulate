@@ -65,6 +65,14 @@ public:
     return *this;
   }
 
+  // Number of spaces to prepend to every line of the rendered table. Only
+  // consulted on the table's own format (table.format().indent(n)); row- and
+  // cell-level values have no effect.
+  Format &indent(size_t value) {
+    indent_ = value;
+    return *this;
+  }
+
   Format &height(size_t value) {
     height_ = value;
     return *this;
@@ -537,6 +545,7 @@ public:
     if (target.field == previous.field)                                                         \
     target.field.reset()
     TABULATE_RESET_IF_UNCHANGED(width_);
+    TABULATE_RESET_IF_UNCHANGED(indent_);
     TABULATE_RESET_IF_UNCHANGED(height_);
     TABULATE_RESET_IF_UNCHANGED(font_align_);
     TABULATE_RESET_IF_UNCHANGED(font_style_);
@@ -606,6 +615,11 @@ public:
       result.width_ = first.width_;
     else
       result.width_ = second.width_;
+
+    if (first.indent_.has_value())
+      result.indent_ = first.indent_;
+    else
+      result.indent_ = second.indent_;
 
     if (first.height_.has_value())
       result.height_ = first.height_;
@@ -898,6 +912,7 @@ private:
 
   void set_defaults() {
     // NOTE: width and height are not set here
+    indent_ = 0;
     font_align_ = FontAlign::left;
     font_style_ = std::vector<FontStyle>{};
     font_color_ = font_background_color_ = Color::none;
@@ -995,6 +1010,7 @@ private:
 
   // Element width and height
   optional<size_t> width_{};
+  optional<size_t> indent_{};
   optional<size_t> height_{};
 
   // Font styling
