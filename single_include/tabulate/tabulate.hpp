@@ -7121,6 +7121,76 @@ public:
 #undef TABULATE_RESET_IF_UNCHANGED
   }
 
+public:
+  // Lets Row/Cell::format() cheaply detect "did the parent's format actually
+  // change since my last merge?" and skip re-merging (which touches every
+  // field) when it didn't -- the common case when printing a table more
+  // than once, or rendering the same cell multiple times within one print.
+  // Short-circuits on the first differing field, same as reset_inherited_fields.
+  bool operator==(const Format &other) const {
+    bool result = true;
+#define TABULATE_FIELD_EQUAL(field) result = result && (field == other.field)
+    TABULATE_FIELD_EQUAL(width_);
+    TABULATE_FIELD_EQUAL(indent_);
+    TABULATE_FIELD_EQUAL(height_);
+    TABULATE_FIELD_EQUAL(font_align_);
+    TABULATE_FIELD_EQUAL(font_style_);
+    TABULATE_FIELD_EQUAL(font_color_);
+    TABULATE_FIELD_EQUAL(font_background_color_);
+    TABULATE_FIELD_EQUAL(padding_left_);
+    TABULATE_FIELD_EQUAL(padding_top_);
+    TABULATE_FIELD_EQUAL(padding_right_);
+    TABULATE_FIELD_EQUAL(padding_bottom_);
+    TABULATE_FIELD_EQUAL(border_left_);
+    TABULATE_FIELD_EQUAL(border_left_color_);
+    TABULATE_FIELD_EQUAL(border_left_background_color_);
+    TABULATE_FIELD_EQUAL(border_left_style_);
+    TABULATE_FIELD_EQUAL(border_top_);
+    TABULATE_FIELD_EQUAL(border_top_color_);
+    TABULATE_FIELD_EQUAL(border_top_background_color_);
+    TABULATE_FIELD_EQUAL(border_top_style_);
+    TABULATE_FIELD_EQUAL(border_bottom_);
+    TABULATE_FIELD_EQUAL(border_bottom_color_);
+    TABULATE_FIELD_EQUAL(border_bottom_background_color_);
+    TABULATE_FIELD_EQUAL(border_bottom_style_);
+    TABULATE_FIELD_EQUAL(border_right_);
+    TABULATE_FIELD_EQUAL(border_right_color_);
+    TABULATE_FIELD_EQUAL(border_right_background_color_);
+    TABULATE_FIELD_EQUAL(border_right_style_);
+    TABULATE_FIELD_EQUAL(show_border_top_);
+    TABULATE_FIELD_EQUAL(show_border_bottom_);
+    TABULATE_FIELD_EQUAL(show_border_left_);
+    TABULATE_FIELD_EQUAL(show_border_right_);
+    TABULATE_FIELD_EQUAL(corner_top_left_);
+    TABULATE_FIELD_EQUAL(corner_top_left_color_);
+    TABULATE_FIELD_EQUAL(corner_top_left_background_color_);
+    TABULATE_FIELD_EQUAL(corner_top_left_style_);
+    TABULATE_FIELD_EQUAL(corner_top_right_);
+    TABULATE_FIELD_EQUAL(corner_top_right_color_);
+    TABULATE_FIELD_EQUAL(corner_top_right_background_color_);
+    TABULATE_FIELD_EQUAL(corner_top_right_style_);
+    TABULATE_FIELD_EQUAL(corner_bottom_left_);
+    TABULATE_FIELD_EQUAL(corner_bottom_left_color_);
+    TABULATE_FIELD_EQUAL(corner_bottom_left_background_color_);
+    TABULATE_FIELD_EQUAL(corner_bottom_left_style_);
+    TABULATE_FIELD_EQUAL(corner_bottom_right_);
+    TABULATE_FIELD_EQUAL(corner_bottom_right_color_);
+    TABULATE_FIELD_EQUAL(corner_bottom_right_background_color_);
+    TABULATE_FIELD_EQUAL(corner_bottom_right_style_);
+    TABULATE_FIELD_EQUAL(column_separator_);
+    TABULATE_FIELD_EQUAL(column_separator_color_);
+    TABULATE_FIELD_EQUAL(column_separator_background_color_);
+    TABULATE_FIELD_EQUAL(multi_byte_characters_);
+    TABULATE_FIELD_EQUAL(locale_);
+    TABULATE_FIELD_EQUAL(trim_mode_);
+    TABULATE_FIELD_EQUAL(show_row_separator_);
+#undef TABULATE_FIELD_EQUAL
+    return result;
+  }
+
+  bool operator!=(const Format &other) const { return !(*this == other); }
+
+private:
   // Merge two formats
   // first has higher precedence
   // e.g., first = cell-level formatting and
@@ -8785,9 +8855,14 @@ private:
 inline Format &Cell::format() {
   std::shared_ptr<Row> parent = parent_.lock();
   Format parent_format = parent->format();
-  if (format_.has_value() && parent_format_snapshot_.has_value())
+  if (format_.has_value() && parent_format_snapshot_.has_value()) {
+    if (parent_format == *parent_format_snapshot_)
+      // Nothing upstream changed since the last merge: the cached result is
+      // still correct, so skip the expensive field-by-field work below.
+      return *format_;
     // Let fields nobody explicitly overrode here track the parent's latest format.
     Format::reset_inherited_fields(*format_, *parent_format_snapshot_);
+  }
   format_ = Format::merge(format_.has_value() ? *format_ : Format(), parent_format);
   parent_format_snapshot_ = parent_format;
   return *format_;
@@ -8800,9 +8875,14 @@ inline bool Cell::is_multi_byte_character_support_enabled() {
 inline Format &Row::format() {
   std::shared_ptr<TableInternal> parent = parent_.lock();
   Format parent_format = parent->format();
-  if (format_.has_value() && parent_format_snapshot_.has_value())
+  if (format_.has_value() && parent_format_snapshot_.has_value()) {
+    if (parent_format == *parent_format_snapshot_)
+      // Nothing upstream changed since the last merge: the cached result is
+      // still correct, so skip the expensive field-by-field work below.
+      return *format_;
     // Let fields nobody explicitly overrode here track the parent's latest format.
     Format::reset_inherited_fields(*format_, *parent_format_snapshot_);
+  }
   format_ = Format::merge(format_.has_value() ? *format_ : Format(), parent_format);
   parent_format_snapshot_ = parent_format;
   return *format_;
