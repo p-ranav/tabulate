@@ -75,5 +75,8 @@ target_link_libraries(nested_table_hidden_border PRIVATE tabulate::tabulate)
 add_executable(format_after_print format_after_print.cpp)
 target_link_libraries(format_after_print PRIVATE tabulate::tabulate)
 
+add_executable(preserve_indentation preserve_indentation.cpp)
+target_link_libraries(preserve_indentation PRIVATE tabulate::tabulate)
+
 add_executable(string_view_in_row string_view_in_row.cpp) 
 target_link_libraries(string_view_in_row PRIVATE tabulate::tabulate ${CMAKE_THREAD_LIBS_INIT})
