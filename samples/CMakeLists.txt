@@ -109,6 +109,9 @@ target_link_libraries(indentation PRIVATE tabulate::tabulate)
 add_executable(streaming_rows streaming_rows.cpp)
 target_link_libraries(streaming_rows PRIVATE tabulate::tabulate)
 
+add_executable(pagination pagination.cpp)
+target_link_libraries(pagination PRIVATE tabulate::tabulate)
+
 add_executable(benchmark benchmark.cpp)
 target_link_libraries(benchmark PRIVATE tabulate::tabulate)
 

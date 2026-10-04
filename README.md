@@ -39,6 +39,7 @@
     *   [Unicode Box Drawing](#unicode-box-drawing)
     *   [Indenting a Table](#indenting-a-table)
     *   [Streaming Rows](#streaming-rows)
+    *   [Pagination](#pagination)
     *   [Range-based Iteration](#range-based-iteration)
     *   [Nested Tables](#nested-tables)
     *   [UTF-8 Support](#utf-8-support)
@@ -542,6 +543,31 @@ table.print_bottom_border();
 |          | message    |
 +----------+------------+
 ```
+
+### Pagination
+
+For very large tables, printing everything at once can produce output that's too long to be useful (e.g. scrolling off a terminal or log viewer). `Table.paginate(rows_per_page)` splits a table into a `std::vector<Table>` of smaller, independent tables -- each one a complete, self-contained page with its own borders:
+
+```cpp
+Table table;
+table.add_row({"ID", "Name", "Status"});
+for (int i = 1; i <= 1000; ++i)
+  table.add_row({std::to_string(i), "Item " + std::to_string(i), i % 7 == 0 ? "FAILED" : "OK"});
+
+std::vector<Table> pages = table.paginate(/*rows_per_page=*/250);
+for (size_t i = 0; i < pages.size(); ++i) {
+  std::cout << "Page " << (i + 1) << " of " << pages.size() << "\n";
+  std::cout << pages[i] << "\n\n";
+}
+```
+
+By default, row 0 is treated as a header and automatically repeated at the top of every page; `rows_per_page` counts only the data rows that follow it. Pass `false` as the second argument to disable this and paginate every row (including row 0) as plain data:
+
+```cpp
+std::vector<Table> pages = table.paginate(250, /*repeat_header_row=*/false);
+```
+
+Column widths are computed once from the *entire* table before splitting, so every page lines up identically even if one page's content happens to be much wider than another's. Each page also carries over the original table's formatting -- table-level settings (like `indent()`) as well as every cell's resolved colors, styles, and alignment -- as an independent snapshot; later changes to the original table won't affect pages already created, and modifying a page never affects the original table.
 
 ### Range-based Iteration
 

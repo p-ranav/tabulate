@@ -227,6 +227,63 @@ public:
 
   std::pair<size_t, size_t> shape() { return table_->shape(); }
 
+  // Splits the table into pages of `rows_per_page` data rows each, suitable
+  // for printing a large table in consistently-formatted chunks. Column
+  // widths are computed once from the *entire* table and fixed on every
+  // page, so pages always line up with each other regardless of which page
+  // happens to hold the widest content. Each page is an independent,
+  // self-contained Table (its own top/bottom border) carrying over the
+  // original table-level format and every cell's resolved formatting
+  // (colors, alignment, custom borders, etc.) as a snapshot -- later changes
+  // to the original table do not propagate to already-created pages.
+  //
+  // When repeat_header_row is true (the default), row 0 of this table is
+  // treated as a header and repeated at the top of every page; the first
+  // "real" data row is row 1, and rows_per_page counts only data rows (so a
+  // page has rows_per_page + 1 total rows: the header plus its data).
+  std::vector<Table> paginate(size_t rows_per_page, bool repeat_header_row = true) {
+    std::vector<Table> pages;
+    if (rows_per_page == 0 || size() == 0)
+      return pages;
+
+    size_t first_data_row = repeat_header_row ? 1 : 0;
+    if (first_data_row >= size())
+      return pages;
+
+    size_t num_columns = dimensions().second;
+    auto column_widths = Printer::compute_cell_dimensions(*table_).second;
+
+    auto copy_row_into = [&](Table &page, size_t src_index) {
+      Row_t row_text;
+      row_text.reserve(num_columns);
+      for (size_t j = 0; j < num_columns; ++j)
+        row_text.push_back(row(src_index)[j].get_text());
+      page.add_row(row_text);
+      size_t dst_index = page.size() - 1;
+      for (size_t j = 0; j < num_columns; ++j)
+        page[dst_index][j].format() = row(src_index)[j].format();
+    };
+
+    for (size_t start = first_data_row; start < size(); start += rows_per_page) {
+      size_t end = (std::min)(start + rows_per_page, size());
+
+      Table page;
+      page.format() = format();
+
+      if (repeat_header_row)
+        copy_row_into(page, 0);
+      for (size_t i = start; i < end; ++i)
+        copy_row_into(page, i);
+
+      for (size_t j = 0; j < num_columns; ++j)
+        page.column(j).format().width(column_widths[j]);
+
+      pages.push_back(page);
+    }
+
+    return pages;
+  }
+
   class RowIterator {
   public:
     explicit RowIterator(std::vector<std::shared_ptr<Row>>::iterator ptr) : ptr(ptr) {}
