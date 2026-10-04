@@ -6999,11 +6999,10 @@ public:
 
     for (size_t i = 0; i < words.size(); ++i) {
       std::string word = words[i];
+      auto word_length = get_sequence_length(word, locale, is_multi_byte_character_support_enabled);
       // If adding the new word to the current line would be too long,
       // then put it on a new line (and split it up if it's too long).
-      if (current_line_length +
-              get_sequence_length(word, locale, is_multi_byte_character_support_enabled) >
-          width) {
+      if (current_line_length + word_length > width) {
         // Only move down to a new line if we have text on the current line.
         // Avoids situation where wrapped whitespace causes emptylines in text.
         if (current_line_length > 0) {
@@ -7013,7 +7012,7 @@ public:
 
         // If the current word is too long to fit on a line even on it's own
         // then split the word up.
-        while (get_sequence_length(word, locale, is_multi_byte_character_support_enabled) > width) {
+        while (word_length > width) {
           // Split on a character boundary, not a byte offset, so multi-byte
           // sequences (e.g. CJK text) aren't cut in half.
           auto split_at = byte_offset_for_width(word, locale, is_multi_byte_character_support_enabled,
@@ -7021,15 +7020,16 @@ public:
           result += word.substr(0, split_at) + "-";
           word = word.substr(split_at);
           result += '\n';
+          word_length = get_sequence_length(word, locale, is_multi_byte_character_support_enabled);
         }
 
         // Remove leading whitespace from the word so the new line starts flush
         // to the left.
         word = trim_left(word);
+        word_length = get_sequence_length(word, locale, is_multi_byte_character_support_enabled);
       }
       result += word;
-      current_line_length +=
-          get_sequence_length(word, locale, is_multi_byte_character_support_enabled);
+      current_line_length += word_length;
     }
     return result;
   }
@@ -7558,16 +7558,18 @@ private:
 
   static size_t index_of_any(const std::string &input, size_t start_index,
                              const std::vector<std::string> &split_characters) {
-    std::vector<size_t> indices{};
-    for (auto &c : split_characters) {
-      auto index = input.find(c, start_index);
-      if (index != std::string::npos)
-        indices.push_back(index);
-    }
-    if (indices.size() > 0)
-      return *std::min_element(indices.begin(), indices.end());
-    else
-      return std::string::npos;
+    // Single-pass scan for any of the (single-character) delimiters, instead
+    // of a separate input.find() per delimiter. The old approach meant any
+    // delimiter that doesn't occur again before the end of the string (e.g.
+    // no more '-' or '\t' in typical prose) scanned the *entire* remainder of
+    // the string on every call, making word-wrap's caller (explode_string)
+    // effectively quadratic in input length.
+    std::string delimiters;
+    delimiters.reserve(split_characters.size());
+    for (auto &c : split_characters)
+      if (!c.empty())
+        delimiters += c[0];
+    return input.find_first_of(delimiters, start_index);
   }
 
   static std::vector<std::string> explode_string(const std::string &input,
@@ -8782,10 +8784,10 @@ public:
     auto &column_widths = dimensions.second;
     size_t num_columns = estimate_num_columns();
 
-    Row row = operator[](row_index);
+    Row &row = operator[](row_index);
     std::vector<std::vector<std::string>> splitted_cells_text(num_columns);
     for (size_t j = 0; j < num_columns; ++j) {
-      Cell cell = row.cell(j);
+      Cell &cell = row.cell(j);
       splitted_cells_text[j] = Printer::split_cell_text(cell, column_widths[j]);
     }
 
@@ -8899,7 +8901,7 @@ Printer::compute_cell_dimensions(TableInternal &table) {
   }
 
   for (size_t i = 0; i < num_rows; ++i) {
-    Row row = table[i];
+    Row &row = table[i];
     size_t configured_height = row.get_configured_height();
     size_t computed_height = row.get_computed_height(column_widths);
 
@@ -8968,9 +8970,9 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
   // Pre-compute the cells' content and split them into lines before actually
   // iterating the cells.
   for (size_t i = 0; i < num_rows; ++i) {
-    Row row = table[i];
+    Row &row = table[i];
     for (size_t j = 0; j < num_columns; ++j) {
-      Cell cell = row.cell(j);
+      Cell &cell = row.cell(j);
       splitted_cells_text[i][j] = split_cell_text(cell, column_widths[j]);
     }
   }
@@ -9002,7 +9004,7 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
       // Check if there is bottom border to print:
       auto bottom_border_needed{true};
       for (size_t j = 0; j < num_columns; ++j) {
-        auto cell = table[i][j];
+        auto &cell = table[i][j];
         auto format = cell.format();
         auto corner = *format.corner_bottom_left_;
         auto border_bottom = *format.border_bottom_;
@@ -9049,7 +9051,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
                                        size_t num_columns, size_t row_index,
                                        const std::vector<std::string> &splitted_cell_text) {
   auto column_width = dimension.second;
-  auto cell = table[index.first][index.second];
+  auto &cell = table[index.first][index.second];
   auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
   auto format = cell.format();
   auto text_height = splitted_cell_text.size();
@@ -9146,7 +9148,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
                                            const std::pair<size_t, size_t> &index,
                                            const std::pair<size_t, size_t> &dimension,
                                            size_t num_columns) {
-  auto cell = table[index.first][index.second];
+  auto &cell = table[index.first][index.second];
   auto format = cell.format();
   auto column_width = dimension.second;
 
@@ -9212,7 +9214,7 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
                                               const std::pair<size_t, size_t> &index,
                                               const std::pair<size_t, size_t> &dimension,
                                               size_t num_columns) {
-  auto cell = table[index.first][index.second];
+  auto &cell = table[index.first][index.second];
   auto format = cell.format();
   auto column_width = dimension.second;
 

@@ -248,6 +248,77 @@ void benchmark_padding_construction(Table &results) {
   (void)sink;
 }
 
+// Builds a rows x cols table where every cell holds a long sentence that
+// won't fit on one line at any reasonably narrow column width, used by the
+// word-wrap benchmarks below. Varying row/column content keeps every cell
+// text distinct (closer to real data than repeating the same string).
+Table make_long_text_table(int rows, int cols) {
+  Table table;
+  for (int r = 0; r < rows; ++r) {
+    Row_t row;
+    for (int c = 0; c < cols; ++c)
+      row.push_back("This is a much longer piece of cell content for row " + std::to_string(r) +
+                   " column " + std::to_string(c) +
+                   " that will not fit on one line and must be word-wrapped properly");
+    table.add_row(row);
+  }
+  return table;
+}
+
+// ============================================================================
+// 4a. Word-wrap scaling: for each rows x cols size, compare a table of short,
+//     single-line cells against the same size table where every cell is long
+//     enough to require word-wrapping (all columns fixed to a narrow width).
+// ============================================================================
+void benchmark_word_wrap_scaling(Table &results, int wrap_width) {
+  for (int rows : {500, 2000, 5000}) {
+    for (int cols : {2, 5, 10}) {
+      double baseline_ms = time_ms(
+          [&] {
+            Table table = make_base_table(rows, cols);
+            print_to_string(table);
+          },
+          3);
+
+      double wrapped_ms = time_ms(
+          [&] {
+            Table table = make_long_text_table(rows, cols);
+            for (int c = 0; c < cols; ++c)
+              table.column(c).format().width(wrap_width);
+            print_to_string(table);
+          },
+          3);
+
+      long long cells = static_cast<long long>(rows) * cols;
+      results.add_row(Row_t{std::to_string(rows), std::to_string(cols), std::to_string(cells),
+                            ms_str(baseline_ms), ms_str(wrapped_ms),
+                            ratio_str(wrapped_ms, baseline_ms)});
+    }
+  }
+}
+
+// ============================================================================
+// 4b. Word-wrap width sweep: for a fixed table size, how does cost change as
+//     the column gets narrower (forcing each cell to wrap into more lines)?
+// ============================================================================
+void benchmark_word_wrap_width_sweep(Table &results, int rows, int cols) {
+  double widest_ms = -1.0;
+  for (int width : {80, 40, 20, 10, 5}) {
+    double ms = time_ms(
+        [&] {
+          Table table = make_long_text_table(rows, cols);
+          for (int c = 0; c < cols; ++c)
+            table.column(c).format().width(width);
+          print_to_string(table);
+        },
+        3);
+    if (widest_ms < 0.0)
+      widest_ms = ms;
+    results.add_row(
+        Row_t{std::to_string(width), ms_str(ms), ratio_str(ms, widest_ms)});
+  }
+}
+
 } // namespace
 
 int main() {
@@ -267,7 +338,27 @@ int main() {
   feature_results.column(2).format().font_align(FontAlign::right);
   std::cout << feature_results << "\n\n";
 
-  std::cout << "=== 3. Padding/repeated-string construction: std::string vs. std::format ===\n";
+  std::cout << "=== 3a. Word-wrap scaling: short single-line cells vs. all-wrapped cells"
+            << " (width=20), by table size ===\n";
+  Table wrap_scaling_results;
+  wrap_scaling_results.add_row(
+      Row_t{"Rows", "Cols", "Cells", "Baseline (no wrap)", "Wrapped", "Wrapped/Baseline"});
+  benchmark_word_wrap_scaling(wrap_scaling_results, 20);
+  wrap_scaling_results.column(3).format().font_align(FontAlign::right);
+  wrap_scaling_results.column(4).format().font_align(FontAlign::right);
+  wrap_scaling_results.column(5).format().font_align(FontAlign::right);
+  std::cout << wrap_scaling_results << "\n\n";
+
+  std::cout << "=== 3b. Word-wrap width sweep: 2000x5 table, narrower columns force more lines"
+            << " per cell ===\n";
+  Table wrap_width_results;
+  wrap_width_results.add_row(Row_t{"Column width", "Time", "vs width=80"});
+  benchmark_word_wrap_width_sweep(wrap_width_results, 2000, 5);
+  wrap_width_results.column(1).format().font_align(FontAlign::right);
+  wrap_width_results.column(2).format().font_align(FontAlign::right);
+  std::cout << wrap_width_results << "\n\n";
+
+  std::cout << "=== 4. Padding/repeated-string construction: std::string vs. std::format ===\n";
   Table format_results;
   format_results.add_row(Row_t{"Method", "Time"});
   benchmark_padding_construction(format_results);

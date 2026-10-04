@@ -123,10 +123,10 @@ public:
     auto &column_widths = dimensions.second;
     size_t num_columns = estimate_num_columns();
 
-    Row row = operator[](row_index);
+    Row &row = operator[](row_index);
     std::vector<std::vector<std::string>> splitted_cells_text(num_columns);
     for (size_t j = 0; j < num_columns; ++j) {
-      Cell cell = row.cell(j);
+      Cell &cell = row.cell(j);
       splitted_cells_text[j] = Printer::split_cell_text(cell, column_widths[j]);
     }
 
@@ -240,7 +240,7 @@ Printer::compute_cell_dimensions(TableInternal &table) {
   }
 
   for (size_t i = 0; i < num_rows; ++i) {
-    Row row = table[i];
+    Row &row = table[i];
     size_t configured_height = row.get_configured_height();
     size_t computed_height = row.get_computed_height(column_widths);
 
@@ -309,9 +309,9 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
   // Pre-compute the cells' content and split them into lines before actually
   // iterating the cells.
   for (size_t i = 0; i < num_rows; ++i) {
-    Row row = table[i];
+    Row &row = table[i];
     for (size_t j = 0; j < num_columns; ++j) {
-      Cell cell = row.cell(j);
+      Cell &cell = row.cell(j);
       splitted_cells_text[i][j] = split_cell_text(cell, column_widths[j]);
     }
   }
@@ -343,7 +343,7 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
       // Check if there is bottom border to print:
       auto bottom_border_needed{true};
       for (size_t j = 0; j < num_columns; ++j) {
-        auto cell = table[i][j];
+        auto &cell = table[i][j];
         auto format = cell.format();
         auto corner = *format.corner_bottom_left_;
         auto border_bottom = *format.border_bottom_;
@@ -390,7 +390,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
                                        size_t num_columns, size_t row_index,
                                        const std::vector<std::string> &splitted_cell_text) {
   auto column_width = dimension.second;
-  auto cell = table[index.first][index.second];
+  auto &cell = table[index.first][index.second];
   auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
   auto format = cell.format();
   auto text_height = splitted_cell_text.size();
@@ -487,7 +487,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
                                            const std::pair<size_t, size_t> &index,
                                            const std::pair<size_t, size_t> &dimension,
                                            size_t num_columns) {
-  auto cell = table[index.first][index.second];
+  auto &cell = table[index.first][index.second];
   auto format = cell.format();
   auto column_width = dimension.second;
 
@@ -553,7 +553,7 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
                                               const std::pair<size_t, size_t> &index,
                                               const std::pair<size_t, size_t> &dimension,
                                               size_t num_columns) {
-  auto cell = table[index.first][index.second];
+  auto &cell = table[index.first][index.second];
   auto format = cell.format();
   auto column_width = dimension.second;
 

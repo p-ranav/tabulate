@@ -479,11 +479,10 @@ public:
 
     for (size_t i = 0; i < words.size(); ++i) {
       std::string word = words[i];
+      auto word_length = get_sequence_length(word, locale, is_multi_byte_character_support_enabled);
       // If adding the new word to the current line would be too long,
       // then put it on a new line (and split it up if it's too long).
-      if (current_line_length +
-              get_sequence_length(word, locale, is_multi_byte_character_support_enabled) >
-          width) {
+      if (current_line_length + word_length > width) {
         // Only move down to a new line if we have text on the current line.
         // Avoids situation where wrapped whitespace causes emptylines in text.
         if (current_line_length > 0) {
@@ -493,7 +492,7 @@ public:
 
         // If the current word is too long to fit on a line even on it's own
         // then split the word up.
-        while (get_sequence_length(word, locale, is_multi_byte_character_support_enabled) > width) {
+        while (word_length > width) {
           // Split on a character boundary, not a byte offset, so multi-byte
           // sequences (e.g. CJK text) aren't cut in half.
           auto split_at = byte_offset_for_width(word, locale, is_multi_byte_character_support_enabled,
@@ -501,15 +500,16 @@ public:
           result += word.substr(0, split_at) + "-";
           word = word.substr(split_at);
           result += '\n';
+          word_length = get_sequence_length(word, locale, is_multi_byte_character_support_enabled);
         }
 
         // Remove leading whitespace from the word so the new line starts flush
         // to the left.
         word = trim_left(word);
+        word_length = get_sequence_length(word, locale, is_multi_byte_character_support_enabled);
       }
       result += word;
-      current_line_length +=
-          get_sequence_length(word, locale, is_multi_byte_character_support_enabled);
+      current_line_length += word_length;
     }
     return result;
   }
@@ -1038,16 +1038,18 @@ private:
 
   static size_t index_of_any(const std::string &input, size_t start_index,
                              const std::vector<std::string> &split_characters) {
-    std::vector<size_t> indices{};
-    for (auto &c : split_characters) {
-      auto index = input.find(c, start_index);
-      if (index != std::string::npos)
-        indices.push_back(index);
-    }
-    if (indices.size() > 0)
-      return *std::min_element(indices.begin(), indices.end());
-    else
-      return std::string::npos;
+    // Single-pass scan for any of the (single-character) delimiters, instead
+    // of a separate input.find() per delimiter. The old approach meant any
+    // delimiter that doesn't occur again before the end of the string (e.g.
+    // no more '-' or '\t' in typical prose) scanned the *entire* remainder of
+    // the string on every call, making word-wrap's caller (explode_string)
+    // effectively quadratic in input length.
+    std::string delimiters;
+    delimiters.reserve(split_characters.size());
+    for (auto &c : split_characters)
+      if (!c.empty())
+        delimiters += c[0];
+    return input.find_first_of(delimiters, start_index);
   }
 
   static std::vector<std::string> explode_string(const std::string &input,
