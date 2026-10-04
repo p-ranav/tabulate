@@ -6539,15 +6539,19 @@ SOFTWARE.
 
 #if __cplusplus >= 201703L
 #include <optional>
-using std::optional;
 #else
 // #include <tabulate/optional_lite.hpp>
-using nonstd::optional;
 #endif
 
 #include <vector>
 
 namespace tabulate {
+
+#if __cplusplus >= 201703L
+using std::optional;
+#else
+using nonstd::optional;
+#endif
 
 class Format {
 public:
@@ -7566,15 +7570,19 @@ private:
 
 #if __cplusplus >= 201703L
 #include <optional>
-using std::optional;
 #else
 // #include <tabulate/optional_lite.hpp>
-using nonstd::optional;
 #endif
 
 #include <vector>
 
 namespace tabulate {
+
+#if __cplusplus >= 201703L
+using std::optional;
+#else
+using nonstd::optional;
+#endif
 
 class Cell {
 public:
@@ -7643,10 +7651,8 @@ SOFTWARE.
 
 #if __cplusplus >= 201703L
 #include <optional>
-using std::optional;
 #else
 // #include <tabulate/optional_lite.hpp>
-using nonstd::optional;
 #endif
 
 #include <vector>
@@ -7658,6 +7664,12 @@ using nonstd::optional;
 #endif
 
 namespace tabulate {
+
+#if __cplusplus >= 201703L
+using std::optional;
+#else
+using nonstd::optional;
+#endif
 
 class Row {
 public:
@@ -7933,10 +7945,8 @@ SOFTWARE.
 
 #if __cplusplus >= 201703L
 #include <optional>
-using std::optional;
 #else
 // #include <tabulate/optional_lite.hpp>
-using nonstd::optional;
 #endif
 
 #include <string>
@@ -7951,6 +7961,12 @@ using nonstd::optional;
 #endif
 
 namespace tabulate {
+
+#if __cplusplus >= 201703L
+using std::optional;
+#else
+using nonstd::optional;
+#endif
 
 class Column {
 public:
@@ -9065,24 +9081,28 @@ SOFTWARE.
 #if __cplusplus >= 201703L
 #include <string_view>
 #include <variant>
+#else
+// #include <tabulate/string_view_lite.hpp>
+// #include <tabulate/variant_lite.hpp>
+#endif
+
+#include <utility>
+
+namespace tabulate {
+
+#if __cplusplus >= 201703L
 using std::get_if;
 using std::holds_alternative;
 using std::string_view;
 using std::variant;
 using std::visit;
 #else
-// #include <tabulate/string_view_lite.hpp>
-// #include <tabulate/variant_lite.hpp>
 using nonstd::get_if;
 using nonstd::holds_alternative;
 using nonstd::string_view;
 using nonstd::variant;
 using nonstd::visit;
 #endif
-
-#include <utility>
-
-namespace tabulate {
 
 // Unicode box-drawing glyph sets, for use with Table::use_unicode_borders().
 enum class BorderStyle { Light, Heavy, Double };
@@ -9560,13 +9580,17 @@ SOFTWARE.
 
 #if __cplusplus >= 201703L
 #include <optional>
-using std::optional;
 #else
 // #include <tabulate/optional_lite.hpp>
-using nonstd::optional;
 #endif
 
 namespace tabulate {
+
+#if __cplusplus >= 201703L
+using std::optional;
+#else
+using nonstd::optional;
+#endif
 
 class LatexExporter : public Exporter {
 

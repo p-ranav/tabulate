@@ -37,24 +37,28 @@ SOFTWARE.
 #if __cplusplus >= 201703L
 #include <string_view>
 #include <variant>
+#else
+#include <tabulate/string_view_lite.hpp>
+#include <tabulate/variant_lite.hpp>
+#endif
+
+#include <utility>
+
+namespace tabulate {
+
+#if __cplusplus >= 201703L
 using std::get_if;
 using std::holds_alternative;
 using std::string_view;
 using std::variant;
 using std::visit;
 #else
-#include <tabulate/string_view_lite.hpp>
-#include <tabulate/variant_lite.hpp>
 using nonstd::get_if;
 using nonstd::holds_alternative;
 using nonstd::string_view;
 using nonstd::variant;
 using nonstd::visit;
 #endif
-
-#include <utility>
-
-namespace tabulate {
 
 // Unicode box-drawing glyph sets, for use with Table::use_unicode_borders().
 enum class BorderStyle { Light, Heavy, Double };
