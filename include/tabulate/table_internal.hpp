@@ -512,16 +512,19 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
     stream << corner;
   reset_element_style(stream);
 
-  for (size_t i = 0; i < column_width; ++i) {
+  {
+    // Apply style once and batch the repeated border character into a
+    // single write, instead of once per column-width unit.
+    const std::string &repeated_unit =
+        (*format.show_row_separator_ && index.first == 0) ? std::string(" ") : border_top;
+    std::string line;
+    line.reserve(repeated_unit.size() * column_width);
+    for (size_t i = 0; i < column_width; ++i)
+      line += repeated_unit;
+
     apply_element_style(stream, *format.border_top_color_, *format.border_top_background_color_,
                         *format.border_top_style_);
-    if (*format.show_row_separator_) {
-      if (index.first != 0)
-        stream << border_top;
-      else
-        stream << " ";
-    } else
-      stream << border_top;
+    stream << line;
     reset_element_style(stream);
   }
 
@@ -568,10 +571,17 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
   stream << corner;
   reset_element_style(stream);
 
-  for (size_t i = 0; i < column_width; ++i) {
+  {
+    // Apply style once and batch the repeated border character into a
+    // single write, instead of once per column-width unit.
+    std::string line;
+    line.reserve(border_bottom.size() * column_width);
+    for (size_t i = 0; i < column_width; ++i)
+      line += border_bottom;
+
     apply_element_style(stream, *format.border_bottom_color_,
                         *format.border_bottom_background_color_, *format.border_bottom_style_);
-    stream << border_bottom;
+    stream << line;
     reset_element_style(stream);
   }
 

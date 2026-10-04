@@ -8498,9 +8498,7 @@ private:
     apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
 
     if (text_with_padding_size < column_width) {
-      for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
-        stream << " ";
-      }
+      stream << std::string(column_width - text_with_padding_size, ' ');
     }
   }
 
@@ -8510,8 +8508,7 @@ private:
     auto num_spaces = column_width - text_with_padding_size;
     if (num_spaces % 2 == 0) {
       // Even spacing on either side
-      for (size_t j = 0; j < num_spaces / 2; ++j)
-        stream << " ";
+      stream << std::string(num_spaces / 2, ' ');
 
       // Apply font style
       apply_element_style(stream, *format.font_color_, *format.font_background_color_,
@@ -8522,12 +8519,10 @@ private:
       reset_element_style(stream);
       apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
 
-      for (size_t j = 0; j < num_spaces / 2; ++j)
-        stream << " ";
+      stream << std::string(num_spaces / 2, ' ');
     } else {
       auto num_spaces_before = num_spaces / 2 + 1;
-      for (size_t j = 0; j < num_spaces_before; ++j)
-        stream << " ";
+      stream << std::string(num_spaces_before, ' ');
 
       // Apply font style
       apply_element_style(stream, *format.font_color_, *format.font_background_color_,
@@ -8538,8 +8533,7 @@ private:
       reset_element_style(stream);
       apply_element_style(stream, *format.font_color_, *format.font_background_color_, {});
 
-      for (size_t j = 0; j < num_spaces - num_spaces_before; ++j)
-        stream << " ";
+      stream << std::string(num_spaces - num_spaces_before, ' ');
     }
   }
 
@@ -8547,9 +8541,7 @@ private:
                                           const Format &format, size_t text_with_padding_size,
                                           size_t column_width) {
     if (text_with_padding_size < column_width) {
-      for (size_t j = 0; j < (column_width - text_with_padding_size); ++j) {
-        stream << " ";
-      }
+      stream << std::string(column_width - text_with_padding_size, ' ');
     }
 
     // Apply font style
@@ -9179,16 +9171,19 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
     stream << corner;
   reset_element_style(stream);
 
-  for (size_t i = 0; i < column_width; ++i) {
+  {
+    // Apply style once and batch the repeated border character into a
+    // single write, instead of once per column-width unit.
+    const std::string &repeated_unit =
+        (*format.show_row_separator_ && index.first == 0) ? std::string(" ") : border_top;
+    std::string line;
+    line.reserve(repeated_unit.size() * column_width);
+    for (size_t i = 0; i < column_width; ++i)
+      line += repeated_unit;
+
     apply_element_style(stream, *format.border_top_color_, *format.border_top_background_color_,
                         *format.border_top_style_);
-    if (*format.show_row_separator_) {
-      if (index.first != 0)
-        stream << border_top;
-      else
-        stream << " ";
-    } else
-      stream << border_top;
+    stream << line;
     reset_element_style(stream);
   }
 
@@ -9235,10 +9230,17 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
   stream << corner;
   reset_element_style(stream);
 
-  for (size_t i = 0; i < column_width; ++i) {
+  {
+    // Apply style once and batch the repeated border character into a
+    // single write, instead of once per column-width unit.
+    std::string line;
+    line.reserve(border_bottom.size() * column_width);
+    for (size_t i = 0; i < column_width; ++i)
+      line += border_bottom;
+
     apply_element_style(stream, *format.border_bottom_color_,
                         *format.border_bottom_background_color_, *format.border_bottom_style_);
-    stream << border_bottom;
+    stream << line;
     reset_element_style(stream);
   }
 
