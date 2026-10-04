@@ -72,6 +72,7 @@ private:
   std::string data_;
   std::weak_ptr<class Row> parent_;
   optional<Format> format_;
+  optional<Format> parent_format_snapshot_;
 };
 
 } // namespace tabulate

@@ -189,6 +189,7 @@ private:
   std::vector<std::shared_ptr<Cell>> cells_;
   std::weak_ptr<class TableInternal> parent_;
   optional<Format> format_;
+  optional<Format> parent_format_snapshot_;
 };
 
 } // namespace tabulate

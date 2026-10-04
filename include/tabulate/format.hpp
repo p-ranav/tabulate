@@ -459,6 +459,67 @@ public:
     return result;
   };
 
+  // Clears every field in `target` that is still identical to `previous`.
+  //
+  // Row/Cell cache their effective format by merging their own overrides with
+  // their parent's format. That cache must not freeze fields the caller never
+  // explicitly overrode, or later changes to an ancestor's format (e.g.
+  // table.format().hide_border_bottom() after printing once) would be
+  // silently ignored. Before re-merging, this resets any field that still
+  // matches the snapshot taken at the last merge, so unmodified fields go
+  // back to tracking the parent while explicit overrides are preserved.
+  static void reset_inherited_fields(Format &target, const Format &previous) {
+#define TABULATE_RESET_IF_UNCHANGED(field)                                                       \
+    if (target.field == previous.field)                                                         \
+    target.field.reset()
+    TABULATE_RESET_IF_UNCHANGED(width_);
+    TABULATE_RESET_IF_UNCHANGED(height_);
+    TABULATE_RESET_IF_UNCHANGED(font_align_);
+    TABULATE_RESET_IF_UNCHANGED(font_style_);
+    TABULATE_RESET_IF_UNCHANGED(font_color_);
+    TABULATE_RESET_IF_UNCHANGED(font_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(padding_left_);
+    TABULATE_RESET_IF_UNCHANGED(padding_top_);
+    TABULATE_RESET_IF_UNCHANGED(padding_right_);
+    TABULATE_RESET_IF_UNCHANGED(padding_bottom_);
+    TABULATE_RESET_IF_UNCHANGED(border_left_);
+    TABULATE_RESET_IF_UNCHANGED(border_left_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_left_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_top_);
+    TABULATE_RESET_IF_UNCHANGED(border_top_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_top_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_bottom_);
+    TABULATE_RESET_IF_UNCHANGED(border_bottom_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_bottom_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_right_);
+    TABULATE_RESET_IF_UNCHANGED(border_right_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_right_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(show_border_top_);
+    TABULATE_RESET_IF_UNCHANGED(show_border_bottom_);
+    TABULATE_RESET_IF_UNCHANGED(show_border_left_);
+    TABULATE_RESET_IF_UNCHANGED(show_border_right_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_left_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_left_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_left_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_right_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_right_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_right_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_left_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_left_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_left_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_right_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_right_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_right_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(column_separator_);
+    TABULATE_RESET_IF_UNCHANGED(column_separator_color_);
+    TABULATE_RESET_IF_UNCHANGED(column_separator_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(multi_byte_characters_);
+    TABULATE_RESET_IF_UNCHANGED(locale_);
+    TABULATE_RESET_IF_UNCHANGED(trim_mode_);
+    TABULATE_RESET_IF_UNCHANGED(show_row_separator_);
+#undef TABULATE_RESET_IF_UNCHANGED
+  }
+
   // Merge two formats
   // first has higher precedence
   // e.g., first = cell-level formatting and

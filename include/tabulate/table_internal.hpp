@@ -129,13 +129,12 @@ private:
 
 inline Format &Cell::format() {
   std::shared_ptr<Row> parent = parent_.lock();
-  if (!format_.has_value()) {   // no cell format
-    format_ = parent->format(); // Use parent row format
-  } else {
-    // Cell has formatting
-    // Merge cell formatting with parent row formatting
-    format_ = Format::merge(*format_, parent->format());
-  }
+  Format parent_format = parent->format();
+  if (format_.has_value() && parent_format_snapshot_.has_value())
+    // Let fields nobody explicitly overrode here track the parent's latest format.
+    Format::reset_inherited_fields(*format_, *parent_format_snapshot_);
+  format_ = Format::merge(format_.has_value() ? *format_ : Format(), parent_format);
+  parent_format_snapshot_ = parent_format;
   return *format_;
 }
 
@@ -145,13 +144,12 @@ inline bool Cell::is_multi_byte_character_support_enabled() {
 
 inline Format &Row::format() {
   std::shared_ptr<TableInternal> parent = parent_.lock();
-  if (!format_.has_value()) {   // no row format
-    format_ = parent->format(); // Use parent table format
-  } else {
-    // Row has formatting rules
-    // Merge with parent table format
-    format_ = Format::merge(*format_, parent->format());
-  }
+  Format parent_format = parent->format();
+  if (format_.has_value() && parent_format_snapshot_.has_value())
+    // Let fields nobody explicitly overrode here track the parent's latest format.
+    Format::reset_inherited_fields(*format_, *parent_format_snapshot_);
+  format_ = Format::merge(format_.has_value() ? *format_ : Format(), parent_format);
+  parent_format_snapshot_ = parent_format;
   return *format_;
 }
 

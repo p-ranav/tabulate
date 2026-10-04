@@ -6870,6 +6870,67 @@ public:
     return result;
   };
 
+  // Clears every field in `target` that is still identical to `previous`.
+  //
+  // Row/Cell cache their effective format by merging their own overrides with
+  // their parent's format. That cache must not freeze fields the caller never
+  // explicitly overrode, or later changes to an ancestor's format (e.g.
+  // table.format().hide_border_bottom() after printing once) would be
+  // silently ignored. Before re-merging, this resets any field that still
+  // matches the snapshot taken at the last merge, so unmodified fields go
+  // back to tracking the parent while explicit overrides are preserved.
+  static void reset_inherited_fields(Format &target, const Format &previous) {
+#define TABULATE_RESET_IF_UNCHANGED(field)                                                       \
+    if (target.field == previous.field)                                                         \
+    target.field.reset()
+    TABULATE_RESET_IF_UNCHANGED(width_);
+    TABULATE_RESET_IF_UNCHANGED(height_);
+    TABULATE_RESET_IF_UNCHANGED(font_align_);
+    TABULATE_RESET_IF_UNCHANGED(font_style_);
+    TABULATE_RESET_IF_UNCHANGED(font_color_);
+    TABULATE_RESET_IF_UNCHANGED(font_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(padding_left_);
+    TABULATE_RESET_IF_UNCHANGED(padding_top_);
+    TABULATE_RESET_IF_UNCHANGED(padding_right_);
+    TABULATE_RESET_IF_UNCHANGED(padding_bottom_);
+    TABULATE_RESET_IF_UNCHANGED(border_left_);
+    TABULATE_RESET_IF_UNCHANGED(border_left_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_left_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_top_);
+    TABULATE_RESET_IF_UNCHANGED(border_top_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_top_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_bottom_);
+    TABULATE_RESET_IF_UNCHANGED(border_bottom_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_bottom_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_right_);
+    TABULATE_RESET_IF_UNCHANGED(border_right_color_);
+    TABULATE_RESET_IF_UNCHANGED(border_right_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(show_border_top_);
+    TABULATE_RESET_IF_UNCHANGED(show_border_bottom_);
+    TABULATE_RESET_IF_UNCHANGED(show_border_left_);
+    TABULATE_RESET_IF_UNCHANGED(show_border_right_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_left_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_left_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_left_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_right_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_right_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_top_right_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_left_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_left_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_left_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_right_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_right_color_);
+    TABULATE_RESET_IF_UNCHANGED(corner_bottom_right_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(column_separator_);
+    TABULATE_RESET_IF_UNCHANGED(column_separator_color_);
+    TABULATE_RESET_IF_UNCHANGED(column_separator_background_color_);
+    TABULATE_RESET_IF_UNCHANGED(multi_byte_characters_);
+    TABULATE_RESET_IF_UNCHANGED(locale_);
+    TABULATE_RESET_IF_UNCHANGED(trim_mode_);
+    TABULATE_RESET_IF_UNCHANGED(show_row_separator_);
+#undef TABULATE_RESET_IF_UNCHANGED
+  }
+
   // Merge two formats
   // first has higher precedence
   // e.g., first = cell-level formatting and
@@ -7333,6 +7394,7 @@ private:
   std::string data_;
   std::weak_ptr<class Row> parent_;
   optional<Format> format_;
+  optional<Format> parent_format_snapshot_;
 };
 
 } // namespace tabulate
@@ -7527,6 +7589,7 @@ private:
   std::vector<std::shared_ptr<Cell>> cells_;
   std::weak_ptr<class TableInternal> parent_;
   optional<Format> format_;
+  optional<Format> parent_format_snapshot_;
 };
 
 } // namespace tabulate
@@ -8390,13 +8453,12 @@ private:
 
 inline Format &Cell::format() {
   std::shared_ptr<Row> parent = parent_.lock();
-  if (!format_.has_value()) {   // no cell format
-    format_ = parent->format(); // Use parent row format
-  } else {
-    // Cell has formatting
-    // Merge cell formatting with parent row formatting
-    format_ = Format::merge(*format_, parent->format());
-  }
+  Format parent_format = parent->format();
+  if (format_.has_value() && parent_format_snapshot_.has_value())
+    // Let fields nobody explicitly overrode here track the parent's latest format.
+    Format::reset_inherited_fields(*format_, *parent_format_snapshot_);
+  format_ = Format::merge(format_.has_value() ? *format_ : Format(), parent_format);
+  parent_format_snapshot_ = parent_format;
   return *format_;
 }
 
@@ -8406,13 +8468,12 @@ inline bool Cell::is_multi_byte_character_support_enabled() {
 
 inline Format &Row::format() {
   std::shared_ptr<TableInternal> parent = parent_.lock();
-  if (!format_.has_value()) {   // no row format
-    format_ = parent->format(); // Use parent table format
-  } else {
-    // Row has formatting rules
-    // Merge with parent table format
-    format_ = Format::merge(*format_, parent->format());
-  }
+  Format parent_format = parent->format();
+  if (format_.has_value() && parent_format_snapshot_.has_value())
+    // Let fields nobody explicitly overrode here track the parent's latest format.
+    Format::reset_inherited_fields(*format_, *parent_format_snapshot_);
+  format_ = Format::merge(format_.has_value() ? *format_ : Format(), parent_format);
+  parent_format_snapshot_ = parent_format;
   return *format_;
 }
 
