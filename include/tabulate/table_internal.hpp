@@ -306,7 +306,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
 
   if (*format.show_border_left_) {
     apply_element_style(stream, *format.border_left_color_, *format.border_left_background_color_,
-                        {});
+                        *format.border_left_style_);
     stream << *format.border_left_;
     reset_element_style(stream);
   } else {
@@ -379,7 +379,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
     // Print right border after last column
     if (*format.show_border_right_) {
       apply_element_style(stream, *format.border_right_color_,
-                          *format.border_right_background_color_, {});
+                          *format.border_right_background_color_, *format.border_right_style_);
       stream << *format.border_right_;
       reset_element_style(stream);
     } else {
@@ -402,13 +402,14 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
   auto corner = *format.corner_top_left_;
   auto corner_color = *format.corner_top_left_color_;
   auto corner_background_color = *format.corner_top_left_background_color_;
+  auto corner_style = *format.corner_top_left_style_;
   auto border_top = *format.border_top_;
 
   if ((corner == "" && border_top == "") || !*format.show_border_top_) {
     return false;
   }
 
-  apply_element_style(stream, corner_color, corner_background_color, {});
+  apply_element_style(stream, corner_color, corner_background_color, corner_style);
   if (*format.show_row_separator_) {
     if (index.first != 0)
       stream << corner;
@@ -421,7 +422,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
 
   for (size_t i = 0; i < column_width; ++i) {
     apply_element_style(stream, *format.border_top_color_, *format.border_top_background_color_,
-                        {});
+                        *format.border_top_style_);
     if (*format.show_row_separator_) {
       if (index.first != 0)
         stream << border_top;
@@ -437,8 +438,9 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
     corner = *format.corner_top_right_;
     corner_color = *format.corner_top_right_color_;
     corner_background_color = *format.corner_top_right_background_color_;
+    corner_style = *format.corner_top_right_style_;
 
-    apply_element_style(stream, corner_color, corner_background_color, {});
+    apply_element_style(stream, corner_color, corner_background_color, corner_style);
     if (*format.show_row_separator_) {
       if (index.first != 0)
         stream << corner;
@@ -463,19 +465,20 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
   auto corner = *format.corner_bottom_left_;
   auto corner_color = *format.corner_bottom_left_color_;
   auto corner_background_color = *format.corner_bottom_left_background_color_;
+  auto corner_style = *format.corner_bottom_left_style_;
   auto border_bottom = *format.border_bottom_;
 
   if ((corner == "" && border_bottom == "") || !*format.show_border_bottom_) {
     return false;
   }
 
-  apply_element_style(stream, corner_color, corner_background_color, {});
+  apply_element_style(stream, corner_color, corner_background_color, corner_style);
   stream << corner;
   reset_element_style(stream);
 
   for (size_t i = 0; i < column_width; ++i) {
     apply_element_style(stream, *format.border_bottom_color_,
-                        *format.border_bottom_background_color_, {});
+                        *format.border_bottom_background_color_, *format.border_bottom_style_);
     stream << border_bottom;
     reset_element_style(stream);
   }
@@ -485,8 +488,9 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
     corner = *format.corner_bottom_right_;
     corner_color = *format.corner_bottom_right_color_;
     corner_background_color = *format.corner_bottom_right_background_color_;
+    corner_style = *format.corner_bottom_right_style_;
 
-    apply_element_style(stream, corner_color, corner_background_color, {});
+    apply_element_style(stream, corner_color, corner_background_color, corner_style);
     stream << corner;
     reset_element_style(stream);
   }
