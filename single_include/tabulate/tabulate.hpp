@@ -6253,6 +6253,90 @@ inline size_t get_sequence_length(const std::string &text, const std::string &lo
 #endif
 }
 
+// Returns the number of bytes from the start of `text` whose rendered width
+// does not exceed max_width, without ever splitting a multi-byte character
+// (or ANSI escape sequence) in half. Always advances past at least one
+// character when text is non-empty, even if that character alone is wider
+// than max_width, so callers that force-split long words always make
+// progress. Mirrors get_sequence_length()'s width accounting exactly, so a
+// prefix of this many bytes is guaranteed to measure as <= max_width.
+inline size_t byte_offset_for_width(const std::string &text, const std::string &locale,
+                                    bool is_multi_byte_character_support_enabled,
+                                    size_t max_width) {
+  if (!is_multi_byte_character_support_enabled)
+    return (std::min)(max_width, text.size());
+
+#if defined(_WIN32) || defined(_WIN64)
+  (void)locale;
+  size_t consumed_width = 0;
+  bool first_character = true;
+  const char *p = text.c_str();
+  while (*p != '\0') {
+    if (static_cast<unsigned char>(*p) == 0x1b) {
+      p = skip_ansi_escape_sequence(p);
+      continue;
+    }
+    const char *character_start = p;
+    ++p;
+    while (*p != '\0' && (static_cast<unsigned char>(*p) & 0xC0) == 0x80)
+      ++p; // UTF-8 continuation byte: part of the same character
+    if (!first_character && consumed_width + 1 > max_width)
+      return static_cast<size_t>(character_start - text.c_str());
+    consumed_width += 1;
+    first_character = false;
+  }
+  return text.size();
+#elif defined(__unix__) || defined(__unix) || defined(__APPLE__)
+  const char *previous_locale = std::setlocale(LC_CTYPE, nullptr);
+  const std::string saved_locale = previous_locale != nullptr ? previous_locale : "";
+  std::setlocale(LC_CTYPE, locale.c_str());
+
+  const char *p = text.c_str();
+  std::mbstate_t state = std::mbstate_t();
+  size_t consumed_width = 0;
+  bool first_character = true;
+  size_t result = text.size();
+
+  while (*p != '\0') {
+    if (static_cast<unsigned char>(*p) == 0x1b) {
+      p = skip_ansi_escape_sequence(p);
+      continue;
+    }
+
+    const char *character_start = p;
+    wchar_t wide_character;
+    size_t length = std::mbrtowc(&wide_character, p, MB_CUR_MAX, &state);
+
+    if (length == static_cast<size_t>(-2))
+      break; // truncated multi-byte character at the end of the string
+
+    if (length == static_cast<size_t>(-1)) {
+      state = std::mbstate_t();
+      length = 1; // invalid byte: treat as width 1 and resynchronize
+    } else if (length == 0) {
+      length = 1; // embedded null: treat as a 1-byte character
+    }
+
+    int character_width = wcwidth(wide_character);
+    if (character_width < 0)
+      character_width = 0;
+
+    if (!first_character && consumed_width + static_cast<size_t>(character_width) > max_width) {
+      result = static_cast<size_t>(character_start - text.c_str());
+      break;
+    }
+
+    consumed_width += static_cast<size_t>(character_width);
+    first_character = false;
+    p = character_start + length;
+  }
+
+  if (!saved_locale.empty())
+    std::setlocale(LC_CTYPE, saved_locale.c_str());
+  return result;
+#endif
+}
+
 } // namespace tabulate
 
 /*
@@ -6893,8 +6977,12 @@ public:
         // If the current word is too long to fit on a line even on it's own
         // then split the word up.
         while (get_sequence_length(word, locale, is_multi_byte_character_support_enabled) > width) {
-          result += word.substr(0, width - 1) + "-";
-          word = word.substr(width - 1);
+          // Split on a character boundary, not a byte offset, so multi-byte
+          // sequences (e.g. CJK text) aren't cut in half.
+          auto split_at = byte_offset_for_width(word, locale, is_multi_byte_character_support_enabled,
+                                                width - 1);
+          result += word.substr(0, split_at) + "-";
+          word = word.substr(split_at);
           result += '\n';
         }
 

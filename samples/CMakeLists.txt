@@ -84,5 +84,8 @@ target_link_libraries(border_styles PRIVATE tabulate::tabulate)
 add_executable(unicode_borders unicode_borders.cpp)
 target_link_libraries(unicode_borders PRIVATE tabulate::tabulate)
 
+add_executable(multi_byte_wrapping multi_byte_wrapping.cpp)
+target_link_libraries(multi_byte_wrapping PRIVATE tabulate::tabulate)
+
 add_executable(string_view_in_row string_view_in_row.cpp) 
 target_link_libraries(string_view_in_row PRIVATE tabulate::tabulate ${CMAKE_THREAD_LIBS_INIT})
