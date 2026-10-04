@@ -81,5 +81,8 @@ target_link_libraries(preserve_indentation PRIVATE tabulate::tabulate)
 add_executable(border_styles border_styles.cpp)
 target_link_libraries(border_styles PRIVATE tabulate::tabulate)
 
+add_executable(unicode_borders unicode_borders.cpp)
+target_link_libraries(unicode_borders PRIVATE tabulate::tabulate)
+
 add_executable(string_view_in_row string_view_in_row.cpp) 
 target_link_libraries(string_view_in_row PRIVATE tabulate::tabulate ${CMAKE_THREAD_LIBS_INIT})

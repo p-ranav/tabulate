@@ -56,6 +56,9 @@ using nonstd::visit;
 
 namespace tabulate {
 
+// Unicode box-drawing glyph sets, for use with Table::use_unicode_borders().
+enum class BorderStyle { Light, Heavy, Double };
+
 class Table {
 public:
   Table() : table_(TableInternal::create()) {}
@@ -120,6 +123,77 @@ public:
     table_->erase_column(index);
     if (cols_ > 0)
       cols_ -= 1;
+    return *this;
+  }
+
+  // Configures clean Unicode box-drawing borders/corners instead of the
+  // default ASCII "+"/"-"/"|", in one of the common box-drawing weights
+  // (BorderStyle::Light "┌─┬─┐", ::Heavy "┏━┳━┓", or ::Double "╔═╦═╗").
+  // With show_row_separators = false (the default), only the outer box is
+  // drawn; with true, every row boundary gets the matching T-junction/cross
+  // characters too.
+  Table &use_unicode_borders(bool show_row_separators = false, BorderStyle style = BorderStyle::Light) {
+    struct Glyphs {
+      const char *horizontal;
+      const char *vertical;
+      const char *top_left, *top_mid, *top_right;
+      const char *mid_left, *mid_mid, *mid_right;
+      const char *bottom_left, *bottom_mid, *bottom_right;
+    };
+
+    Glyphs glyphs;
+    switch (style) {
+    case BorderStyle::Heavy:
+      glyphs = {"\u2501", "\u2503", "\u250f", "\u2533", "\u2513",
+                "\u2523", "\u254b", "\u252b", "\u2517", "\u253b", "\u251b"};
+      break;
+    case BorderStyle::Double:
+      glyphs = {"\u2550", "\u2551", "\u2554", "\u2566", "\u2557",
+                "\u2560", "\u256c", "\u2563", "\u255a", "\u2569", "\u255d"};
+      break;
+    case BorderStyle::Light:
+    default:
+      glyphs = {"\u2500", "\u2502", "\u250c", "\u252c", "\u2510",
+                "\u251c", "\u253c", "\u2524", "\u2514", "\u2534", "\u2518"};
+      break;
+    }
+
+    format()
+        .border_left(glyphs.vertical)
+        .border_right(glyphs.vertical)
+        .border_top(glyphs.horizontal)
+        .border_bottom(glyphs.horizontal);
+
+    size_t num_rows = size();
+    for (size_t i = 0; i < num_rows; ++i) {
+      Row &r = row(i);
+      size_t num_cols = r.size();
+      bool is_first_row = (i == 0);
+      bool is_last_row = (i + 1 == num_rows);
+      for (size_t j = 0; j < num_cols; ++j) {
+        bool is_first_col = (j == 0);
+        bool is_last_col = (j + 1 == num_cols);
+        Cell &cell = r[j];
+
+        if (is_first_row) {
+          cell.format().corner_top_left(is_first_col ? glyphs.top_left : glyphs.top_mid);
+          if (is_last_col)
+            cell.format().corner_top_right(glyphs.top_right);
+        } else if (show_row_separators) {
+          cell.format().corner_top_left(is_first_col ? glyphs.mid_left : glyphs.mid_mid);
+          if (is_last_col)
+            cell.format().corner_top_right(glyphs.mid_right);
+        } else {
+          cell.format().hide_border_top();
+        }
+
+        if (is_last_row) {
+          cell.format().corner_bottom_left(is_first_col ? glyphs.bottom_left : glyphs.bottom_mid);
+          if (is_last_col)
+            cell.format().corner_bottom_right(glyphs.bottom_right);
+        }
+      }
+    }
     return *this;
   }
 
