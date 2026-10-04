@@ -35,6 +35,7 @@
     *   [Font Styles](#font-styles)
     *   [Cell Colors](#cell-colors)
     *   [Borders and Corners](#borders-and-corners)
+    *   [Unicode Box Drawing](#unicode-box-drawing)
     *   [Range-based Iteration](#range-based-iteration)
     *   [Nested Tables](#nested-tables)
     *   [UTF-8 Support](#utf-8-support)
@@ -401,6 +402,58 @@ int main() {
 <p align="center">
   <img src="img/runic.png"/>  
 </p>
+
+### Unicode Box Drawing
+
+Manually assigning `┌`/`┬`/`┐`, `├`/`┼`/`┤`, and `└`/`┴`/`┘` to the right cells is tedious to get right. `Table::use_unicode_borders()` does it for you, picking the correct corner/junction character for every cell based on its position in the table:
+
+```cpp
+#include <tabulate/table.hpp>
+using namespace tabulate;
+
+int main() {
+  Table table;
+  table.add_row({"col1", "col2"});
+  table.add_row({"val1", "val2"});
+
+  // show_row_separators = true draws a divider (with T-junctions/cross) between every row
+  table.use_unicode_borders(/* show_row_separators = */ true);
+
+  std::cout << table << std::endl;
+}
+```
+
+```text
+┌──────┬──────┐
+│ col1 │ col2 │
+├──────┼──────┤
+│ val1 │ val2 │
+└──────┴──────┘
+```
+
+A second argument picks one of three common `BorderStyle`s (`Light` is the default):
+
+```cpp
+table.use_unicode_borders(true, BorderStyle::Heavy);
+```
+```text
+┏━━━━━━┳━━━━━━┓
+┃ col1 ┃ col2 ┃
+┣━━━━━━╋━━━━━━┫
+┃ val1 ┃ val2 ┃
+┗━━━━━━┻━━━━━━┛
+```
+
+```cpp
+table.use_unicode_borders(true, BorderStyle::Double);
+```
+```text
+╔══════╦══════╗
+║ col1 ║ col2 ║
+╠══════╬══════╣
+║ val1 ║ val2 ║
+╚══════╩══════╝
+```
 
 ### Range-based Iteration
 
