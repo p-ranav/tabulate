@@ -157,6 +157,18 @@ inline std::ostream &crossed(std::ostream &stream) {
   return stream;
 }
 
+inline std::ostream &black(std::ostream &stream) {
+  if (_internal::is_colorized(stream)) {
+#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+    stream << "\033[30m";
+#elif defined(TERMCOLOR_OS_WINDOWS)
+    _internal::win_change_attributes(stream, 0 // black
+    );
+#endif
+  }
+  return stream;
+}
+
 inline std::ostream &grey(std::ostream &stream) {
   if (_internal::is_colorized(stream)) {
 #if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
@@ -254,6 +266,19 @@ inline std::ostream &on_grey(std::ostream &stream) {
 #elif defined(TERMCOLOR_OS_WINDOWS)
     _internal::win_change_attributes(stream, -1,
                                      0 // grey (black)
+    );
+#endif
+  }
+  return stream;
+}
+
+inline std::ostream &on_black(std::ostream &stream) {
+  if (_internal::is_colorized(stream)) {
+#if defined(TERMCOLOR_OS_MACOS) || defined(TERMCOLOR_OS_LINUX)
+    stream << "\033[40m";
+#elif defined(TERMCOLOR_OS_WINDOWS)
+    _internal::win_change_attributes(stream, -1,
+                                     0 // black
     );
 #endif
   }

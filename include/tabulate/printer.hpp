@@ -207,6 +207,9 @@ private:
     case Color::white:
       stream << termcolor::white;
       break;
+    case Color::black:
+      stream << termcolor::black;
+      break;
     case Color::none:
     default:
       break;
@@ -238,6 +241,9 @@ private:
       break;
     case Color::white:
       stream << termcolor::on_white;
+      break;
+    case Color::black:
+      stream << termcolor::on_black;
       break;
     case Color::none:
     default:
