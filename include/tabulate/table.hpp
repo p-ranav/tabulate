@@ -213,6 +213,10 @@ public:
 
   size_t size() const { return table_->size(); }
 
+  // {number of rows, number of columns} actually added to the table. Not to
+  // be confused with shape(), which measures the *rendered* table instead.
+  std::pair<size_t, size_t> dimensions() const { return {size(), cols_}; }
+
   std::pair<size_t, size_t> shape() { return table_->shape(); }
 
   class RowIterator {

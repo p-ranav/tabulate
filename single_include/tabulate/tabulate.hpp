@@ -8665,6 +8665,9 @@ public:
 
   size_t size() const { return rows_.size(); }
 
+  // {rendered width in characters, rendered height in lines} of the printed
+  // table -- NOT the number of data rows/columns. See Table::dimensions()
+  // for that.
   std::pair<size_t, size_t> shape() {
     std::pair<size_t, size_t> result{0, 0};
     std::stringstream stream;
@@ -9287,6 +9290,10 @@ public:
   }
 
   size_t size() const { return table_->size(); }
+
+  // {number of rows, number of columns} actually added to the table. Not to
+  // be confused with shape(), which measures the *rendered* table instead.
+  std::pair<size_t, size_t> dimensions() const { return {size(), cols_}; }
 
   std::pair<size_t, size_t> shape() { return table_->shape(); }
 

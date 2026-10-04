@@ -28,6 +28,7 @@
 ## Table of Contents
 
 *   [Quick Start](#quick-start)
+    *   [Table Size and Shape](#table-size-and-shape)
 *   [Formatting Options](#formatting-options)
     *   [Style Inheritance Model](#style-inheritance-model)
     *   [Word Wrapping](#word-wrapping)
@@ -137,6 +138,18 @@ You could also use `Table.print(stream)` to print the table, e.g., `universal_co
 <p align="center">
   <img src="img/universal_constants.png"/>  
 </p>
+
+### Table Size and Shape
+
+`Table.size()` returns the number of rows, and `Table.dimensions()` returns `{rows, columns}` actually added to the table:
+
+```cpp
+Table table;
+table.add_row({"cell"});
+auto [rows, cols] = table.dimensions(); // {1, 1}
+```
+
+**NOTE**: `Table.shape()` is a different, unrelated measurement: it renders the table and returns `{character width, line count}` of that rendered text, not row/column counts. It exists for callers who need to know how much terminal space a printed table will occupy (e.g. for a single-cell table, `shape()` returns the width/height of its printed box, not `{1, 1}`).
 
 ## Formatting Options
 
