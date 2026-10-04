@@ -42,6 +42,7 @@
     *   [Markdown](#markdown)
     *   [AsciiDoc](#asciidoc)
 *   [Building Samples](#building-samples)
+*   [Running Tests](#running-tests)
 *   [Generating Single Header](#generating-single-header)
 *   [Contributing](#contributing)
 *   [License](#license)
@@ -745,6 +746,18 @@ Note the `USE_CPP17` variable. `Tabulate` uses `std::variant` and `std::optional
 <p align="center">
   <img width="400" src="img/mario.png"/>  
 </p>
+
+## Running Tests
+
+Tests live in the `test/` directory and run against both the modular headers and the generated `single_include/tabulate/tabulate.hpp`. Build and run them with `tabulate_BUILD_TESTS` and CTest:
+
+```bash
+mkdir build
+cd build
+cmake -Dtabulate_BUILD_TESTS=ON ..
+make
+ctest --output-on-failure
+```
 
 ## Generating Single Header
 

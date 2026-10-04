@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(tabulate VERSION 1.5.0 LANGUAGES CXX)
-option(tabulate_BUILD_TESTS OFF)
+option(tabulate_BUILD_TESTS "Build Tests" OFF)
 option(SAMPLES "Build Samples" OFF)
 
 set(TABULATE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -50,6 +50,11 @@ target_include_directories(tabulate INTERFACE
 
 if( SAMPLES )
   add_subdirectory(samples)
+endif()
+
+if( tabulate_BUILD_TESTS )
+  enable_testing()
+  add_subdirectory(test)
 endif()
 
 configure_package_config_file(tabulateConfig.cmake.in
