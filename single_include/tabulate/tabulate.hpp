@@ -8957,6 +8957,8 @@ inline std::vector<std::string> Printer::split_cell_text(Cell &cell, size_t colu
 inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
   size_t indent = *table.format().indent_;
   std::ostringstream buffer_stream;
+  if (indent > 0 && termcolor::_internal::is_colorized(stream))
+    buffer_stream << termcolor::colorize;
   std::ostream &stream_ref = indent == 0 ? stream : buffer_stream;
 
   size_t num_rows = table.size();
