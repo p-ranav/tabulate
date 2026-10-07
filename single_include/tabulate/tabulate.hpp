@@ -6860,6 +6860,7 @@ class Format {
 public:
   Format &width(size_t value) {
     width_ = value;
+    touch();
     return *this;
   }
 
@@ -6868,11 +6869,13 @@ public:
   // cell-level values have no effect.
   Format &indent(size_t value) {
     indent_ = value;
+    touch();
     return *this;
   }
 
   Format &height(size_t value) {
     height_ = value;
+    touch();
     return *this;
   }
 
@@ -6881,26 +6884,31 @@ public:
     padding_right_ = value;
     padding_top_ = value;
     padding_bottom_ = value;
+    touch();
     return *this;
   }
 
   Format &padding_left(size_t value) {
     padding_left_ = value;
+    touch();
     return *this;
   }
 
   Format &padding_right(size_t value) {
     padding_right_ = value;
+    touch();
     return *this;
   }
 
   Format &padding_top(size_t value) {
     padding_top_ = value;
+    touch();
     return *this;
   }
 
   Format &padding_bottom(size_t value) {
     padding_bottom_ = value;
+    touch();
     return *this;
   }
 
@@ -6909,6 +6917,7 @@ public:
     border_right_ = value;
     border_top_ = value;
     border_bottom_ = value;
+    touch();
     return *this;
   }
 
@@ -6917,6 +6926,7 @@ public:
     border_right_color_ = value;
     border_top_color_ = value;
     border_bottom_color_ = value;
+    touch();
     return *this;
   }
 
@@ -6925,6 +6935,7 @@ public:
     border_right_background_color_ = value;
     border_top_background_color_ = value;
     border_bottom_background_color_ = value;
+    touch();
     return *this;
   }
 
@@ -6933,86 +6944,103 @@ public:
     border_right_style_ = value;
     border_top_style_ = value;
     border_bottom_style_ = value;
+    touch();
     return *this;
   }
 
   Format &border_left(const std::string &value) {
     border_left_ = value;
+    touch();
     return *this;
   }
 
   Format &border_left_color(Color value) {
     border_left_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_left_background_color(Color value) {
     border_left_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_left_style(const std::vector<FontStyle> &value) {
     border_left_style_ = value;
+    touch();
     return *this;
   }
 
   Format &border_right(const std::string &value) {
     border_right_ = value;
+    touch();
     return *this;
   }
 
   Format &border_right_color(Color value) {
     border_right_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_right_background_color(Color value) {
     border_right_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_right_style(const std::vector<FontStyle> &value) {
     border_right_style_ = value;
+    touch();
     return *this;
   }
 
   Format &border_top(const std::string &value) {
     border_top_ = value;
+    touch();
     return *this;
   }
 
   Format &border_top_color(Color value) {
     border_top_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_top_background_color(Color value) {
     border_top_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_top_style(const std::vector<FontStyle> &value) {
     border_top_style_ = value;
+    touch();
     return *this;
   }
 
   Format &border_bottom(const std::string &value) {
     border_bottom_ = value;
+    touch();
     return *this;
   }
 
   Format &border_bottom_color(Color value) {
     border_bottom_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_bottom_background_color(Color value) {
     border_bottom_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_bottom_style(const std::vector<FontStyle> &value) {
     border_bottom_style_ = value;
+    touch();
     return *this;
   }
 
@@ -7021,6 +7049,7 @@ public:
     show_border_bottom_ = true;
     show_border_left_ = true;
     show_border_right_ = true;
+    touch();
     return *this;
   }
 
@@ -7029,52 +7058,62 @@ public:
     show_border_bottom_ = false;
     show_border_left_ = false;
     show_border_right_ = false;
+    touch();
     return *this;
   }
 
   Format &show_border_top() {
     show_border_top_ = true;
+    touch();
     return *this;
   }
 
   Format &hide_border_top() {
     show_border_top_ = false;
+    touch();
     return *this;
   }
 
   Format &show_border_bottom() {
     show_border_bottom_ = true;
+    touch();
     return *this;
   }
 
   Format &hide_border_bottom() {
     show_border_bottom_ = false;
+    touch();
     return *this;
   }
 
   Format &show_border_left() {
     show_border_left_ = true;
+    touch();
     return *this;
   }
 
   Format &hide_border_left() {
     show_border_left_ = false;
+    touch();
     return *this;
   }
 
   Format &show_border_right() {
     show_border_right_ = true;
+    touch();
     return *this;
   }
 
   Format &hide_border_right() {
     show_border_right_ = false;
+    touch();
     return *this;
   }
 
   Format& show_row_separator() {
     show_border_top_ = true;
     show_row_separator_ = true;
+    touch();
     return *this;
   }
 
@@ -7083,6 +7122,7 @@ public:
     corner_top_right_ = value;
     corner_bottom_left_ = value;
     corner_bottom_right_ = value;
+    touch();
     return *this;
   }
 
@@ -7091,6 +7131,7 @@ public:
     corner_top_right_color_ = value;
     corner_bottom_left_color_ = value;
     corner_bottom_right_color_ = value;
+    touch();
     return *this;
   }
 
@@ -7099,6 +7140,7 @@ public:
     corner_top_right_background_color_ = value;
     corner_bottom_left_background_color_ = value;
     corner_bottom_right_background_color_ = value;
+    touch();
     return *this;
   }
 
@@ -7107,106 +7149,127 @@ public:
     corner_top_right_style_ = value;
     corner_bottom_left_style_ = value;
     corner_bottom_right_style_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_left(const std::string &value) {
     corner_top_left_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_left_color(Color value) {
     corner_top_left_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_left_background_color(Color value) {
     corner_top_left_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_left_style(const std::vector<FontStyle> &value) {
     corner_top_left_style_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_right(const std::string &value) {
     corner_top_right_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_right_color(Color value) {
     corner_top_right_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_right_background_color(Color value) {
     corner_top_right_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_right_style(const std::vector<FontStyle> &value) {
     corner_top_right_style_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_left(const std::string &value) {
     corner_bottom_left_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_left_color(Color value) {
     corner_bottom_left_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_left_background_color(Color value) {
     corner_bottom_left_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_left_style(const std::vector<FontStyle> &value) {
     corner_bottom_left_style_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_right(const std::string &value) {
     corner_bottom_right_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_right_color(Color value) {
     corner_bottom_right_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_right_background_color(Color value) {
     corner_bottom_right_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_right_style(const std::vector<FontStyle> &value) {
     corner_bottom_right_style_ = value;
+    touch();
     return *this;
   }
 
   Format &column_separator(const std::string &value) {
     column_separator_ = value;
+    touch();
     return *this;
   }
 
   Format &column_separator_color(Color value) {
     column_separator_color_ = value;
+    touch();
     return *this;
   }
 
   Format &column_separator_background_color(Color value) {
     column_separator_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &font_align(FontAlign value) {
     font_align_ = value;
+    touch();
     return *this;
   }
 
@@ -7217,16 +7280,19 @@ public:
     } else {
       font_style_ = style;
     }
+    touch();
     return *this;
   }
 
   Format &font_color(Color value) {
     font_color_ = value;
+    touch();
     return *this;
   }
 
   Format &font_background_color(Color value) {
     font_background_color_ = value;
+    touch();
     return *this;
   }
 
@@ -7234,6 +7300,7 @@ public:
     font_color(value);
     border_color(value);
     corner_color(value);
+    touch();
     return *this;
   }
 
@@ -7241,16 +7308,19 @@ public:
     font_background_color(value);
     border_background_color(value);
     corner_background_color(value);
+    touch();
     return *this;
   }
 
   Format &multi_byte_characters(bool value) {
     multi_byte_characters_ = value;
+    touch();
     return *this;
   }
 
   Format &locale(const std::string &value) {
     locale_ = value;
+    touch();
     return *this;
   }
 
@@ -7263,6 +7333,7 @@ public:
 
   Format &trim_mode(TrimMode trim_mode) {
     trim_mode_ = trim_mode;
+    touch();
     return *this;
   }
 
@@ -7316,16 +7387,18 @@ public:
                                               const std::string &locale,
                                               bool is_multi_byte_character_support_enabled) {
     std::vector<std::string> result{};
-    std::string input = text;
-    size_t pos = 0;
-    std::string token;
-    while ((pos = input.find(delimiter)) != std::string::npos) {
-      token = input.substr(0, pos);
-      result.push_back(token);
-      input.erase(0, pos + delimiter.length());
+    // Index-based scan instead of copying `text` into a mutable buffer and
+    // repeatedly erase()-ing its front: erase() shifts the whole remainder
+    // left, making that approach O(n^2) in the number of lines.
+    size_t start = 0;
+    size_t pos;
+    while ((pos = text.find(delimiter, start)) != std::string::npos) {
+      result.push_back(text.substr(start, pos - start));
+      start = pos + delimiter.length();
     }
-    if (get_sequence_length(input, locale, is_multi_byte_character_support_enabled))
-      result.push_back(input);
+    std::string tail = text.substr(start);
+    if (get_sequence_length(tail, locale, is_multi_byte_character_support_enabled))
+      result.push_back(std::move(tail));
     return result;
   };
 
@@ -7468,6 +7541,13 @@ public:
   }
 
   bool operator!=(const Format &other) const { return !(*this == other); }
+
+  // Monotonically increases whenever any setter runs (including transitively,
+  // e.g. color() calling font_color()/border_color()/corner_color()) or a
+  // merge() produces a new combined Format. Cell/Row::format() compare this
+  // against a saved snapshot to detect "did anything upstream change" in O(1)
+  // instead of comparing every field.
+  size_t generation() const { return generation_; }
 
 private:
   // Merge two formats
@@ -7766,10 +7846,18 @@ private:
 	  else
 		  result.show_row_separator_ = second.show_row_separator_;
 
+    result.touch();
     return result;
   }
 
 private:
+  static size_t &generation_counter() {
+    static size_t counter = 0;
+    return counter;
+  }
+  void touch() { generation_ = ++generation_counter(); }
+  mutable size_t generation_ = 0;
+
   friend class Cell;
   friend class Row;
   friend class Column;
@@ -8437,25 +8525,32 @@ private:
     if (format.padding_left_.has_value())
       result += *format.padding_left_;
 
-    // Check if input text has newlines
-    auto text = cell.get_text();
-    auto split_lines = Format::split_lines(text, "\n", cell.locale(),
-                                           cell.is_multi_byte_character_support_enabled());
-
-    // If there are no newlines in input, set column_width = text.size()
-    if (split_lines.size() == 1) {
+    // Check if input text has newlines. Skip Format::split_lines entirely in
+    // the common case where there are none -- it would otherwise copy the
+    // text and heap-allocate a vector just to tell us what find() already
+    // can for free.
+    const std::string &text = cell.get_text();
+    if (text.find('\n') == std::string::npos) {
       result += cell.size();
     } else {
-      // There are newlines in input
-      // Find widest substring in input and use this as column_width
-      size_t widest_sub_string_size{0};
-      for (auto &line : split_lines)
-        if (get_sequence_length(line, cell.locale(),
-                                cell.is_multi_byte_character_support_enabled()) >
-            widest_sub_string_size)
-          widest_sub_string_size = get_sequence_length(
-              line, cell.locale(), cell.is_multi_byte_character_support_enabled());
-      result += widest_sub_string_size;
+      auto split_lines = Format::split_lines(text, "\n", cell.locale(),
+                                             cell.is_multi_byte_character_support_enabled());
+      if (split_lines.size() == 1) {
+        // e.g. a single trailing newline with nothing after it: preserve
+        // the existing width calculation (same as the no-newline case
+        // above, using the raw text's length including the newline).
+        result += cell.size();
+      } else {
+        // Find widest substring in input and use this as column_width
+        size_t widest_sub_string_size{0};
+        for (auto &line : split_lines) {
+          auto line_length =
+              get_sequence_length(line, cell.locale(), cell.is_multi_byte_character_support_enabled());
+          if (line_length > widest_sub_string_size)
+            widest_sub_string_size = line_length;
+        }
+        result += widest_sub_string_size;
+      }
     }
 
     if (format.padding_right_.has_value())
@@ -8728,6 +8823,11 @@ namespace tabulate {
 
 class Printer {
 public:
+  // Column widths alone (no word-wrapping involved), used both by
+  // compute_cell_dimensions() and by print_table(), which needs them before
+  // it can word-wrap cell content to compute row heights.
+  static std::vector<size_t> compute_column_widths(TableInternal &table);
+
   static std::pair<std::vector<size_t>, std::vector<size_t>>
   compute_cell_dimensions(TableInternal &table);
 
@@ -9133,14 +9233,19 @@ inline Format &Cell::format() {
   // would dominate print() cost on tables with many cells.
   const Format &parent_format = parent->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
-    if (parent_format == *parent_format_snapshot_)
-      // Nothing upstream changed since the last merge: the cached result is
-      // still correct, so skip the expensive field-by-field work below.
+    if (parent_format.generation() == parent_format_snapshot_->generation())
+      // Nothing upstream changed since the last merge (cheap O(1) check):
+      // the cached result is still correct, so skip the expensive
+      // field-by-field work below.
       return *format_;
     // Let fields nobody explicitly overrode here track the parent's latest format.
     Format::reset_inherited_fields(*format_, *parent_format_snapshot_);
   }
-  format_ = Format::merge(format_.has_value() ? *format_ : Format(), parent_format);
+  // merge(Format(), parent_format) always reduces to parent_format field by
+  // field (an empty Format has nothing to take precedence) -- skip the ~49
+  // conditional field copies and the Format() throwaway when there's
+  // nothing of our own to merge in.
+  format_ = format_.has_value() ? Format::merge(*format_, parent_format) : parent_format;
   parent_format_snapshot_ = parent_format;
   return *format_;
 }
@@ -9155,35 +9260,41 @@ inline Format &Row::format() {
   // whole-Format copy on every call.
   const Format &parent_format = parent->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
-    if (parent_format == *parent_format_snapshot_)
-      // Nothing upstream changed since the last merge: the cached result is
-      // still correct, so skip the expensive field-by-field work below.
+    if (parent_format.generation() == parent_format_snapshot_->generation())
+      // Nothing upstream changed since the last merge (cheap O(1) check):
+      // the cached result is still correct, so skip the expensive
+      // field-by-field work below.
       return *format_;
     // Let fields nobody explicitly overrode here track the parent's latest format.
     Format::reset_inherited_fields(*format_, *parent_format_snapshot_);
   }
-  format_ = Format::merge(format_.has_value() ? *format_ : Format(), parent_format);
+  // See the comment in Cell::format() above for why this skips merge() when
+  // there are no row-level overrides to merge in.
+  format_ = format_.has_value() ? Format::merge(*format_, parent_format) : parent_format;
   parent_format_snapshot_ = parent_format;
   return *format_;
+}
+
+inline std::vector<size_t> Printer::compute_column_widths(TableInternal &table) {
+  size_t num_columns = table.estimate_num_columns();
+  std::vector<size_t> column_widths{};
+  column_widths.reserve(num_columns);
+  for (size_t i = 0; i < num_columns; ++i) {
+    Column column = table.column(i);
+    size_t configured_width = column.get_configured_width();
+    size_t computed_width = column.get_computed_width();
+    column_widths.push_back(configured_width != 0 ? configured_width : computed_width);
+  }
+  return column_widths;
 }
 
 inline std::pair<std::vector<size_t>, std::vector<size_t>>
 Printer::compute_cell_dimensions(TableInternal &table) {
   std::pair<std::vector<size_t>, std::vector<size_t>> result;
   size_t num_rows = table.size();
-  size_t num_columns = table.estimate_num_columns();
-
-  std::vector<size_t> row_heights, column_widths{};
-
-  for (size_t i = 0; i < num_columns; ++i) {
-    Column column = table.column(i);
-    size_t configured_width = column.get_configured_width();
-    size_t computed_width = column.get_computed_width();
-    if (configured_width != 0)
-      column_widths.push_back(configured_width);
-    else
-      column_widths.push_back(computed_width);
-  }
+  std::vector<size_t> column_widths = compute_column_widths(table);
+  std::vector<size_t> row_heights;
+  row_heights.reserve(num_rows);
 
   for (size_t i = 0; i < num_rows; ++i) {
     Row &row = table[i];
@@ -9249,20 +9360,32 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
 
   size_t num_rows = table.size();
   size_t num_columns = table.estimate_num_columns();
-  auto dimensions = compute_cell_dimensions(table);
-  auto row_heights = dimensions.first;
-  auto column_widths = dimensions.second;
+  std::vector<size_t> column_widths = compute_column_widths(table);
   auto splitted_cells_text = std::vector<std::vector<std::vector<std::string>>>(
       num_rows, std::vector<std::vector<std::string>>(num_columns, std::vector<std::string>{}));
+  std::vector<size_t> row_heights(num_rows, 0);
 
-  // Pre-compute the cells' content and split them into lines before actually
-  // iterating the cells.
+  // Word-wrap each cell's text exactly once, then derive its row's height
+  // directly from the resulting line count -- row.get_computed_height()
+  // would otherwise redo the exact same word_wrap() independently just to
+  // count lines, doubling the cost of what is usually the most expensive
+  // part of printing a table.
   for (size_t i = 0; i < num_rows; ++i) {
     Row &row = table[i];
+    size_t row_height = row.get_configured_height();
     for (size_t j = 0; j < num_columns; ++j) {
       Cell &cell = row.cell(j);
-      splitted_cells_text[i][j] = split_cell_text(cell, column_widths[j]);
+      auto &lines = splitted_cells_text[i][j];
+      lines = split_cell_text(cell, column_widths[j]);
+      const auto &format = cell.format();
+      // split_cell_text() drops a trailing empty segment (see
+      // Format::split_lines), so completely empty cell content comes back
+      // as 0 lines -- but it still occupies one content line on screen.
+      size_t line_count = lines.empty() ? 1 : lines.size();
+      size_t cell_height = *format.padding_top_ + line_count + *format.padding_bottom_;
+      row_height = std::max(row_height, cell_height);
     }
+    row_heights[i] = row_height;
   }
 
   // For each row,

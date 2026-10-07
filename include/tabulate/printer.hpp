@@ -41,6 +41,11 @@ namespace tabulate {
 
 class Printer {
 public:
+  // Column widths alone (no word-wrapping involved), used both by
+  // compute_cell_dimensions() and by print_table(), which needs them before
+  // it can word-wrap cell content to compute row heights.
+  static std::vector<size_t> compute_column_widths(TableInternal &table);
+
   static std::pair<std::vector<size_t>, std::vector<size_t>>
   compute_cell_dimensions(TableInternal &table);
 

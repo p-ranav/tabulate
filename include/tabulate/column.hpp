@@ -139,25 +139,32 @@ private:
     if (format.padding_left_.has_value())
       result += *format.padding_left_;
 
-    // Check if input text has newlines
-    auto text = cell.get_text();
-    auto split_lines = Format::split_lines(text, "\n", cell.locale(),
-                                           cell.is_multi_byte_character_support_enabled());
-
-    // If there are no newlines in input, set column_width = text.size()
-    if (split_lines.size() == 1) {
+    // Check if input text has newlines. Skip Format::split_lines entirely in
+    // the common case where there are none -- it would otherwise copy the
+    // text and heap-allocate a vector just to tell us what find() already
+    // can for free.
+    const std::string &text = cell.get_text();
+    if (text.find('\n') == std::string::npos) {
       result += cell.size();
     } else {
-      // There are newlines in input
-      // Find widest substring in input and use this as column_width
-      size_t widest_sub_string_size{0};
-      for (auto &line : split_lines)
-        if (get_sequence_length(line, cell.locale(),
-                                cell.is_multi_byte_character_support_enabled()) >
-            widest_sub_string_size)
-          widest_sub_string_size = get_sequence_length(
-              line, cell.locale(), cell.is_multi_byte_character_support_enabled());
-      result += widest_sub_string_size;
+      auto split_lines = Format::split_lines(text, "\n", cell.locale(),
+                                             cell.is_multi_byte_character_support_enabled());
+      if (split_lines.size() == 1) {
+        // e.g. a single trailing newline with nothing after it: preserve
+        // the existing width calculation (same as the no-newline case
+        // above, using the raw text's length including the newline).
+        result += cell.size();
+      } else {
+        // Find widest substring in input and use this as column_width
+        size_t widest_sub_string_size{0};
+        for (auto &line : split_lines) {
+          auto line_length =
+              get_sequence_length(line, cell.locale(), cell.is_multi_byte_character_support_enabled());
+          if (line_length > widest_sub_string_size)
+            widest_sub_string_size = line_length;
+        }
+        result += widest_sub_string_size;
+      }
     }
 
     if (format.padding_right_.has_value())

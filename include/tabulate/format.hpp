@@ -62,6 +62,7 @@ class Format {
 public:
   Format &width(size_t value) {
     width_ = value;
+    touch();
     return *this;
   }
 
@@ -70,11 +71,13 @@ public:
   // cell-level values have no effect.
   Format &indent(size_t value) {
     indent_ = value;
+    touch();
     return *this;
   }
 
   Format &height(size_t value) {
     height_ = value;
+    touch();
     return *this;
   }
 
@@ -83,26 +86,31 @@ public:
     padding_right_ = value;
     padding_top_ = value;
     padding_bottom_ = value;
+    touch();
     return *this;
   }
 
   Format &padding_left(size_t value) {
     padding_left_ = value;
+    touch();
     return *this;
   }
 
   Format &padding_right(size_t value) {
     padding_right_ = value;
+    touch();
     return *this;
   }
 
   Format &padding_top(size_t value) {
     padding_top_ = value;
+    touch();
     return *this;
   }
 
   Format &padding_bottom(size_t value) {
     padding_bottom_ = value;
+    touch();
     return *this;
   }
 
@@ -111,6 +119,7 @@ public:
     border_right_ = value;
     border_top_ = value;
     border_bottom_ = value;
+    touch();
     return *this;
   }
 
@@ -119,6 +128,7 @@ public:
     border_right_color_ = value;
     border_top_color_ = value;
     border_bottom_color_ = value;
+    touch();
     return *this;
   }
 
@@ -127,6 +137,7 @@ public:
     border_right_background_color_ = value;
     border_top_background_color_ = value;
     border_bottom_background_color_ = value;
+    touch();
     return *this;
   }
 
@@ -135,86 +146,103 @@ public:
     border_right_style_ = value;
     border_top_style_ = value;
     border_bottom_style_ = value;
+    touch();
     return *this;
   }
 
   Format &border_left(const std::string &value) {
     border_left_ = value;
+    touch();
     return *this;
   }
 
   Format &border_left_color(Color value) {
     border_left_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_left_background_color(Color value) {
     border_left_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_left_style(const std::vector<FontStyle> &value) {
     border_left_style_ = value;
+    touch();
     return *this;
   }
 
   Format &border_right(const std::string &value) {
     border_right_ = value;
+    touch();
     return *this;
   }
 
   Format &border_right_color(Color value) {
     border_right_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_right_background_color(Color value) {
     border_right_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_right_style(const std::vector<FontStyle> &value) {
     border_right_style_ = value;
+    touch();
     return *this;
   }
 
   Format &border_top(const std::string &value) {
     border_top_ = value;
+    touch();
     return *this;
   }
 
   Format &border_top_color(Color value) {
     border_top_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_top_background_color(Color value) {
     border_top_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_top_style(const std::vector<FontStyle> &value) {
     border_top_style_ = value;
+    touch();
     return *this;
   }
 
   Format &border_bottom(const std::string &value) {
     border_bottom_ = value;
+    touch();
     return *this;
   }
 
   Format &border_bottom_color(Color value) {
     border_bottom_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_bottom_background_color(Color value) {
     border_bottom_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &border_bottom_style(const std::vector<FontStyle> &value) {
     border_bottom_style_ = value;
+    touch();
     return *this;
   }
 
@@ -223,6 +251,7 @@ public:
     show_border_bottom_ = true;
     show_border_left_ = true;
     show_border_right_ = true;
+    touch();
     return *this;
   }
 
@@ -231,52 +260,62 @@ public:
     show_border_bottom_ = false;
     show_border_left_ = false;
     show_border_right_ = false;
+    touch();
     return *this;
   }
 
   Format &show_border_top() {
     show_border_top_ = true;
+    touch();
     return *this;
   }
 
   Format &hide_border_top() {
     show_border_top_ = false;
+    touch();
     return *this;
   }
 
   Format &show_border_bottom() {
     show_border_bottom_ = true;
+    touch();
     return *this;
   }
 
   Format &hide_border_bottom() {
     show_border_bottom_ = false;
+    touch();
     return *this;
   }
 
   Format &show_border_left() {
     show_border_left_ = true;
+    touch();
     return *this;
   }
 
   Format &hide_border_left() {
     show_border_left_ = false;
+    touch();
     return *this;
   }
 
   Format &show_border_right() {
     show_border_right_ = true;
+    touch();
     return *this;
   }
 
   Format &hide_border_right() {
     show_border_right_ = false;
+    touch();
     return *this;
   }
 
   Format& show_row_separator() {
     show_border_top_ = true;
     show_row_separator_ = true;
+    touch();
     return *this;
   }
 
@@ -285,6 +324,7 @@ public:
     corner_top_right_ = value;
     corner_bottom_left_ = value;
     corner_bottom_right_ = value;
+    touch();
     return *this;
   }
 
@@ -293,6 +333,7 @@ public:
     corner_top_right_color_ = value;
     corner_bottom_left_color_ = value;
     corner_bottom_right_color_ = value;
+    touch();
     return *this;
   }
 
@@ -301,6 +342,7 @@ public:
     corner_top_right_background_color_ = value;
     corner_bottom_left_background_color_ = value;
     corner_bottom_right_background_color_ = value;
+    touch();
     return *this;
   }
 
@@ -309,106 +351,127 @@ public:
     corner_top_right_style_ = value;
     corner_bottom_left_style_ = value;
     corner_bottom_right_style_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_left(const std::string &value) {
     corner_top_left_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_left_color(Color value) {
     corner_top_left_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_left_background_color(Color value) {
     corner_top_left_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_left_style(const std::vector<FontStyle> &value) {
     corner_top_left_style_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_right(const std::string &value) {
     corner_top_right_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_right_color(Color value) {
     corner_top_right_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_right_background_color(Color value) {
     corner_top_right_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_top_right_style(const std::vector<FontStyle> &value) {
     corner_top_right_style_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_left(const std::string &value) {
     corner_bottom_left_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_left_color(Color value) {
     corner_bottom_left_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_left_background_color(Color value) {
     corner_bottom_left_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_left_style(const std::vector<FontStyle> &value) {
     corner_bottom_left_style_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_right(const std::string &value) {
     corner_bottom_right_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_right_color(Color value) {
     corner_bottom_right_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_right_background_color(Color value) {
     corner_bottom_right_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &corner_bottom_right_style(const std::vector<FontStyle> &value) {
     corner_bottom_right_style_ = value;
+    touch();
     return *this;
   }
 
   Format &column_separator(const std::string &value) {
     column_separator_ = value;
+    touch();
     return *this;
   }
 
   Format &column_separator_color(Color value) {
     column_separator_color_ = value;
+    touch();
     return *this;
   }
 
   Format &column_separator_background_color(Color value) {
     column_separator_background_color_ = value;
+    touch();
     return *this;
   }
 
   Format &font_align(FontAlign value) {
     font_align_ = value;
+    touch();
     return *this;
   }
 
@@ -419,16 +482,19 @@ public:
     } else {
       font_style_ = style;
     }
+    touch();
     return *this;
   }
 
   Format &font_color(Color value) {
     font_color_ = value;
+    touch();
     return *this;
   }
 
   Format &font_background_color(Color value) {
     font_background_color_ = value;
+    touch();
     return *this;
   }
 
@@ -436,6 +502,7 @@ public:
     font_color(value);
     border_color(value);
     corner_color(value);
+    touch();
     return *this;
   }
 
@@ -443,16 +510,19 @@ public:
     font_background_color(value);
     border_background_color(value);
     corner_background_color(value);
+    touch();
     return *this;
   }
 
   Format &multi_byte_characters(bool value) {
     multi_byte_characters_ = value;
+    touch();
     return *this;
   }
 
   Format &locale(const std::string &value) {
     locale_ = value;
+    touch();
     return *this;
   }
 
@@ -465,6 +535,7 @@ public:
 
   Format &trim_mode(TrimMode trim_mode) {
     trim_mode_ = trim_mode;
+    touch();
     return *this;
   }
 
@@ -518,16 +589,18 @@ public:
                                               const std::string &locale,
                                               bool is_multi_byte_character_support_enabled) {
     std::vector<std::string> result{};
-    std::string input = text;
-    size_t pos = 0;
-    std::string token;
-    while ((pos = input.find(delimiter)) != std::string::npos) {
-      token = input.substr(0, pos);
-      result.push_back(token);
-      input.erase(0, pos + delimiter.length());
+    // Index-based scan instead of copying `text` into a mutable buffer and
+    // repeatedly erase()-ing its front: erase() shifts the whole remainder
+    // left, making that approach O(n^2) in the number of lines.
+    size_t start = 0;
+    size_t pos;
+    while ((pos = text.find(delimiter, start)) != std::string::npos) {
+      result.push_back(text.substr(start, pos - start));
+      start = pos + delimiter.length();
     }
-    if (get_sequence_length(input, locale, is_multi_byte_character_support_enabled))
-      result.push_back(input);
+    std::string tail = text.substr(start);
+    if (get_sequence_length(tail, locale, is_multi_byte_character_support_enabled))
+      result.push_back(std::move(tail));
     return result;
   };
 
@@ -670,6 +743,13 @@ public:
   }
 
   bool operator!=(const Format &other) const { return !(*this == other); }
+
+  // Monotonically increases whenever any setter runs (including transitively,
+  // e.g. color() calling font_color()/border_color()/corner_color()) or a
+  // merge() produces a new combined Format. Cell/Row::format() compare this
+  // against a saved snapshot to detect "did anything upstream change" in O(1)
+  // instead of comparing every field.
+  size_t generation() const { return generation_; }
 
 private:
   // Merge two formats
@@ -968,10 +1048,18 @@ private:
 	  else
 		  result.show_row_separator_ = second.show_row_separator_;
 
+    result.touch();
     return result;
   }
 
 private:
+  static size_t &generation_counter() {
+    static size_t counter = 0;
+    return counter;
+  }
+  void touch() { generation_ = ++generation_counter(); }
+  mutable size_t generation_ = 0;
+
   friend class Cell;
   friend class Row;
   friend class Column;
