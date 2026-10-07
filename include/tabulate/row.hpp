@@ -107,7 +107,7 @@ private:
     size_t result{0};
     for (size_t i = 0; i < size(); ++i) {
       auto cell = cells_[i];
-      auto format = cell->format();
+      const auto &format = cell->format();
       if (format.height_.has_value())
         result = std::max(result, *format.height_);
     }
@@ -148,7 +148,7 @@ private:
   size_t get_cell_height(size_t cell_index, size_t column_width) {
     size_t result{0};
     Cell &cell = *(cells_[cell_index]);
-    auto format = cell.format();
+    const auto &format = cell.format();
     auto text = cell.get_text();
 
     auto padding_left = *format.padding_left_;

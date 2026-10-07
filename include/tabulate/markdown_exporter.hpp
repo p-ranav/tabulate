@@ -58,7 +58,7 @@ private:
       // Create alignment header cells
       std::vector<std::string> alignment_cells{};
       for (auto &cell : table[0]) {
-        auto format = cell.format();
+        const auto &format = cell.format();
         if (format.font_align_.value() == FontAlign::left) {
           alignment_cells.push_back(":----");
         } else if (format.font_align_.value() == FontAlign::center) {
@@ -103,7 +103,7 @@ private:
     // Apply markdown format to cells in each row
     for (auto row : table) {
       for (auto &cell : row) {
-        auto format = cell.format();
+        const auto &format = cell.format();
         formats_.push_back(format);
         cell.format()
             .hide_border_top()

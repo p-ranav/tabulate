@@ -5427,22 +5427,22 @@ nssv_inline_ns namespace string_view_literals {
 
 #if nssv_CONFIG_STD_SV_OPERATOR && nssv_HAVE_STD_DEFINED_LITERALS
 
-nssv_constexpr nonstd::sv_lite::string_view operator "" sv( const char* str, size_t len ) nssv_noexcept  // (1)
+nssv_constexpr nonstd::sv_lite::string_view operator""sv( const char* str, size_t len ) nssv_noexcept  // (1)
 {
     return nonstd::sv_lite::string_view{ str, len };
 }
 
-nssv_constexpr nonstd::sv_lite::u16string_view operator "" sv( const char16_t* str, size_t len ) nssv_noexcept  // (2)
+nssv_constexpr nonstd::sv_lite::u16string_view operator""sv( const char16_t* str, size_t len ) nssv_noexcept  // (2)
 {
     return nonstd::sv_lite::u16string_view{ str, len };
 }
 
-nssv_constexpr nonstd::sv_lite::u32string_view operator "" sv( const char32_t* str, size_t len ) nssv_noexcept  // (3)
+nssv_constexpr nonstd::sv_lite::u32string_view operator""sv( const char32_t* str, size_t len ) nssv_noexcept  // (3)
 {
     return nonstd::sv_lite::u32string_view{ str, len };
 }
 
-nssv_constexpr nonstd::sv_lite::wstring_view operator "" sv( const wchar_t* str, size_t len ) nssv_noexcept  // (4)
+nssv_constexpr nonstd::sv_lite::wstring_view operator""sv( const wchar_t* str, size_t len ) nssv_noexcept  // (4)
 {
     return nonstd::sv_lite::wstring_view{ str, len };
 }
@@ -5451,22 +5451,22 @@ nssv_constexpr nonstd::sv_lite::wstring_view operator "" sv( const wchar_t* str,
 
 #if nssv_CONFIG_USR_SV_OPERATOR
 
-nssv_constexpr nonstd::sv_lite::string_view operator "" _sv( const char* str, size_t len ) nssv_noexcept  // (1)
+nssv_constexpr nonstd::sv_lite::string_view operator""_sv( const char* str, size_t len ) nssv_noexcept  // (1)
 {
     return nonstd::sv_lite::string_view{ str, len };
 }
 
-nssv_constexpr nonstd::sv_lite::u16string_view operator "" _sv( const char16_t* str, size_t len ) nssv_noexcept  // (2)
+nssv_constexpr nonstd::sv_lite::u16string_view operator""_sv( const char16_t* str, size_t len ) nssv_noexcept  // (2)
 {
     return nonstd::sv_lite::u16string_view{ str, len };
 }
 
-nssv_constexpr nonstd::sv_lite::u32string_view operator "" _sv( const char32_t* str, size_t len ) nssv_noexcept  // (3)
+nssv_constexpr nonstd::sv_lite::u32string_view operator""_sv( const char32_t* str, size_t len ) nssv_noexcept  // (3)
 {
     return nonstd::sv_lite::u32string_view{ str, len };
 }
 
-nssv_constexpr nonstd::sv_lite::wstring_view operator "" _sv( const wchar_t* str, size_t len ) nssv_noexcept  // (4)
+nssv_constexpr nonstd::sv_lite::wstring_view operator""_sv( const wchar_t* str, size_t len ) nssv_noexcept  // (4)
 {
     return nonstd::sv_lite::wstring_view{ str, len };
 }
@@ -7406,8 +7406,9 @@ public:
   // than once, or rendering the same cell multiple times within one print.
   // Short-circuits on the first differing field, same as reset_inherited_fields.
   bool operator==(const Format &other) const {
-    bool result = true;
-#define TABULATE_FIELD_EQUAL(field) result = result && (field == other.field)
+#define TABULATE_FIELD_EQUAL(field)                                                               \
+    if (!(field == other.field))                                                                  \
+    return false
     TABULATE_FIELD_EQUAL(width_);
     TABULATE_FIELD_EQUAL(indent_);
     TABULATE_FIELD_EQUAL(height_);
@@ -7463,7 +7464,7 @@ public:
     TABULATE_FIELD_EQUAL(trim_mode_);
     TABULATE_FIELD_EQUAL(show_row_separator_);
 #undef TABULATE_FIELD_EQUAL
-    return result;
+    return true;
   }
 
   bool operator!=(const Format &other) const { return !(*this == other); }
@@ -8110,7 +8111,7 @@ private:
     size_t result{0};
     for (size_t i = 0; i < size(); ++i) {
       auto cell = cells_[i];
-      auto format = cell->format();
+      const auto &format = cell->format();
       if (format.height_.has_value())
         result = std::max(result, *format.height_);
     }
@@ -8151,7 +8152,7 @@ private:
   size_t get_cell_height(size_t cell_index, size_t column_width) {
     size_t result{0};
     Cell &cell = *(cells_[cell_index]);
-    auto format = cell.format();
+    const auto &format = cell.format();
     auto text = cell.get_text();
 
     auto padding_left = *format.padding_left_;
@@ -8404,7 +8405,7 @@ private:
     size_t result{0};
     for (size_t i = 0; i < size(); ++i) {
       auto cell = cells_[i];
-      auto format = cell.get().format();
+      const auto &format = cell.get().format();
       if (format.width_.has_value())
         result = std::max(result, *format.width_);
     }
@@ -8432,7 +8433,7 @@ private:
   size_t get_cell_width(size_t cell_index) {
     size_t result{0};
     Cell &cell = cells_[cell_index].get();
-    auto format = cell.format();
+    const auto &format = cell.format();
     if (format.padding_left_.has_value())
       result += *format.padding_left_;
 
@@ -9126,7 +9127,11 @@ private:
 
 inline Format &Cell::format() {
   std::shared_ptr<Row> parent = parent_.lock();
-  Format parent_format = parent->format();
+  // A reference, not a copy: Format has ~50 optional<> fields (several
+  // strings/vectors), so copying it on every call -- including the common
+  // case below where nothing changed and we return the cached result --
+  // would dominate print() cost on tables with many cells.
+  const Format &parent_format = parent->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
     if (parent_format == *parent_format_snapshot_)
       // Nothing upstream changed since the last merge: the cached result is
@@ -9146,7 +9151,9 @@ inline bool Cell::is_multi_byte_character_support_enabled() {
 
 inline Format &Row::format() {
   std::shared_ptr<TableInternal> parent = parent_.lock();
-  Format parent_format = parent->format();
+  // See the comment in Cell::format(): a reference avoids an expensive
+  // whole-Format copy on every call.
+  const Format &parent_format = parent->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
     if (parent_format == *parent_format_snapshot_)
       // Nothing upstream changed since the last merge: the cached result is
@@ -9206,8 +9213,9 @@ Printer::compute_cell_dimensions(TableInternal &table) {
 
 inline std::vector<std::string> Printer::split_cell_text(Cell &cell, size_t column_width) {
   const std::string &text = cell.get_text();
-  auto padding_left = *cell.format().padding_left_;
-  auto padding_right = *cell.format().padding_right_;
+  const Format &format = cell.format();
+  auto padding_left = *format.padding_left_;
+  auto padding_right = *format.padding_right_;
 
   // Check if input text has embedded \n that are to be respected
   bool has_new_line = text.find_first_of('\n') != std::string::npos;
@@ -9285,7 +9293,7 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
       auto bottom_border_needed{true};
       for (size_t j = 0; j < num_columns; ++j) {
         auto &cell = table[i][j];
-        auto format = cell.format();
+        const auto &format = cell.format();
         auto corner = *format.corner_bottom_left_;
         auto border_bottom = *format.border_bottom_;
         if (corner == "" && border_bottom == "") {
@@ -9333,7 +9341,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
   auto column_width = dimension.second;
   auto &cell = table[index.first][index.second];
   auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
-  auto format = cell.format();
+  const auto &format = cell.format();
   auto text_height = splitted_cell_text.size();
   auto padding_top = *format.padding_top_;
 
@@ -9429,7 +9437,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
                                            const std::pair<size_t, size_t> &dimension,
                                            size_t num_columns) {
   auto &cell = table[index.first][index.second];
-  auto format = cell.format();
+  const auto &format = cell.format();
   auto column_width = dimension.second;
 
   auto corner = *format.corner_top_left_;
@@ -9495,7 +9503,7 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
                                               const std::pair<size_t, size_t> &dimension,
                                               size_t num_columns) {
   auto &cell = table[index.first][index.second];
-  auto format = cell.format();
+  const auto &format = cell.format();
   auto column_width = dimension.second;
 
   auto corner = *format.corner_bottom_left_;
@@ -10032,7 +10040,7 @@ private:
       // Create alignment header cells
       std::vector<std::string> alignment_cells{};
       for (auto &cell : table[0]) {
-        auto format = cell.format();
+        const auto &format = cell.format();
         if (format.font_align_.value() == FontAlign::left) {
           alignment_cells.push_back(":----");
         } else if (format.font_align_.value() == FontAlign::center) {
@@ -10077,7 +10085,7 @@ private:
     // Apply markdown format to cells in each row
     for (auto row : table) {
       for (auto &cell : row) {
-        auto format = cell.format();
+        const auto &format = cell.format();
         formats_.push_back(format);
         cell.format()
             .hide_border_top()
@@ -10219,7 +10227,7 @@ private:
     std::string result{"{"};
 
     for (auto &cell : table[0]) {
-      auto format = cell.format();
+      const auto &format = cell.format();
       if (format.font_align_.value() == FontAlign::left) {
         result += 'l';
       } else if (format.font_align_.value() == FontAlign::center) {
@@ -10312,7 +10320,7 @@ public:
 private:
   std::string add_formatted_cell(Cell &cell) const {
     std::stringstream ss;
-    auto format = cell.format();
+    const auto &format = cell.format();
     std::string cell_string = cell.get_text();
 
     auto font_style = format.font_style_.value();
@@ -10351,7 +10359,7 @@ private:
     size_t column_count = table[0].size();
     size_t column_index = 0;
     for (auto &cell : table[0]) {
-      auto format = cell.format();
+      const auto &format = cell.format();
 
       if (format.font_align_.value() == FontAlign::left) {
         ss << '<';

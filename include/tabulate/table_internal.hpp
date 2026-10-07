@@ -187,7 +187,11 @@ private:
 
 inline Format &Cell::format() {
   std::shared_ptr<Row> parent = parent_.lock();
-  Format parent_format = parent->format();
+  // A reference, not a copy: Format has ~50 optional<> fields (several
+  // strings/vectors), so copying it on every call -- including the common
+  // case below where nothing changed and we return the cached result --
+  // would dominate print() cost on tables with many cells.
+  const Format &parent_format = parent->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
     if (parent_format == *parent_format_snapshot_)
       // Nothing upstream changed since the last merge: the cached result is
@@ -207,7 +211,9 @@ inline bool Cell::is_multi_byte_character_support_enabled() {
 
 inline Format &Row::format() {
   std::shared_ptr<TableInternal> parent = parent_.lock();
-  Format parent_format = parent->format();
+  // See the comment in Cell::format(): a reference avoids an expensive
+  // whole-Format copy on every call.
+  const Format &parent_format = parent->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
     if (parent_format == *parent_format_snapshot_)
       // Nothing upstream changed since the last merge: the cached result is
@@ -267,8 +273,9 @@ Printer::compute_cell_dimensions(TableInternal &table) {
 
 inline std::vector<std::string> Printer::split_cell_text(Cell &cell, size_t column_width) {
   const std::string &text = cell.get_text();
-  auto padding_left = *cell.format().padding_left_;
-  auto padding_right = *cell.format().padding_right_;
+  const Format &format = cell.format();
+  auto padding_left = *format.padding_left_;
+  auto padding_right = *format.padding_right_;
 
   // Check if input text has embedded \n that are to be respected
   bool has_new_line = text.find_first_of('\n') != std::string::npos;
@@ -346,7 +353,7 @@ inline void Printer::print_table(std::ostream &stream, TableInternal &table) {
       auto bottom_border_needed{true};
       for (size_t j = 0; j < num_columns; ++j) {
         auto &cell = table[i][j];
-        auto format = cell.format();
+        const auto &format = cell.format();
         auto corner = *format.corner_bottom_left_;
         auto border_bottom = *format.border_bottom_;
         if (corner == "" && border_bottom == "") {
@@ -394,7 +401,7 @@ inline void Printer::print_row_in_cell(std::ostream &stream, TableInternal &tabl
   auto column_width = dimension.second;
   auto &cell = table[index.first][index.second];
   auto is_multi_byte_character_support_enabled = cell.is_multi_byte_character_support_enabled();
-  auto format = cell.format();
+  const auto &format = cell.format();
   auto text_height = splitted_cell_text.size();
   auto padding_top = *format.padding_top_;
 
@@ -490,7 +497,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
                                            const std::pair<size_t, size_t> &dimension,
                                            size_t num_columns) {
   auto &cell = table[index.first][index.second];
-  auto format = cell.format();
+  const auto &format = cell.format();
   auto column_width = dimension.second;
 
   auto corner = *format.corner_top_left_;
@@ -556,7 +563,7 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
                                               const std::pair<size_t, size_t> &dimension,
                                               size_t num_columns) {
   auto &cell = table[index.first][index.second];
-  auto format = cell.format();
+  const auto &format = cell.format();
   auto column_width = dimension.second;
 
   auto corner = *format.corner_bottom_left_;

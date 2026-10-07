@@ -608,8 +608,9 @@ public:
   // than once, or rendering the same cell multiple times within one print.
   // Short-circuits on the first differing field, same as reset_inherited_fields.
   bool operator==(const Format &other) const {
-    bool result = true;
-#define TABULATE_FIELD_EQUAL(field) result = result && (field == other.field)
+#define TABULATE_FIELD_EQUAL(field)                                                               \
+    if (!(field == other.field))                                                                  \
+    return false
     TABULATE_FIELD_EQUAL(width_);
     TABULATE_FIELD_EQUAL(indent_);
     TABULATE_FIELD_EQUAL(height_);
@@ -665,7 +666,7 @@ public:
     TABULATE_FIELD_EQUAL(trim_mode_);
     TABULATE_FIELD_EQUAL(show_row_separator_);
 #undef TABULATE_FIELD_EQUAL
-    return result;
+    return true;
   }
 
   bool operator!=(const Format &other) const { return !(*this == other); }

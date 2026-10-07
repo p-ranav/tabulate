@@ -107,7 +107,7 @@ private:
     size_t result{0};
     for (size_t i = 0; i < size(); ++i) {
       auto cell = cells_[i];
-      auto format = cell.get().format();
+      const auto &format = cell.get().format();
       if (format.width_.has_value())
         result = std::max(result, *format.width_);
     }
@@ -135,7 +135,7 @@ private:
   size_t get_cell_width(size_t cell_index) {
     size_t result{0};
     Cell &cell = cells_[cell_index].get();
-    auto format = cell.format();
+    const auto &format = cell.format();
     if (format.padding_left_.has_value())
       result += *format.padding_left_;
 

@@ -107,7 +107,7 @@ private:
     std::string result{"{"};
 
     for (auto &cell : table[0]) {
-      auto format = cell.format();
+      const auto &format = cell.format();
       if (format.font_align_.value() == FontAlign::left) {
         result += 'l';
       } else if (format.font_align_.value() == FontAlign::center) {

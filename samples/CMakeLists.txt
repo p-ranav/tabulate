@@ -115,5 +115,26 @@ target_link_libraries(pagination PRIVATE tabulate::tabulate)
 add_executable(benchmark benchmark.cpp)
 target_link_libraries(benchmark PRIVATE tabulate::tabulate)
 
+# Opt-in: compares tabulate against haarcuba/cpp-text-table (LGPL-2.1).
+# Downloads TextTable.h into the build directory at configure time instead of
+# vendoring it in the source tree, since that library's license differs from
+# every other dependency already vendored in this repo.
+option(BENCHMARK_VS_CPP_TEXT_TABLE
+      "Build a benchmark comparing tabulate against haarcuba/cpp-text-table" OFF)
+if(BENCHMARK_VS_CPP_TEXT_TABLE)
+  set(CPP_TEXT_TABLE_DIR ${CMAKE_CURRENT_BINARY_DIR}/cpp_text_table)
+  set(CPP_TEXT_TABLE_HEADER ${CPP_TEXT_TABLE_DIR}/TextTable.h)
+  if(NOT EXISTS ${CPP_TEXT_TABLE_HEADER})
+    file(DOWNLOAD
+      https://raw.githubusercontent.com/haarcuba/cpp-text-table/master/TextTable.h
+      ${CPP_TEXT_TABLE_HEADER}
+      SHOW_PROGRESS)
+  endif()
+
+  add_executable(benchmark_vs_cpp_text_table benchmark_vs_cpp_text_table.cpp)
+  target_link_libraries(benchmark_vs_cpp_text_table PRIVATE tabulate::tabulate)
+  target_include_directories(benchmark_vs_cpp_text_table PRIVATE ${CPP_TEXT_TABLE_DIR})
+endif()
+
 add_executable(string_view_in_row string_view_in_row.cpp) 
 target_link_libraries(string_view_in_row PRIVATE tabulate::tabulate ${CMAKE_THREAD_LIBS_INIT})

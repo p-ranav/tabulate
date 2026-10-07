@@ -74,7 +74,7 @@ public:
 private:
   std::string add_formatted_cell(Cell &cell) const {
     std::stringstream ss;
-    auto format = cell.format();
+    const auto &format = cell.format();
     std::string cell_string = cell.get_text();
 
     auto font_style = format.font_style_.value();
@@ -113,7 +113,7 @@ private:
     size_t column_count = table[0].size();
     size_t column_index = 0;
     for (auto &cell : table[0]) {
-      auto format = cell.format();
+      const auto &format = cell.format();
 
       if (format.font_align_.value() == FontAlign::left) {
         ss << '<';
