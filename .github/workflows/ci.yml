@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Configure
         run: cmake -S . -B build -Dtabulate_BUILD_TESTS=ON -DSAMPLES=ON -DUSE_CPP17=${{ matrix.cpp17 }}
