@@ -8870,6 +8870,29 @@ public:
   static void reset_element_style(std::ostream &stream) { stream << termcolor::reset; }
 
 private:
+  // Repeats `unit` until the result is `width` units long. Used to build
+  // border/separator lines. A naive loop appending `unit` once per
+  // iteration is the single hottest part of printing a plain table (profiled
+  // via `sample` -- each append(), even reserve()'d, still pays a function
+  // call + bounds check per column-width unit, 10-20+ times per cell). The
+  // single-char case (the overwhelming majority: "-", "|", "+", ...) uses
+  // the fill constructor directly; the general case doubles the buffer each
+  // round instead of growing it one unit at a time, for O(log width) appends.
+  static std::string repeat_to_width(const std::string &unit, size_t width) {
+    if (width == 0 || unit.empty())
+      return {};
+    if (unit.size() == 1)
+      return std::string(width, unit[0]);
+    const size_t target = unit.size() * width;
+    std::string line = unit;
+    line.reserve(target);
+    while (line.size() < target) {
+      size_t remaining = target - line.size();
+      line.append(line, 0, std::min(line.size(), remaining));
+    }
+    return line;
+  }
+
   static void print_content_left_aligned(std::ostream &stream, const std::string &cell_content,
                                          const Format &format, size_t text_with_padding_size,
                                          size_t column_width) {
@@ -9625,10 +9648,7 @@ inline bool Printer::print_cell_border_top(std::ostream &stream, TableInternal &
     // single write, instead of once per column-width unit.
     const std::string &repeated_unit =
         (*format.show_row_separator_ && index.first == 0) ? std::string(" ") : border_top;
-    std::string line;
-    line.reserve(repeated_unit.size() * column_width);
-    for (size_t i = 0; i < column_width; ++i)
-      line += repeated_unit;
+    std::string line = repeat_to_width(repeated_unit, column_width);
 
     apply_element_style(stream, *format.border_top_color_, *format.border_top_background_color_,
                         *format.border_top_style_);
@@ -9682,10 +9702,7 @@ inline bool Printer::print_cell_border_bottom(std::ostream &stream, TableInterna
   {
     // Apply style once and batch the repeated border character into a
     // single write, instead of once per column-width unit.
-    std::string line;
-    line.reserve(border_bottom.size() * column_width);
-    for (size_t i = 0; i < column_width; ++i)
-      line += border_bottom;
+    std::string line = repeat_to_width(border_bottom, column_width);
 
     apply_element_style(stream, *format.border_bottom_color_,
                         *format.border_bottom_background_color_, *format.border_bottom_style_);

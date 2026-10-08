@@ -83,6 +83,29 @@ public:
   static void reset_element_style(std::ostream &stream) { stream << termcolor::reset; }
 
 private:
+  // Repeats `unit` until the result is `width` units long. Used to build
+  // border/separator lines. A naive loop appending `unit` once per
+  // iteration is the single hottest part of printing a plain table (profiled
+  // via `sample` -- each append(), even reserve()'d, still pays a function
+  // call + bounds check per column-width unit, 10-20+ times per cell). The
+  // single-char case (the overwhelming majority: "-", "|", "+", ...) uses
+  // the fill constructor directly; the general case doubles the buffer each
+  // round instead of growing it one unit at a time, for O(log width) appends.
+  static std::string repeat_to_width(const std::string &unit, size_t width) {
+    if (width == 0 || unit.empty())
+      return {};
+    if (unit.size() == 1)
+      return std::string(width, unit[0]);
+    const size_t target = unit.size() * width;
+    std::string line = unit;
+    line.reserve(target);
+    while (line.size() < target) {
+      size_t remaining = target - line.size();
+      line.append(line, 0, std::min(line.size(), remaining));
+    }
+    return line;
+  }
+
   static void print_content_left_aligned(std::ostream &stream, const std::string &cell_content,
                                          const Format &format, size_t text_with_padding_size,
                                          size_t column_width) {
