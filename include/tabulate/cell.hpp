@@ -56,7 +56,7 @@ using nonstd::optional;
 
 class Cell {
 public:
-  explicit Cell(std::shared_ptr<class Row> parent) : parent_(parent) {}
+  explicit Cell(std::shared_ptr<class Row> parent) : parent_(parent.get()) {}
 
   void set_text(const std::string &text) { data_ = text; }
 
@@ -74,7 +74,10 @@ public:
 
 private:
   std::string data_;
-  std::weak_ptr<class Row> parent_;
+  // Raw, not weak_ptr: a Cell is only ever reachable through its owning Row
+  // (which outlives it), and weak_ptr::lock()'s atomic refcount bump showed
+  // up as a measurable per-cell cost in printing's hot path.
+  class Row *parent_;
   optional<Format> format_;
   optional<Format> parent_format_snapshot_;
 };

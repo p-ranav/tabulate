@@ -61,7 +61,7 @@ using nonstd::optional;
 
 class Row {
 public:
-  explicit Row(std::shared_ptr<class TableInternal> parent) : parent_(parent) {}
+  explicit Row(std::shared_ptr<class TableInternal> parent) : parent_(parent.get()) {}
 
   void add_cell(std::shared_ptr<Cell> cell) { cells_.push_back(cell); }
 
@@ -191,7 +191,8 @@ private:
   }
 
   std::vector<std::shared_ptr<Cell>> cells_;
-  std::weak_ptr<class TableInternal> parent_;
+  // Raw, not weak_ptr: see the comment on Cell::parent_ in cell.hpp.
+  class TableInternal *parent_;
   optional<Format> format_;
   optional<Format> parent_format_snapshot_;
 };

@@ -4145,22 +4145,22 @@ inline namespace literals {
 inline namespace string_view_literals {
 
 
-constexpr std::string_view operator "" _sv( const char* str, size_t len ) noexcept  // (1)
+constexpr std::string_view operator ""_sv( const char* str, size_t len ) noexcept  // (1)
 {
     return std::string_view{ str, len };
 }
 
-constexpr std::u16string_view operator "" _sv( const char16_t* str, size_t len ) noexcept  // (2)
+constexpr std::u16string_view operator ""_sv( const char16_t* str, size_t len ) noexcept  // (2)
 {
     return std::u16string_view{ str, len };
 }
 
-constexpr std::u32string_view operator "" _sv( const char32_t* str, size_t len ) noexcept  // (3)
+constexpr std::u32string_view operator ""_sv( const char32_t* str, size_t len ) noexcept  // (3)
 {
     return std::u32string_view{ str, len };
 }
 
-constexpr std::wstring_view operator "" _sv( const wchar_t* str, size_t len ) noexcept  // (4)
+constexpr std::wstring_view operator ""_sv( const wchar_t* str, size_t len ) noexcept  // (4)
 {
     return std::wstring_view{ str, len };
 }
@@ -8066,7 +8066,7 @@ using nonstd::optional;
 
 class Cell {
 public:
-  explicit Cell(std::shared_ptr<class Row> parent) : parent_(parent) {}
+  explicit Cell(std::shared_ptr<class Row> parent) : parent_(parent.get()) {}
 
   void set_text(const std::string &text) { data_ = text; }
 
@@ -8084,7 +8084,10 @@ public:
 
 private:
   std::string data_;
-  std::weak_ptr<class Row> parent_;
+  // Raw, not weak_ptr: a Cell is only ever reachable through its owning Row
+  // (which outlives it), and weak_ptr::lock()'s atomic refcount bump showed
+  // up as a measurable per-cell cost in printing's hot path.
+  class Row *parent_;
   optional<Format> format_;
   optional<Format> parent_format_snapshot_;
 };
@@ -8153,7 +8156,7 @@ using nonstd::optional;
 
 class Row {
 public:
-  explicit Row(std::shared_ptr<class TableInternal> parent) : parent_(parent) {}
+  explicit Row(std::shared_ptr<class TableInternal> parent) : parent_(parent.get()) {}
 
   void add_cell(std::shared_ptr<Cell> cell) { cells_.push_back(cell); }
 
@@ -8283,7 +8286,8 @@ private:
   }
 
   std::vector<std::shared_ptr<Cell>> cells_;
-  std::weak_ptr<class TableInternal> parent_;
+  // Raw, not weak_ptr: see the comment on Cell::parent_ in cell.hpp.
+  class TableInternal *parent_;
   optional<Format> format_;
   optional<Format> parent_format_snapshot_;
 };
@@ -9226,12 +9230,11 @@ private:
 };
 
 inline Format &Cell::format() {
-  std::shared_ptr<Row> parent = parent_.lock();
   // A reference, not a copy: Format has ~50 optional<> fields (several
   // strings/vectors), so copying it on every call -- including the common
   // case below where nothing changed and we return the cached result --
   // would dominate print() cost on tables with many cells.
-  const Format &parent_format = parent->format();
+  const Format &parent_format = parent_->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
     if (parent_format.generation() == parent_format_snapshot_->generation())
       // Nothing upstream changed since the last merge (cheap O(1) check):
@@ -9255,10 +9258,9 @@ inline bool Cell::is_multi_byte_character_support_enabled() {
 }
 
 inline Format &Row::format() {
-  std::shared_ptr<TableInternal> parent = parent_.lock();
   // See the comment in Cell::format(): a reference avoids an expensive
   // whole-Format copy on every call.
-  const Format &parent_format = parent->format();
+  const Format &parent_format = parent_->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
     if (parent_format.generation() == parent_format_snapshot_->generation())
       // Nothing upstream changed since the last merge (cheap O(1) check):

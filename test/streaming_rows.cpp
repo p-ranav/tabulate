@@ -36,5 +36,27 @@ int main() {
   t.expect_eq("streaming rows one at a time matches a normal full print()", streamed.str(),
               table.str() + "\n");
 
+  {
+    // print_row()'s height calculation must also respect embedded newlines,
+    // not just word-wrap them (mirrors Printer::split_cell_text's behavior).
+    tabulate::Table multiline;
+    multiline.add_row(Row_t{"a\nb", "x"});
+    multiline.column(0).format().width(6);
+    multiline.column(1).format().width(6);
+    std::ostringstream out;
+    multiline.print_row(0, out);
+    multiline.print_bottom_border(out);
+    t.expect_eq("print_row() respects embedded newlines when computing row height", out.str(),
+                multiline.str() + "\n");
+  }
+
+  {
+    tabulate::Table table2;
+    table2.add_row(Row_t{"a"});
+    table2.add_row(Row_t{"b"});
+    t.expect_eq("Row::cells() returns one entry per cell in the row",
+                std::to_string(table2[0].cells().size()), "1");
+  }
+
   return t.report();
 }

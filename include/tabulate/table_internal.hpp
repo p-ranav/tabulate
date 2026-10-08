@@ -186,12 +186,11 @@ private:
 };
 
 inline Format &Cell::format() {
-  std::shared_ptr<Row> parent = parent_.lock();
   // A reference, not a copy: Format has ~50 optional<> fields (several
   // strings/vectors), so copying it on every call -- including the common
   // case below where nothing changed and we return the cached result --
   // would dominate print() cost on tables with many cells.
-  const Format &parent_format = parent->format();
+  const Format &parent_format = parent_->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
     if (parent_format.generation() == parent_format_snapshot_->generation())
       // Nothing upstream changed since the last merge (cheap O(1) check):
@@ -215,10 +214,9 @@ inline bool Cell::is_multi_byte_character_support_enabled() {
 }
 
 inline Format &Row::format() {
-  std::shared_ptr<TableInternal> parent = parent_.lock();
   // See the comment in Cell::format(): a reference avoids an expensive
   // whole-Format copy on every call.
-  const Format &parent_format = parent->format();
+  const Format &parent_format = parent_->format();
   if (format_.has_value() && parent_format_snapshot_.has_value()) {
     if (parent_format.generation() == parent_format_snapshot_->generation())
       // Nothing upstream changed since the last merge (cheap O(1) check):
