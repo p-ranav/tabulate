@@ -125,16 +125,17 @@ private:
   size_t get_computed_width() {
     size_t result{0};
     for (size_t i = 0; i < size(); ++i) {
-      result = std::max(result, get_cell_width(i));
+      result = std::max(result, get_cell_width(cells_[i].get()));
     }
     return result;
   }
 
-  // Returns padding_left + cell_contents.size() + padding_right
-  // for a given cell in the column
-  size_t get_cell_width(size_t cell_index) {
+  // Returns padding_left + cell_contents.size() + padding_right for a given
+  // cell. Static and keyed off the Cell itself (not a column index) so
+  // Printer::compute_column_widths() can call it directly while iterating
+  // rows, without needing to materialize a Column's cell-reference vector.
+  static size_t get_cell_width(Cell &cell) {
     size_t result{0};
-    Cell &cell = cells_[cell_index].get();
     const auto &format = cell.format();
     if (format.padding_left_.has_value())
       result += *format.padding_left_;
