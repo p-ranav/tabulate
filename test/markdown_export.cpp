@@ -62,5 +62,30 @@ int main() {
                 "|  mid  |\n| :---: |\n");
   }
 
+  {
+    // A '|' in cell text would end the cell early in a pipe table.
+    tabulate::Table table;
+    table.add_row(Row_t{"Expr", "Result"});
+    table.add_row(Row_t{"a|b", "1"});
+    MarkdownExporter exporter;
+    t.expect_eq("markdown export escapes '|' in cell text", exporter.dump(table),
+                "| Expr  | Result |\n| :---- | :----  |\n| a\\|b  | 1      |\n");
+    t.expect("cell text is restored after markdown export", table,
+             "+------+--------+\n| Expr | Result |\n+------+--------+\n| a|b  | 1      |\n+------+--------+");
+  }
+
+  {
+    // Reusing one exporter on a second table must restore that table's own text.
+    tabulate::Table first;
+    first.add_row(Row_t{"x|y"});
+    tabulate::Table second;
+    second.add_row(Row_t{"p|q"});
+    MarkdownExporter exporter;
+    (void)exporter.dump(first);
+    (void)exporter.dump(second);
+    t.expect("reused exporter restores the second table's text", second,
+             "+-----+\n| p|q |\n+-----+");
+  }
+
   return t.report();
 }

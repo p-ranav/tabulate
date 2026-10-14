@@ -10258,11 +10258,16 @@ private:
   }
 
   void apply_markdown_format(Table &table) {
+    // Saved state is per dump(), so the exporter can be reused on another table.
+    formats_.clear();
+    texts_.clear();
     // Apply markdown format to cells in each row
     for (auto row : table) {
       for (auto &cell : row) {
         const auto &format = cell.format();
         formats_.push_back(format);
+        texts_.push_back(cell.get_text());
+        cell.set_text(escape_pipes(cell.get_text()));
         cell.format()
             .hide_border_top()
             .hide_border_bottom()
@@ -10285,12 +10290,26 @@ private:
     for (auto row : table) {
       for (auto &cell : row) {
         cell.format() = formats_[format_index];
+        cell.set_text(texts_[format_index]);
         format_index += 1;
       }
     }
   }
 
+  // A '|' inside a cell would end the cell early in a pipe table.
+  static std::string escape_pipes(const std::string &text) {
+    std::string result;
+    result.reserve(text.size());
+    for (char c : text) {
+      if (c == '|')
+        result += '\\';
+      result += c;
+    }
+    return result;
+  }
+
   std::vector<Format> formats_;
+  std::vector<std::string> texts_;
 };
 
 } // namespace tabulate
