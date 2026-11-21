@@ -32,8 +32,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #pragma once
-#include <algorithm>
-#include <optional>
 #include <sstream>
 #include <string>
 #include <tabulate/exporter.hpp>
@@ -81,13 +79,13 @@ private:
 
     bool format_bold = false;
     bool format_italic = false;
-    std::for_each(font_style.begin(), font_style.end(), [&](FontStyle &style) {
+    for (FontStyle style : font_style) {
       if (style == FontStyle::bold) {
         format_bold = true;
       } else if (style == FontStyle::italic) {
         format_italic = true;
       }
-    });
+    }
 
     if (format_bold) {
       ss << '*';

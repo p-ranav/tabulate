@@ -38,7 +38,7 @@ SOFTWARE.
 #include <tabulate/format.hpp>
 #include <tabulate/utf8.hpp>
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #include <optional>
 #else
 #include <tabulate/optional_lite.hpp>
@@ -48,7 +48,7 @@ SOFTWARE.
 
 namespace tabulate {
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 using std::optional;
 #else
 using nonstd::optional;

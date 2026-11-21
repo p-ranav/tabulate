@@ -5669,7 +5669,13 @@ namespace termcolor {
 namespace _internal {
 // An index to be used to access a private storage of I/O streams. See
 // colorize / nocolorize I/O manipulators for details.
-static int colorize_index = std::ios_base::xalloc();
+inline int colorize_index() {
+  static int index = -1;
+  if (index < 0) {
+    index = std::ios_base::xalloc();
+  }
+  return index;
+}
 
 inline FILE *get_standard_stream(const std::ostream &stream);
 inline bool is_colorized(std::ostream &stream);
@@ -5682,12 +5688,12 @@ inline void win_change_attributes(std::ostream &stream, int foreground, int back
 } // namespace _internal
 
 inline std::ostream &colorize(std::ostream &stream) {
-  stream.iword(_internal::colorize_index) = 1L;
+  stream.iword(_internal::colorize_index()) = 1L;
   return stream;
 }
 
 inline std::ostream &nocolorize(std::ostream &stream) {
-  stream.iword(_internal::colorize_index) = 0L;
+  stream.iword(_internal::colorize_index()) = 0L;
   return stream;
 }
 
@@ -6085,7 +6091,7 @@ inline FILE *get_standard_stream(const std::ostream &stream) {
 // true for ATTY streams and may be true for streams marked with
 // colorize flag.
 inline bool is_colorized(std::ostream &stream) {
-  return is_atty(stream) || static_cast<bool>(stream.iword(colorize_index));
+  return is_atty(stream) || static_cast<bool>(stream.iword(colorize_index()));
 }
 
 //! Test whether a given `std::ostream` object refers to
@@ -6833,6 +6839,7 @@ SOFTWARE.
 #include <algorithm>
 #include <cctype>
 #include <cstddef>
+#include <cstring>
 #include <sstream>
 #include <string>
 // #include <tabulate/color.hpp>
@@ -6840,7 +6847,7 @@ SOFTWARE.
 // #include <tabulate/font_style.hpp>
 // #include <tabulate/utf8.hpp>
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #include <optional>
 #else
 // #include <tabulate/optional_lite.hpp>
@@ -6850,7 +6857,7 @@ SOFTWARE.
 
 namespace tabulate {
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 using std::optional;
 #else
 using nonstd::optional;
@@ -7402,6 +7409,24 @@ public:
     return result;
   };
 
+  template <typename T> static bool values_equal(const T &lhs, const T &rhs) { return lhs == rhs; }
+
+  static bool values_equal(const std::string &lhs, const std::string &rhs) {
+    return lhs.compare(rhs) == 0;
+  }
+
+  static bool values_equal(const std::vector<FontStyle> &lhs, const std::vector<FontStyle> &rhs) {
+    return lhs.size() == rhs.size() &&
+           (lhs.empty() ||
+            std::memcmp(lhs.data(), rhs.data(), lhs.size() * sizeof(FontStyle)) == 0);
+  }
+
+  template <typename T> static bool optional_equal(const optional<T> &lhs, const optional<T> &rhs) {
+    if (lhs.has_value() != rhs.has_value())
+      return false;
+    return !lhs.has_value() || values_equal(*lhs, *rhs);
+  }
+
   // Clears every field in `target` that is still identical to `previous`.
   //
   // Row/Cell cache their effective format by merging their own overrides with
@@ -7412,9 +7437,9 @@ public:
   // matches the snapshot taken at the last merge, so unmodified fields go
   // back to tracking the parent while explicit overrides are preserved.
   static void reset_inherited_fields(Format &target, const Format &previous) {
-#define TABULATE_RESET_IF_UNCHANGED(field)                                                       \
-    if (target.field == previous.field)                                                         \
-    target.field.reset()
+#define TABULATE_RESET_IF_UNCHANGED(field)                                                         \
+  if (optional_equal(target.field, previous.field))                                                \
+  target.field.reset()
     TABULATE_RESET_IF_UNCHANGED(width_);
     TABULATE_RESET_IF_UNCHANGED(indent_);
     TABULATE_RESET_IF_UNCHANGED(height_);
@@ -7479,9 +7504,9 @@ public:
   // than once, or rendering the same cell multiple times within one print.
   // Short-circuits on the first differing field, same as reset_inherited_fields.
   bool operator==(const Format &other) const {
-#define TABULATE_FIELD_EQUAL(field)                                                               \
-    if (!(field == other.field))                                                                  \
-    return false
+#define TABULATE_FIELD_EQUAL(field)                                                                \
+  if (!optional_equal(field, other.field))                                                         \
+  return false
     TABULATE_FIELD_EQUAL(width_);
     TABULATE_FIELD_EQUAL(indent_);
     TABULATE_FIELD_EQUAL(height_);
@@ -7902,20 +7927,20 @@ private:
 
   // trim white spaces from the left end of an input string
   static std::string trim_left(const std::string &input_string) {
-    std::string result = input_string;
-    result.erase(result.begin(), std::find_if(result.begin(), result.end(),
-                                              [](int ch) { return !std::isspace(ch); }));
-    return result;
+    size_t i = 0;
+    while (i < input_string.size() && std::isspace(static_cast<unsigned char>(input_string[i]))) {
+      ++i;
+    }
+    return input_string.substr(i);
   }
 
   // trim white spaces from right end of an input string
   static std::string trim_right(const std::string &input_string) {
-    std::string result = input_string;
-    result.erase(
-        std::find_if(result.rbegin(), result.rend(), [](int ch) { return !std::isspace(ch); })
-            .base(),
-        result.end());
-    return result;
+    size_t end = input_string.size();
+    while (end > 0 && std::isspace(static_cast<unsigned char>(input_string[end - 1]))) {
+      --end;
+    }
+    return input_string.substr(0, end);
   }
 
   // trim white spaces from either end of an input string
@@ -8048,7 +8073,7 @@ private:
 
 // #include <tabulate/utf8.hpp>
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #include <optional>
 #else
 // #include <tabulate/optional_lite.hpp>
@@ -8058,7 +8083,7 @@ private:
 
 namespace tabulate {
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 using std::optional;
 #else
 using nonstd::optional;
@@ -8132,7 +8157,7 @@ SOFTWARE.
 #include <string>
 // #include <tabulate/cell.hpp>
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #include <optional>
 #else
 // #include <tabulate/optional_lite.hpp>
@@ -8148,7 +8173,7 @@ SOFTWARE.
 
 namespace tabulate {
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 using std::optional;
 #else
 using nonstd::optional;
@@ -8427,7 +8452,7 @@ SOFTWARE.
 #include <iostream>
 #include <memory>
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #include <optional>
 #else
 // #include <tabulate/optional_lite.hpp>
@@ -8446,7 +8471,7 @@ SOFTWARE.
 
 namespace tabulate {
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 using std::optional;
 #else
 using nonstd::optional;
@@ -9761,7 +9786,7 @@ SOFTWARE.
 #pragma once
 // #include <tabulate/table_internal.hpp>
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #include <string_view>
 #include <variant>
 #else
@@ -9773,7 +9798,7 @@ SOFTWARE.
 
 namespace tabulate {
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 using std::get_if;
 using std::holds_alternative;
 using std::string_view;
@@ -10349,7 +10374,7 @@ SOFTWARE.
 #pragma once
 // #include <tabulate/exporter.hpp>
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #include <optional>
 #else
 // #include <tabulate/optional_lite.hpp>
@@ -10357,7 +10382,7 @@ SOFTWARE.
 
 namespace tabulate {
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 using std::optional;
 #else
 using nonstd::optional;
@@ -10473,8 +10498,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE  OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #pragma once
-#include <algorithm>
-#include <optional>
 #include <sstream>
 #include <string>
 // #include <tabulate/exporter.hpp>
@@ -10522,13 +10545,13 @@ private:
 
     bool format_bold = false;
     bool format_italic = false;
-    std::for_each(font_style.begin(), font_style.end(), [&](FontStyle &style) {
+    for (FontStyle style : font_style) {
       if (style == FontStyle::bold) {
         format_bold = true;
       } else if (style == FontStyle::italic) {
         format_italic = true;
       }
-    });
+    }
 
     if (format_bold) {
       ss << '*';
