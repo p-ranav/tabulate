@@ -46,6 +46,7 @@
 *   [Exporters](#exporters)
     *   [Markdown](#markdown)
     *   [AsciiDoc](#asciidoc)
+*   [C++20 Modules](#c20-modules)
 *   [Building Samples](#building-samples)
 *   [Running Tests](#running-tests)
 *   [Generating Single Header](#generating-single-header)
@@ -895,6 +896,55 @@ Below is the export of the example above:
 The rendered output you can see here: http://tpcg.io/pbbfU3ks
 
 **NOTE** Alignment is only supported per column. The font styles `FontStyle::bold` and `FontStyle::italic` can be used for each cell, also in combination.
+
+## C++20 Modules
+
+`tabulate` provides optional C++20 module support (`import tabulate;`) via the `tabulate::tabulate_module` CMake target when `tabulate_BUILD_MODULES=ON` is enabled.
+
+Requirements:
+*   CMake 3.28 or newer
+*   A C++20 module-capable compiler (Clang 16+, GCC 14+, or MSVC 19.34+)
+*   A generator that supports C++20 modules (`Ninja` or `Visual Studio 17 2022`+)
+
+With `FetchContent`:
+
+```cmake
+cmake_minimum_required(VERSION 3.28)
+project(my_app LANGUAGES CXX)
+
+include(FetchContent)
+set(tabulate_BUILD_MODULES ON CACHE BOOL "" FORCE)
+FetchContent_Declare(
+  tabulate
+  GIT_REPOSITORY https://github.com/p-ranav/tabulate.git
+  GIT_TAG master)
+FetchContent_MakeAvailable(tabulate)
+
+add_executable(my_app main.cpp)
+target_link_libraries(my_app PRIVATE tabulate::tabulate_module)
+```
+
+Or via a system installation (`cmake -S . -B build -G Ninja -Dtabulate_BUILD_MODULES=ON && cmake --install build`):
+
+```cmake
+find_package(tabulate REQUIRED)
+target_link_libraries(my_app PRIVATE tabulate::tabulate_module)
+```
+
+Usage:
+
+```cpp
+#include <iostream>
+import tabulate;
+
+int main() {
+  tabulate::Table table;
+  table.add_row({"Name", "Value"});
+  table.add_row({"Hello", "World"});
+  table[0].format().font_style({tabulate::FontStyle::bold});
+  std::cout << table << "\n";
+}
+```
 
 ## Building Samples
 

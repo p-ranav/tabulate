@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(tabulate VERSION 2.2 LANGUAGES CXX)
 option(tabulate_BUILD_TESTS "Build Tests" OFF)
+option(tabulate_BUILD_MODULES "Build C++20 Module" OFF)
 option(SAMPLES "Build Samples" OFF)
 
 set(TABULATE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -36,7 +37,10 @@ include(GNUInstallDirs)
 add_library(tabulate INTERFACE)
 add_library(tabulate::tabulate ALIAS tabulate)
 
-if (USE_CPP17)
+if (USE_CPP20)
+  target_compile_features(tabulate INTERFACE cxx_std_20)
+  message(STATUS "Using C++20")
+elseif (USE_CPP17)
   target_compile_features(tabulate INTERFACE cxx_std_17)
   message(STATUS "Using C++17")
 else()
@@ -47,6 +51,24 @@ endif()
 target_include_directories(tabulate INTERFACE
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+
+if(tabulate_BUILD_MODULES)
+  if(CMAKE_VERSION VERSION_LESS "3.28")
+    message(FATAL_ERROR "tabulate_BUILD_MODULES requires CMake 3.28 or newer (found ${CMAKE_VERSION})")
+  endif()
+
+  message(STATUS "Building C++20 module")
+  add_library(tabulate_module)
+  add_library(tabulate::tabulate_module ALIAS tabulate_module)
+  target_sources(tabulate_module
+    PUBLIC
+      FILE_SET CXX_MODULES
+      BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/module
+      FILES ${CMAKE_CURRENT_SOURCE_DIR}/module/tabulate.cppm)
+  target_compile_features(tabulate_module PUBLIC cxx_std_20)
+  target_link_libraries(tabulate_module PRIVATE tabulate::tabulate)
+  set_target_properties(tabulate_module PROPERTIES CXX_SCAN_FOR_MODULES ON)
+endif()
 
 if( SAMPLES )
   add_subdirectory(samples)
@@ -65,11 +87,22 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Conf
                                  VERSION ${TABULATE_VERSION}
                                  COMPATIBILITY AnyNewerVersion)
 
-install(TARGETS tabulate EXPORT tabulateTargets)
-install(EXPORT tabulateTargets
-        FILE tabulateTargets.cmake
-        NAMESPACE tabulate::
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/tabulate)
+if(tabulate_BUILD_MODULES)
+  install(TARGETS tabulate tabulate_module
+          EXPORT tabulateTargets
+          FILE_SET CXX_MODULES DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/tabulate/modules)
+  install(EXPORT tabulateTargets
+          FILE tabulateTargets.cmake
+          NAMESPACE tabulate::
+          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/tabulate
+          CXX_MODULES_DIRECTORY cxx-modules)
+else()
+  install(TARGETS tabulate EXPORT tabulateTargets)
+  install(EXPORT tabulateTargets
+          FILE tabulateTargets.cmake
+          NAMESPACE tabulate::
+          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/tabulate)
+endif()
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tabulateConfig.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/tabulate)

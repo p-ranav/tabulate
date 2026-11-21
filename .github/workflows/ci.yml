@@ -23,8 +23,33 @@ jobs:
         run: cmake -S . -B build -Dtabulate_BUILD_TESTS=ON -DSAMPLES=ON -DUSE_CPP17=${{ matrix.cpp17 }}
 
       - name: Build
-        run: cmake --build build --config Release --parallel
+        run: cmake --build build --config Release --parallel 4
 
       - name: Test
         working-directory: build
         run: ctest --output-on-failure -C Release
+
+  build-and-test-modules:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cmake_args: "-G Ninja"
+          - os: windows-latest
+            cmake_args: ""
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Configure
+        run: cmake -S . -B build ${{ matrix.cmake_args }} -Dtabulate_BUILD_TESTS=ON -Dtabulate_BUILD_MODULES=ON
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 4 --target test_module
+
+      - name: Test
+        working-directory: build
+        run: ctest --output-on-failure -C Release -R "^module$"
