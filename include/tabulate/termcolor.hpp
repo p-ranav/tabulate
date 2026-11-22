@@ -45,7 +45,13 @@ namespace termcolor {
 namespace _internal {
 // An index to be used to access a private storage of I/O streams. See
 // colorize / nocolorize I/O manipulators for details.
-static int colorize_index = std::ios_base::xalloc();
+inline int colorize_index() {
+  static int index = -1;
+  if (index < 0) {
+    index = std::ios_base::xalloc();
+  }
+  return index;
+}
 
 inline FILE *get_standard_stream(const std::ostream &stream);
 inline bool is_colorized(std::ostream &stream);
@@ -58,12 +64,12 @@ inline void win_change_attributes(std::ostream &stream, int foreground, int back
 } // namespace _internal
 
 inline std::ostream &colorize(std::ostream &stream) {
-  stream.iword(_internal::colorize_index) = 1L;
+  stream.iword(_internal::colorize_index()) = 1L;
   return stream;
 }
 
 inline std::ostream &nocolorize(std::ostream &stream) {
-  stream.iword(_internal::colorize_index) = 0L;
+  stream.iword(_internal::colorize_index()) = 0L;
   return stream;
 }
 
@@ -461,7 +467,7 @@ inline FILE *get_standard_stream(const std::ostream &stream) {
 // true for ATTY streams and may be true for streams marked with
 // colorize flag.
 inline bool is_colorized(std::ostream &stream) {
-  return is_atty(stream) || static_cast<bool>(stream.iword(colorize_index));
+  return is_atty(stream) || static_cast<bool>(stream.iword(colorize_index()));
 }
 
 //! Test whether a given `std::ostream` object refers to

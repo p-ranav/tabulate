@@ -34,7 +34,7 @@ SOFTWARE.
 #pragma once
 #include <tabulate/table_internal.hpp>
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #include <string_view>
 #include <variant>
 #else
@@ -46,7 +46,7 @@ SOFTWARE.
 
 namespace tabulate {
 
-#if __cplusplus >= 201703L
+#if __cplusplus >= 201703L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 using std::get_if;
 using std::holds_alternative;
 using std::string_view;
